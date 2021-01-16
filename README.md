@@ -1,7 +1,8 @@
-# VeryLight_Math_For_Game
+# LightMath_Cpp
 
-Very Light Math Library For Game Development.
+Light Math Library For Game Development.
 
 ## Feature
    * C++17
    * Header Only
+   * Suport Mata Programming
