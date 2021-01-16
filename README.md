@@ -1,2 +1,7 @@
 # VeryLight_Math_For_Game
-Very Light , Header Only Math Library For Game Development.
+
+Very Light Math Library For Game Development.
+
+## Feature
+   * C++17
+   * Header Only
