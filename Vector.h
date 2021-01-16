@@ -22,31 +22,31 @@ namespace Math
 	using Vector4 = Vector<4, T>;
 
 	template <size_t ComponentCount, typename X, typename Y>
-	Vector<ComponentCount, X> operator+(const Vector<ComponentCount, X>& vec1, const Vector<ComponentCount, Y>& vec2)
+	constexpr Vector<ComponentCount, X> operator+(const Vector<ComponentCount, X>& vec1, const Vector<ComponentCount, Y>& vec2)
 	{
 		return Vector<ComponentCount, X>{vec1 + vec2};
 	}
 
 	template <size_t ComponentCount, typename X, typename Y>
-	Vector<ComponentCount, X> operator-(const Vector<ComponentCount, X>& vec1, const Vector<ComponentCount, Y>& vec2)
+	constexpr Vector<ComponentCount, X> operator-(const Vector<ComponentCount, X>& vec1, const Vector<ComponentCount, Y>& vec2)
 	{
 		return Vector<ComponentCount, X>{vec1 - vec2};
 	}
 
 	template <size_t ComponentCount, typename X, typename Y>
-	Vector<ComponentCount, X> operator*(const Vector<ComponentCount, X>& vec1, const Vector<ComponentCount, Y>& vec2)
+	constexpr Vector<ComponentCount, X> operator*(const Vector<ComponentCount, X>& vec1, const Vector<ComponentCount, Y>& vec2)
 	{
 		return Vector<ComponentCount, X>{vec1* vec2};
 	}
 
 	template <size_t ComponentCount, typename X, typename Y>
-	Vector<ComponentCount, X> operator/(const Vector<ComponentCount, X>& vec1, const Vector<ComponentCount, Y>& vec2)
+	constexpr Vector<ComponentCount, X> operator/(const Vector<ComponentCount, X>& vec1, const Vector<ComponentCount, Y>& vec2)
 	{
 		return Vector<ComponentCount, X>{vec1 / vec2};
 	}
 
 	template <size_t ComponentCount, typename X, typename Y>
-	Vector<ComponentCount, X> operator%(const Vector<ComponentCount, X>& vec1, const Vector<ComponentCount, Y>& vec2)
+	constexpr Vector<ComponentCount, X> operator%(const Vector<ComponentCount, X>& vec1, const Vector<ComponentCount, Y>& vec2)
 	{
 		return Vector<ComponentCount, X>{vec1 % vec2};
 	}

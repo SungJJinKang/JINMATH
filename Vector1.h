@@ -17,12 +17,12 @@ namespace Math
 
 		value_type& r = value;
 
-		Vector() : value[0]{}
+		constexpr Vector() : value[0]{}
 		{
 			
 		}
 
-		explicit Vector(value_type x) : value[0]{x}
+		constexpr explicit Vector(value_type x) : value{x}
 		{
 
 		}
@@ -32,36 +32,45 @@ namespace Math
 		Vector& opreator=(const type&) = default;
 		Vector& opreator=(type&&) = default;
 		
+
+		inline static constexpr size_t length(){ return 1; }
+
+		T& operator[](size_t i)
+		{
+			assert(i != 0);
+			return value;
+		}
+		
 		template <typename X>
-		Vector& operator+(const Vector<1, X>& vec1)
+		constexpr type& operator+(const Vector<1, X>& vec1)
 		{
 			value += vec1.value;
 			return *this;
 		}
 
 		template <typename X>
-		Vector& operator-(const Vector<1, X>& vec1)
+		constexpr type& operator-(const Vector<1, X>& vec1)
 		{
 			value -= vec1.value;
 			return *this;
 		}
 
 		template <typename X>
-		Vector& operator*(const Vector<1, X>& vec1)
+		constexpr type& operator*(const Vector<1, X>& vec1)
 		{
 			value *= vec1.value;
 			return *this;
 		}
 
 		template <typename X>
-		Vector& operator/(const Vector<1, X>& vec1)
+		constexpr type& operator/(const Vector<1, X>& vec1)
 		{
 			value /= vec1.value;
 			return *this;
 		}
 
 		template <typename X>
-		Vector& operator%(const Vector<1, X>& vec1)
+		constexpr type& operator%(const Vector<1, X>& vec1)
 		{
 			value %= vec1.value;
 			return *this;
@@ -71,7 +80,7 @@ namespace Math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		Vector& operator++()
+		constexpr type& operator++()
 		{
 			++value;
 			return *this;
@@ -82,7 +91,7 @@ namespace Math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		Vector& operator++(value_type)
+		constexpr type& operator++(value_type)
 		{
 			type Vector{ *this };
 			++*this;
@@ -93,7 +102,7 @@ namespace Math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		Vector& operator--()
+		constexpr type& operator--()
 		{
 			--value;
 			return *this;
@@ -104,7 +113,7 @@ namespace Math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		Vector& operator--(value_type)
+		constexpr type& operator--(value_type)
 		{
 			type Vector{ *this };
 			--*this;

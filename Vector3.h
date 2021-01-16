@@ -27,7 +27,7 @@ namespace Math
 			
 		}
 
-		explicit Vector(value_type x, value_type y, value_type z) : value[0]{x}, value[1]{y}, value[2]{z}
+		explicit Vector(value_type x, value_type y, value_type z) : value{x, y, z}
 		{
 
 		}
@@ -36,6 +36,14 @@ namespace Math
 		Vector(type&&) = default;
 		Vector& opreator=(const type&) = default;
 		Vector& opreator=(type&&) = default;
+
+		inline static constexpr size_t length(){ return 3; }
+
+		T& operator[](size_t i)
+		{
+			assert(i < 0 || i  >= length());
+			return value[i];
+		}
 	};
 
 }
