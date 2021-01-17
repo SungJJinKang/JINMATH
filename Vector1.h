@@ -17,12 +17,12 @@ namespace Math
 
 		value_type& r = value;
 
-		Vector() : value{}
+		constexpr Vector() : value{}
 		{
 
 		}
 
-		constexpr explicit Vector(value_type x) : value{x}
+		constexpr Vector(value_type x) : value{x}
 		{
 
 		}
@@ -33,15 +33,46 @@ namespace Math
 			x = vector.x;
 		}
 
+		template <typename X>
+		constexpr explicit Vector(const Vector<1, X>& vector)
+		{
+			x = vector.x;
+		}
+
+		template <typename X>
+		constexpr explicit Vector(const Vector<2, X>& vector)
+		{
+			x = vector.x;
+		}
+
+		template <typename X>
+		constexpr explicit Vector(const Vector<3, X>& vector)
+		{
+			x = vector.x;
+		}
+
+		template <typename X>
+		constexpr explicit Vector(const Vector<4, X>& vector)
+		{
+			x = vector.x;
+		}
+
+
 // 		Vector(const type&) = default;
 // 		Vector(type&&) = default;
 // 		type& opreator=(const type&) = default;
 // 		type& opreator=(type&&) = default;
 		
+		constexpr std::basic_string<char> toString()
+		{
+			std::stringstream ss;
+			ss << "x : " << x;
+			return ss.str();
+		}
 
 		inline static constexpr size_t length(){ return 1; }
 
-		value_type& operator[](size_t i)
+		constexpr value_type& operator[](size_t i)
 		{
 			assert(i != 0);
 			return value;
@@ -79,40 +110,74 @@ namespace Math
 		}
 
 		
+
+		
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		constexpr type& operator+(const Vector<RightComponentSize, X>& rhs)
+		constexpr type& operator+=(const Vector<RightComponentSize, X>& rhs)
 		{
 			x += rhs.x;
 			return *this;
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		constexpr type& operator-(const Vector<RightComponentSize, X>& rhs)
+		constexpr type& operator-=(const Vector<RightComponentSize, X>& rhs)
 		{
 			x -= rhs.x;
 			return *this;
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		constexpr type& operator*(const Vector<RightComponentSize, X>& rhs)
+		constexpr type& operator*=(const Vector<RightComponentSize, X>& rhs)
 		{
 			x *= rhs.x;
 			return *this;
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		constexpr type& operator/(const Vector<RightComponentSize, X>& rhs)
+		constexpr type& operator/=(const Vector<RightComponentSize, X>& rhs)
 		{
 			x /= rhs.x;
 			return *this;
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		constexpr type& operator%(const Vector<RightComponentSize, X>& rhs)
+		constexpr type& operator%=(const Vector<RightComponentSize, X>& rhs)
 		{
 			x %= rhs.x;
 			return *this;
 		}
+
+		constexpr type& operator+=(const value_type& scalar)
+		{
+			x += scalar;
+			return *this;
+		}
+
+		constexpr type& operator-=(const value_type& scalar)
+		{
+			x -= scalar;
+			return *this;
+		}
+		
+		constexpr type& operator*=(const value_type& scalar)
+		{
+			x *= scalar;
+			return *this;
+		}
+
+		constexpr type& operator/=(const value_type& scalar)
+		{
+			x /= scalar;
+			return *this;
+		}
+
+		constexpr type& operator%=(const value_type& scalar)
+		{
+			x %= scalar;
+			return *this;
+		}
+
+		//
 
 		inline constexpr bool operator==(const type& rhs)
 		{
@@ -124,6 +189,8 @@ namespace Math
 			return this.x != rhs.x;
 		}
 
+		
+		
 		/// <summary>
 		/// prefix
 		/// </summary>
