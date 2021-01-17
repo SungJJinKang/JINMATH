@@ -7,26 +7,13 @@
 
 namespace Math
 {
-	template<typename T>
-	constexpr typename std::enable_if_t<std::is_floating_point_v<T>, T> PI = T(3.14159265358979323846);
+	constexpr typename float PI = 3.14159265358979323846f;
 
-	template<typename T>
-	constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> DegreeToRadinFomula = PI<T> / T(180);
+	constexpr typename float DegreeToRadian = PI / 180.0f;
 
-	template<typename T>
-	constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> RadinToDegreeFomula = T(180) / PI<T>;
+	constexpr typename float RadianToDegree = 180.0f / PI;
 
-	template<typename T>
-	inline constexpr  typename std::enable_if_t<std::is_arithmetic_v<T>, T> DegreeToRadin(T degree)
-	{
-		return degree * DegreeToRadinFomula<T>;
-	}
-
-	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> RadinToDegree(T radian)
-	{
-		return radian * RadinToDegreeFomula<T>;
-	}
+	
 
 	template<typename T>
 	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Epsilon()
@@ -80,7 +67,7 @@ namespace Math
 	template<typename T>
 	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Clamp01(T value)
 	{
-		return Clamp(value, 0, 1);
+		return Clamp(value, T{ 0 }, T{ 1 });
 	}
 
 	template<typename T>
@@ -119,13 +106,13 @@ namespace Math
 	template<typename Value, typename Floating, typename std::enable_if_t<std::is_floating_point_v<Floating>, bool> = true>
 	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<Value>, Value> LerpUnClamped(Value value1, Value value2, Floating t)
 	{
-		return value1 + t(value2 - value1);
+		return value1 + t * (value2 - value1);
 	}
 
 	template<typename Value, typename Floating, typename std::enable_if_t<std::is_floating_point_v<Floating>, bool> = true>
 	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<Value>, Value> Lerp(Value value1, Value value2, Floating t)
 	{
-		return Clamp01<Value>(LerpUnClamped(value1, value2, t));
+		return LerpUnClamped<Value, Floating>(value1, value2, Clamp01<Floating>(t));
 	}
 
 	
@@ -142,14 +129,14 @@ namespace Math
 		return std::log10(value);
 	}
 
-	template<typename T, typename std::enable_if_t<std::is_arithmetic_v<T>> = true>
-	inline constexpr T Max(T x, T y)
+	template<typename T>
+	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Max(T x, T y)
 	{
 		return (std::max)(x, y);
 	}
 
-	template<typename T, typename std::enable_if_t<std::is_arithmetic_v<T>> = true>
-	inline constexpr T Min(T x, T y)
+	template<typename T>
+	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Min(T x, T y)
 	{
 		return (std::min)(x, y);
 	}
@@ -157,14 +144,17 @@ namespace Math
 	template<typename T>
 	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> PerlinNoise(T value);
 
-	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>&& std::is_floating_point_v<T>, T> Pow(T value, T exp)
+	template<typename X, typename Y, typename std::enable_if_t<std::is_arithmetic_v<Y> && std::is_floating_point_v<Y>, bool> = true>
+	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<X> && std::is_floating_point_v<X>, X> Pow(X value, Y exp)
 	{
 		return std::pow(value, exp);
 	}
 
-	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T> && !std::is_floating_point_v<T>, double> Pow(T value, T exp)
+	template<typename X, typename Y, 
+	typename std::enable_if_t<std::is_arithmetic_v<X> && std::is_arithmetic_v<Y>, bool> = true,
+	typename std::enable_if_t<!std::is_floating_point_v<X> || !std::is_floating_point_v<Y>, bool> = true
+	>
+	inline constexpr double Pow(X value, Y exp)
 	{
 		return std::pow(value, exp);
 	}
