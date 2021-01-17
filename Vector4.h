@@ -23,12 +23,12 @@ namespace Math
 		value_type& b = value[2];
 		value_type& a = value[3];
 
-		constexpr Vector() : value{}
+		constexpr Vector() noexcept : value{}
 		{
 
 		}
 
-		constexpr Vector(value_type x, value_type y, value_type z, value_type w)
+		constexpr Vector(value_type x, value_type y, value_type z, value_type w) noexcept
 		{
 			value[0] = x;
 			value[1] = y;
@@ -37,7 +37,7 @@ namespace Math
 		}
 
 		template <typename X>
-		constexpr explicit Vector(const Vector<1, X>& vector)
+		constexpr explicit Vector(const Vector<1, X>& vector) noexcept
 		{
 			x = vector.x;
 			y = 0;
@@ -46,7 +46,7 @@ namespace Math
 		}
 
 		template <typename X>
-		constexpr explicit Vector(const Vector<2, X>& vector)
+		constexpr explicit Vector(const Vector<2, X>& vector) noexcept
 		{
 			x = vector.x;
 			y = vector.y;
@@ -55,7 +55,7 @@ namespace Math
 		}
 
 		template <typename X>
-		constexpr explicit Vector(const Vector<3, X>& vector)
+		constexpr explicit Vector(const Vector<3, X>& vector) noexcept
 		{
 			x = vector.x;
 			y = vector.y;
@@ -64,7 +64,7 @@ namespace Math
 		}
 
 		template <typename X>
-		constexpr explicit Vector(const Vector<4, X>& vector)
+		constexpr explicit Vector(const Vector<4, X>& vector) noexcept
 		{
 			x = vector.x;
 			y = vector.y;
@@ -77,32 +77,40 @@ namespace Math
 // 		type& opreator=(const type&) = default;
 // 		type& opreator=(type&&) = default;
 
-		constexpr std::basic_string<char> toString()
+		constexpr std::basic_string<char> toString() noexcept
 		{
 			std::stringstream ss;
 			ss << x << "  " << y << "  " << z << "  " << w;
 			return ss.str();
 		}
 
-		inline static constexpr size_t length() { return 4; }
+		[[nodiscard]] inline static constexpr size_t length()  noexcept { return 4; }
 
-		constexpr T& operator[](size_t i)
+		[[nodiscard]] value_type& operator[](size_t i)
 		{
-			assert(i < 0 || i >= length());
+			assert(i >= 0 || i < length());
 			return value[i];
 		}
 
-		inline constexpr value_type sqrMagnitude()
+		[[nodiscard]] constexpr value_type& operator[](size_t i) const
+		{
+			assert(i >= 0 || i < length());
+			return value[i];
+		}
+
+		
+
+		[[nodiscard]] inline constexpr value_type sqrMagnitude() noexcept
 		{
 			return std::pow(x, 2) + std::pow(y, 2) + std::pow(z, 2) + std::pow(w, 2);
 		}
 
-		inline constexpr value_type magnitude()
+		[[nodiscard]] inline constexpr value_type magnitude() noexcept
 		{
 			return std::pow(sqrMagnitude(), 2);
 		}
 
-		constexpr type normalized()
+		[[nodiscard]] constexpr type normalized()
 		{
 			value_type magnitude = magnitude();
 			if (magnitude == 0)
@@ -129,7 +137,7 @@ namespace Math
 		
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		constexpr type& operator+=(const Vector<RightComponentSize, X>& rhs)
+		constexpr type& operator+=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x += rhs.x;
 			y += rhs.y;
@@ -139,7 +147,7 @@ namespace Math
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		constexpr type& operator-=(const Vector<RightComponentSize, X>& rhs)
+		constexpr type& operator-=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x -= rhs.x;
 			y -= rhs.y;
@@ -149,7 +157,7 @@ namespace Math
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		constexpr type& operator*=(const Vector<RightComponentSize, X>& rhs)
+		constexpr type& operator*=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x *= rhs.x;
 			y *= rhs.y;
@@ -180,7 +188,7 @@ namespace Math
 
 		//
 
-		constexpr type& operator+=(const value_type& scalar)
+		constexpr type& operator+=(const value_type& scalar) noexcept
 		{
 			x += scalar;
 			y += scalar;
@@ -189,7 +197,7 @@ namespace Math
 			return *this;
 		}
 
-		constexpr type& operator-=(const value_type& scalar)
+		constexpr type& operator-=(const value_type& scalar) noexcept
 		{
 			x -= scalar;
 			y -= scalar;
@@ -198,7 +206,7 @@ namespace Math
 			return *this;
 		}
 		
-		constexpr type& operator*=(const value_type& scalar)
+		constexpr type& operator*=(const value_type& scalar) noexcept
 		{
 			x *= scalar;
 			y *= scalar;
@@ -227,12 +235,12 @@ namespace Math
 
 		//
 
-		inline constexpr bool operator==(const type& rhs)
+		[[nodiscard]] inline constexpr bool operator==(const type& rhs) noexcept
 		{
 			return this.x == rhs.x && this.y == rhs.y && this.z == rhs.z && this.w == rhs.w;
 		}
 
-		constexpr bool operator!=(const type& rhs)
+		[[nodiscard]] constexpr bool operator!=(const type& rhs) noexcept
 		{
 			return this.x != rhs.x || this.y != rhs.y || this.z != rhs.z || this.w != rhs.w;
 		}
@@ -241,7 +249,7 @@ namespace Math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		constexpr type& operator++()
+		constexpr type& operator++() noexcept
 		{
 			++x;
 			++y;
@@ -255,7 +263,7 @@ namespace Math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		constexpr type operator++(int)
+		constexpr type operator++(int) noexcept
 		{
 			type Vector{ *this };
 			++* this;
@@ -266,7 +274,7 @@ namespace Math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		constexpr type& operator--()
+		constexpr type& operator--() noexcept
 		{
 			--x;
 			--y;
@@ -280,7 +288,7 @@ namespace Math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		constexpr type operator--(int)
+		constexpr type operator--(int) noexcept
 		{
 			type Vector{ *this };
 			--* this;
