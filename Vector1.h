@@ -17,63 +17,111 @@ namespace Math
 
 		value_type& r = value;
 
-		constexpr Vector() : value[0]{}
+		Vector() : value{}
 		{
-			
+
 		}
 
 		constexpr explicit Vector(value_type x) : value{x}
 		{
 
 		}
+		
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
+		constexpr explicit Vector(const Vector<RightComponentSize, X>& vector)
+		{
+			x = vector.x;
+		}
 
-		Vector(const type&) = default;
-		Vector(type&&) = default;
-		Vector& opreator=(const type&) = default;
-		Vector& opreator=(type&&) = default;
+// 		Vector(const type&) = default;
+// 		Vector(type&&) = default;
+// 		type& opreator=(const type&) = default;
+// 		type& opreator=(type&&) = default;
 		
 
 		inline static constexpr size_t length(){ return 1; }
 
-		T& operator[](size_t i)
+		value_type& operator[](size_t i)
 		{
 			assert(i != 0);
 			return value;
 		}
 		
-		template <typename X>
-		constexpr type& operator+(const Vector<1, X>& vec1)
+		inline constexpr value_type sqrMagnitude()
 		{
-			value += vec1.value;
+			return std::pow(value, 2);
+		}
+
+		inline constexpr value_type magnitude()
+		{
+			return std::pow(sqrMagnitude(), 2);
+		}
+
+		constexpr type normalized()
+		{
+			value_type magnitude = magnitude();
+			if (magnitude == 0)
+				return type{};
+
+			return type{ x / magnitude };
+		}
+
+		constexpr type& Normalize()
+		{
+			value_type magnitude = magnitude();
+			if (magnitude == 0)
+				return *this;
+			else
+			{
+				x = x / magnitude;
+				return *this;
+			}
+		}
+
+		
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
+		constexpr type& operator+(const Vector<RightComponentSize, X>& rhs)
+		{
+			x += rhs.x;
 			return *this;
 		}
 
-		template <typename X>
-		constexpr type& operator-(const Vector<1, X>& vec1)
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
+		constexpr type& operator-(const Vector<RightComponentSize, X>& rhs)
 		{
-			value -= vec1.value;
+			x -= rhs.x;
 			return *this;
 		}
 
-		template <typename X>
-		constexpr type& operator*(const Vector<1, X>& vec1)
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
+		constexpr type& operator*(const Vector<RightComponentSize, X>& rhs)
 		{
-			value *= vec1.value;
+			x *= rhs.x;
 			return *this;
 		}
 
-		template <typename X>
-		constexpr type& operator/(const Vector<1, X>& vec1)
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
+		constexpr type& operator/(const Vector<RightComponentSize, X>& rhs)
 		{
-			value /= vec1.value;
+			x /= rhs.x;
 			return *this;
 		}
 
-		template <typename X>
-		constexpr type& operator%(const Vector<1, X>& vec1)
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
+		constexpr type& operator%(const Vector<RightComponentSize, X>& rhs)
 		{
-			value %= vec1.value;
+			x %= rhs.x;
 			return *this;
+		}
+
+		inline constexpr bool operator==(const type& rhs)
+		{
+			return this.x == rhs.x;
+		}
+
+		constexpr bool operator!=(const type& rhs)
+		{
+			return this.x != rhs.x;
 		}
 
 		/// <summary>
@@ -82,7 +130,7 @@ namespace Math
 		/// <returns></returns>
 		constexpr type& operator++()
 		{
-			++value;
+			++x;
 			return *this;
 		}
 
@@ -91,7 +139,7 @@ namespace Math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		constexpr type& operator++(value_type)
+		constexpr type operator++(int)
 		{
 			type Vector{ *this };
 			++*this;
@@ -104,7 +152,7 @@ namespace Math
 		/// <returns></returns>
 		constexpr type& operator--()
 		{
-			--value;
+			--x;
 			return *this;
 		}
 
@@ -113,7 +161,7 @@ namespace Math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		constexpr type& operator--(value_type)
+		constexpr type operator--(int)
 		{
 			type Vector{ *this };
 			--*this;

@@ -1,6 +1,7 @@
 #pragma once
-
 #include <limits>
+#include <algorithm>
+
 #include <cmath>
 #include <type_traits>
 
@@ -28,19 +29,19 @@ namespace Math
 	}
 
 	template<typename T>
-	inline constexpr inline typename std::enable_if_t<std::is_arithmetic_v<T>, T> Epsilon()
+	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Epsilon()
 	{
 		return std::numeric_limits<T>::epsilon();
 	}
 
 	template<typename T>
-	inline constexpr inline typename std::enable_if_t<std::is_arithmetic_v<T> && !std::is_unsigned_v<T>, T> Abs(T value)
+	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T> && !std::is_unsigned_v<T>, T> Abs(T value)
 	{
 		return std::abs(value);
 	}
 
 	template<typename T>
-	inline constexpr inline typename std::enable_if_t<std::is_arithmetic_v<T> && std::is_unsigned_v<T>, T> Abs(T value)
+	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T> && std::is_unsigned_v<T>, T> Abs(T value)
 	{
 		return value;
 	}
@@ -102,10 +103,17 @@ namespace Math
 	}
 
 	template<typename T>
-	constexpr T Infinity = std::numeric_limits<T>::max();
+	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Infinity()
+	{
+		return (std::numeric_limits<T>::max)();
+	} 
 
 	template<typename T>
-	constexpr T NegativeInfinity = std::numeric_limits<T>::lowest();
+	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> NegativeInfinity()
+	{
+		return std::numeric_limits<T>::lowest();
+
+	}
 
 
 	template<typename Value, typename Floating, typename std::enable_if_t<std::is_floating_point_v<Floating>, bool> = true>
@@ -137,13 +145,13 @@ namespace Math
 	template<typename T, typename std::enable_if_t<std::is_arithmetic_v<T>> = true>
 	inline constexpr T Max(T x, T y)
 	{
-		return x > y ? x : y;
+		return (std::max)(x, y);
 	}
 
 	template<typename T, typename std::enable_if_t<std::is_arithmetic_v<T>> = true>
 	inline constexpr T Min(T x, T y)
 	{
-		return x < y ? x : y;
+		return (std::min)(x, y);
 	}
 
 	template<typename T>

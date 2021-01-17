@@ -1,5 +1,6 @@
 #pragma once
 
+#define NOMINMAX // For ust std::min max
 
 #include "Utility.h"
 
