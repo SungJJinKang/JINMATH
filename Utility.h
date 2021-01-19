@@ -7,11 +7,11 @@
 
 namespace Math
 {
-	constexpr typename float PI = 3.14159265358979323846f;
+	inline constexpr float PI = 3.14159265358979323846f;
 
-	constexpr typename float DegreeToRadian = PI / 180.0f;
+	inline constexpr float DegreeToRadian = PI / 180.0f;
 
-	constexpr typename float RadianToDegree = 180.0f / PI;
+	inline constexpr float RadianToDegree = 180.0f / PI;
 
 	
 
