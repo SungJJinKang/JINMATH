@@ -6,7 +6,7 @@ namespace Math
 	template <typename T>
 	struct Vector<1, T>
 	{
-		static_assert(std::is_arithmetic_v<T>);
+		static_assert(CHECK_IS_NUMBER(T));
 
 		using value_type = typename T;
 		using type = typename Vector<1, T>;
@@ -56,6 +56,42 @@ namespace Math
 		{
 			x = vector.x;
 		}
+
+		constexpr operator=(value_type x)  noexcept 
+		{
+			value = x;
+		}
+
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
+		constexpr operator=(const Vector<RightComponentSize, X>& vector) noexcept
+		{
+			x = vector.x;
+		}
+
+		template <typename X>
+		constexpr operator=(const Vector<1, X>& vector) noexcept
+		{
+			x = vector.x;
+		}
+
+		template <typename X>
+		constexpr operator=(const Vector<2, X>& vector) noexcept
+		{
+			x = vector.x;
+		}
+
+		template <typename X>
+		constexpr operator=(const Vector<3, X>& vector) noexcept
+		{
+			x = vector.x;
+		}
+
+		template <typename X>
+		constexpr operator=(const Vector<4, X>& vector) noexcept
+		{
+			x = vector.x;
+		}
+
 
 
 // 		Vector(const type&) = default;

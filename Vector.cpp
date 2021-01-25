@@ -1,11 +1,15 @@
 #include "Vector.h"
+#include "Vector1.h"
+#include "Vector2.h"
+#include "Vector3.h"
+#include "Vector4.h"
 
+using namespace Math;
 
-
-template struct Vector<1, flaoat>;
-template struct Vector<2, flaoat>;
-template struct Vector<3, flaoat>;
-template struct Vector<4, flaoat>;
+template struct Vector<1, float>;
+template struct Vector<2, float>;
+template struct Vector<3, float>;
+template struct Vector<4, float>;
 
 template struct Vector<1, double>;
 template struct Vector<2, double>;
@@ -57,9 +61,5 @@ template struct Vector<2, unsigned long long int>;
 template struct Vector<3, unsigned long long int>;
 template struct Vector<4, unsigned long long int>;
 
-template struct Vector<1, bool>;
-template struct Vector<2, bool>;
-template struct Vector<3, bool>;
-template struct Vector<4, bool>;
 
 

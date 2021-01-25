@@ -6,7 +6,7 @@ namespace Math
 	template <typename T>
 	struct Vector<4, T>
 	{
-		static_assert(std::is_arithmetic_v<T>);
+		static_assert(CHECK_IS_NUMBER(T));
 
 		using value_type = typename T;
 		using type = typename Vector<4, T>;
@@ -34,6 +34,14 @@ namespace Math
 			value[1] = y;
 			value[2] = z;
 			value[3] = w;
+		}
+
+		constexpr Vector(value_type x) noexcept
+		{
+			value[0] = x;
+			value[1] = x;
+			value[2] = x;
+			value[3] = x;
 		}
 
 		template <typename X>
@@ -65,6 +73,50 @@ namespace Math
 
 		template <typename X>
 		constexpr explicit Vector(const Vector<4, X>& vector) noexcept
+		{
+			x = vector.x;
+			y = vector.y;
+			z = vector.z;
+			w = vector.w;
+		}
+
+		constexpr operator=(value_type x) noexcept
+		{
+			value[0] = x;
+			value[1] = x;
+			value[2] = x;
+			value[3] = x;
+		}
+
+		template <typename X>
+		constexpr operator=(const Vector<1, X>& vector) noexcept
+		{
+			x = vector.x;
+			y = 0;
+			z = 0;
+			w = 0;
+		}
+
+		template <typename X>
+		constexpr operator=(const Vector<2, X>& vector) noexcept
+		{
+			x = vector.x;
+			y = vector.y;
+			z = 0;
+			w = 0;
+		}
+
+		template <typename X>
+		constexpr operator=(const Vector<3, X>& vector) noexcept
+		{
+			x = vector.x;
+			y = vector.y;
+			z = vector.z;
+			w = 0;
+		}
+
+		template <typename X>
+		constexpr operator=(const Vector<4, X>& vector) noexcept
 		{
 			x = vector.x;
 			y = vector.y;

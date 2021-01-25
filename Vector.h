@@ -3,23 +3,23 @@
 #include <cassert>
 #include <type_traits>
 #include <cmath>
-
 #include <string>
 #include <sstream>
+
+#include "LMath_Core.h"
+
 
 namespace Math
 {
 	template <size_t ComponentCount, typename T>
-	struct Vector
-	{
-		static_assert(true, "Wrong Template Parameter");
-	};
+	struct Vector;
 
 	using Vector1 = Vector<1, float>;
 	using Vector2 = Vector<2, float>;
 	using Vector3 = Vector<3, float>;
 	using Vector4 = Vector<4, float>;
 
+	
 
 	template <size_t RightComponentSize, typename T, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
 	[[nodiscard]] constexpr Vector<1, T> operator+(const Vector<1, T>& lhs, const Vector<RightComponentSize, T>& rhs) noexcept

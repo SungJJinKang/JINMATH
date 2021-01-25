@@ -1,9 +1,10 @@
 #pragma once
 #include <limits>
 #include <algorithm>
-
 #include <cmath>
 #include <type_traits>
+
+#include "LMath_Core.h"
 
 namespace Math
 {
@@ -16,46 +17,46 @@ namespace Math
 	
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Epsilon()
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Epsilon()
 	{
 		return std::numeric_limits<T>::epsilon();
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T> && !std::is_unsigned_v<T>, T> Abs(T value)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T) && !std::is_unsigned_v<T>, T> Abs(T value)
 	{
 		return std::abs(value);
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T> && std::is_unsigned_v<T>, T> Abs(T value)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T) && std::is_unsigned_v<T>, T> Abs(T value)
 	{
 		return value;
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Acos(T value)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Acos(T value)
 	{
 		return std::acos(value);
 	}
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Asin(T value)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Asin(T value)
 	{
 		return std::asin(value);
 	}
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Atan(T value)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Atan(T value)
 	{
 		return std::atan(value);
 	}
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Atan2(T value1, T value2)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Atan2(T value1, T value2)
 	{
 		return std::atan2(value1, value2);
 	}
 
 	template<typename T, typename Limit, typename std::enable_if_t<std::is_arithmetic_v<Limit>, bool> = true>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Clamp(T value, Limit min, Limit max)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Clamp(T value, Limit min, Limit max)
 	{
 		if (value < min)
 			return min;
@@ -65,38 +66,38 @@ namespace Math
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Clamp01(T value)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Clamp01(T value)
 	{
 		return Clamp(value, T{ 0 }, T{ 1 });
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> CosInDegree(T degree)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> CosInDegree(T degree)
 	{
 		return std::cos(DegreeToRadin(degree));
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> CosInRadian(T radian)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> CosInRadian(T radian)
 	{
 		return std::cos(radian);
 	}
 
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Exp(T value)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Exp(T value)
 	{
 		return std::exp(value);
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Infinity()
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Infinity()
 	{
 		return (std::numeric_limits<T>::max)();
 	} 
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> NegativeInfinity()
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> NegativeInfinity()
 	{
 		return std::numeric_limits<T>::lowest();
 
@@ -118,31 +119,31 @@ namespace Math
 	
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Log(T value)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Log(T value)
 	{
 		return std::log(value);
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Log10(T value)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Log10(T value)
 	{
 		return std::log10(value);
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Max(T x, T y)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Max(T x, T y)
 	{
 		return (std::max)(x, y);
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> Min(T x, T y)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Min(T x, T y)
 	{
 		return (std::min)(x, y);
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> PerlinNoise(T value);
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> PerlinNoise(T value);
 
 	template<typename X, typename Y, typename std::enable_if_t<std::is_arithmetic_v<Y> && std::is_floating_point_v<Y>, bool> = true>
 	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<X> && std::is_floating_point_v<X>, X> Pow(X value, Y exp)
@@ -160,38 +161,38 @@ namespace Math
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> SinInDegree(T degree)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> SinInDegree(T degree)
 	{
 		return std::sin(DegreeToRadin(degree));
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> SinInRadian(T radian)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> SinInRadian(T radian)
 	{
 		return std::sin(radian);
 	}
 
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>&& std::is_floating_point_v<T>, T> Sqrt(T value)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T)&& std::is_floating_point_v<T>, T> Sqrt(T value)
 	{
 		return std::sqrt(value);
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>&& !std::is_floating_point_v<T>, double> Sqrt(T value)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T)&& !std::is_floating_point_v<T>, double> Sqrt(T value)
 	{
 		return std::sqrt(value);
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> TanInDegree(T degree)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> TanInDegree(T degree)
 	{
 		return std::tan(DegreeToRadin(degree));
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<T>, T> TanInRadian(T radian)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> TanInRadian(T radian)
 	{
 		return std::tan(radian);
 	}
