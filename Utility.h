@@ -1,8 +1,6 @@
 #pragma once
 #include <limits>
 #include <algorithm>
-#include <cmath>
-#include <type_traits>
 
 #include "LMath_Core.h"
 

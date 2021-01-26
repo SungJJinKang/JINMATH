@@ -28,57 +28,82 @@ namespace Math
 
 		}
 
-		constexpr Vector(value_type x) noexcept
+		constexpr explicit Vector(T xValue)  noexcept
 		{
-			value[0] = x;
-			value[1] = x;
-			value[2] = x;
-		}
-
-		constexpr Vector(value_type x, value_type y, value_type z) noexcept
-		{
-			value[0] = x;
-			value[1] = y;
-			value[2] = z;
+			x = xValue;
+			y = xValue;
+			z = xValue;
 		}
 
 		template <typename X>
-		constexpr explicit Vector(const Vector<1, X>& vector) noexcept
+		constexpr Vector(X xValue)  noexcept
+		{
+			x = static_cast<T>(xValue);
+			y = static_cast<T>(xValue);
+			z = static_cast<T>(xValue);
+		}
+
+
+		template <typename X, typename Y, typename Z>
+		constexpr Vector(X xValue, Y yValue, Z zValue) noexcept
+		{
+			x = static_cast<T>(xValue);
+			y = static_cast<T>(yValue);
+			z = static_cast<T>(zValue);
+		}
+
+		constexpr explicit Vector(const Vector<3, T>& vector) noexcept
 		{
 			x = vector.x;
+			y = vector.y;
+			z = vector.z;
+		}
+		
+		template <typename X>
+		constexpr Vector(const Vector<1, X>& vector) noexcept
+		{
+			x = static_cast<T>(vector.x);
 			y = 0;
 			z = 0;
 		}
 
 		template <typename X>
-		constexpr explicit Vector(const Vector<2, X>& vector) noexcept
+		constexpr Vector(const Vector<2, X>& vector) noexcept
 		{
-			x = vector.x;
-			y = vector.y;
+			x = static_cast<T>(vector.x);
+			y = static_cast<T>(vector.y);
 			z = 0;
 		}
 
 		template <typename X>
-		constexpr explicit Vector(const Vector<3, X>& vector) noexcept
+		constexpr Vector(const Vector<3, X>& vector) noexcept
 		{
-			x = vector.x;
-			y = vector.y;
-			z = vector.z;
+			x = static_cast<T>(vector.x);
+			y = static_cast<T>(vector.y);
+			z = static_cast<T>(vector.z);
 		}
 
 		template <typename X>
-		constexpr explicit Vector(const Vector<4, X>& vector) noexcept
+		constexpr Vector(const Vector<4, X>& vector) noexcept
+		{
+			x = static_cast<T>(vector.x);
+			y = static_cast<T>(vector.y);
+			z = static_cast<T>(vector.z);
+		}
+
+		constexpr type& operator=(value_type xValue) noexcept
+		{
+			x = xValue;
+			y = xValue;
+			z = xValue;
+			return *this;
+		}
+
+		constexpr type& operator=(const Vector<3, T>& vector) noexcept
 		{
 			x = vector.x;
 			y = vector.y;
 			z = vector.z;
-		}
-
-		constexpr type& operator=(value_type x) noexcept
-		{
-			value[0] = x;
-			value[1] = x;
-			value[2] = x;
 			return *this;
 		}
 
@@ -153,7 +178,7 @@ namespace Math
 
 		[[nodiscard]] inline constexpr auto magnitude() noexcept
 		{
-			return std::pow(sqrMagnitude(), 2);
+			return std::sqrt(sqrMagnitude());
 		}
 
 		[[nodiscard]] constexpr type normalized()
@@ -206,7 +231,7 @@ namespace Math
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 3, bool> = true>
 		constexpr type operator%(const Vector<RightComponentSize, X>& rhs)
 		{
-			return type(x % rhs.x, y % rhs.y, z % rhs.z);
+			return type(MODULO(T, x, rhs.x), MODULO(T, y, rhs.y), MODULO(T, z, rhs.z));
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 3, bool> = true>
@@ -248,16 +273,16 @@ namespace Math
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 3, bool> = true>
 		constexpr type& operator%=(const Vector<RightComponentSize, X>& rhs)
 		{
-			x %= rhs.x;
-			y %= rhs.y;
-			z %= rhs.z;
+			MODULO(T, x, rhs.x);
+			MODULO(T, y, rhs.y);
+			MODULO(T, z, rhs.z);
 			return *this;
 		}
 
 		//
 
-		template <typename T>
-		constexpr type& operator+=(const T& scalar) noexcept
+		template <typename X>
+		constexpr type& operator+=(const X& scalar) noexcept
 		{
 			x += scalar;
 			y += scalar;
@@ -265,8 +290,8 @@ namespace Math
 			return *this;
 		}
 
-		template <typename T>
-		constexpr type& operator-=(const T& scalar) noexcept
+		template <typename X>
+		constexpr type& operator-=(const X& scalar) noexcept
 		{
 			x -= scalar;
 			y -= scalar;
@@ -274,8 +299,8 @@ namespace Math
 			return *this;
 		}
 
-		template <typename T>
-		constexpr type& operator*=(const T& scalar) noexcept
+		template <typename X>
+		constexpr type& operator*=(const X& scalar) noexcept
 		{
 			x *= scalar;
 			y *= scalar;
@@ -283,8 +308,8 @@ namespace Math
 			return *this;
 		}
 
-		template <typename T>
-		constexpr type& operator/=(const T& scalar)
+		template <typename X>
+		constexpr type& operator/=(const X& scalar)
 		{
 			x /= scalar;
 			y /= scalar;
@@ -292,24 +317,15 @@ namespace Math
 			return *this;
 		}
 
-		template <typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
-		constexpr type& operator%=(const T& scalar)
+		template <typename X>
+		constexpr type& operator%=(const X& scalar)
 		{
-			x %= scalar;
-			y %= scalar;
-			z %= scalar;
+			MODULO(T, x, scalar);
+			MODULO(T, y, scalar);
+			MODULO(T, z, scalar);
 			return *this;
 		}
 
-		template <typename T, std::enable_if_t<std::is_floating_point_v<T>, bool> = true>
-		constexpr type& operator%=(const T& scalar)
-		{
-
-			x %= std::fmod(x, scalar);
-			y %= std::fmod(y, scalar);
-			z %= std::fmod(z, scalar);
-			return *this;
-		}
 		//
 
 		[[nodiscard]] inline constexpr bool operator==(const type& rhs) noexcept
@@ -370,7 +386,10 @@ namespace Math
 			return Vector;
 		}
 
-		
+		constexpr operator std::basic_string<char>() noexcept
+		{
+			return this->toString();
+		}
 	};
 
 	template<typename T>
@@ -388,4 +407,5 @@ namespace Math
 			-vector.z);
 	}
 
+	using Vector3 = Vector<3, float>;
 }
