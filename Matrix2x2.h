@@ -1,5 +1,7 @@
 #pragma once
 #include "Matrix.h"
+
+#include "Vector2.h"
 namespace Math
 {
 	template <typename T>

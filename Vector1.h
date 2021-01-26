@@ -7,6 +7,7 @@ namespace Math
 	struct Vector<1, T>
 	{
 		static_assert(CHECK_IS_NUMBER(T));
+		static_assert(CHECK_IS_NOT_CV(T));
 
 		using value_type = typename T;
 		using type = typename Vector<1, T>;
@@ -27,12 +28,6 @@ namespace Math
 
 		}
 		
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		constexpr explicit Vector(const Vector<RightComponentSize, X>& vector) noexcept
-		{
-			x = vector.x;
-		}
-
 		template <typename X>
 		constexpr explicit Vector(const Vector<1, X>& vector) noexcept
 		{
@@ -57,39 +52,46 @@ namespace Math
 			x = vector.x;
 		}
 
-		constexpr operator=(value_type x)  noexcept 
+		constexpr type& operator=(value_type x)  noexcept
 		{
 			value = x;
+			return *this;
 		}
 
+		/*
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		constexpr operator=(const Vector<RightComponentSize, X>& vector) noexcept
+		constexpr type& operator=(const Vector<RightComponentSize, X>& vector) noexcept
 		{
 			x = vector.x;
+			return *this;
+		}
+		*/
+		template <typename X>
+		constexpr type& operator=(const Vector<1, X>& vector) noexcept
+		{
+			x = vector.x;
+			return *this;
 		}
 
 		template <typename X>
-		constexpr operator=(const Vector<1, X>& vector) noexcept
+		constexpr type& operator=(const Vector<2, X>& vector) noexcept
 		{
 			x = vector.x;
+			return *this;
 		}
 
 		template <typename X>
-		constexpr operator=(const Vector<2, X>& vector) noexcept
+		constexpr type& operator=(const Vector<3, X>& vector) noexcept
 		{
 			x = vector.x;
+			return *this;
 		}
 
 		template <typename X>
-		constexpr operator=(const Vector<3, X>& vector) noexcept
+		constexpr type& operator=(const Vector<4, X>& vector) noexcept
 		{
 			x = vector.x;
-		}
-
-		template <typename X>
-		constexpr operator=(const Vector<4, X>& vector) noexcept
-		{
-			x = vector.x;
+			return *this;
 		}
 
 
@@ -114,46 +116,72 @@ namespace Math
 			return value;
 		}
 
-		[[nodiscard]] constexpr value_type& operator[](size_t i) const
+		[[nodiscard]] constexpr const value_type& operator[](size_t i) const
 		{
 			assert(i != 0);
 			return value;
 		}
 
-		
-
-		[[nodiscard]] inline constexpr value_type sqrMagnitude() noexcept
+		[[nodiscard]] inline constexpr auto sqrMagnitude() noexcept
 		{
 			return std::pow(value, 2);
 		}
 
-		[[nodiscard]] inline constexpr value_type magnitude() noexcept
+		[[nodiscard]] inline constexpr auto magnitude() noexcept
 		{
 			return std::pow(sqrMagnitude(), 2);
 		}
 
 		[[nodiscard]] constexpr type normalized()
 		{
-			value_type magnitude = magnitude();
-			if (magnitude == 0)
+			auto mag = magnitude();
+			if (mag == 0)
 				return type{};
 
-			return type{ x / magnitude };
+			return type{ static_cast<value_type>(x / mag) };
 		}
 
 		constexpr type& Normalize()
 		{
-			value_type magnitude = magnitude();
-			if (magnitude == 0)
+			auto mag = magnitude();
+			if (mag == 0)
 				return *this;
 			else
 			{
-				x = x / magnitude;
+				x = static_cast<value_type>(x / mag);
 				return *this;
 			}
 		}
 
-		
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
+		constexpr type operator+(const Vector<RightComponentSize, X>& rhs) noexcept
+		{
+			return type(x + rhs.x);
+		}
+
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
+		constexpr type operator-(const Vector<RightComponentSize, X>& rhs) noexcept
+		{
+			return type(x - rhs.x);
+		}
+
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
+		constexpr type operator*(const Vector<RightComponentSize, X>& rhs) noexcept
+		{
+			return type(x * rhs.x);
+		}
+
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
+		constexpr type operator/(const Vector<RightComponentSize, X>& rhs)
+		{
+			return type(x / rhs.x);
+		}
+
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
+		constexpr type operator%(const Vector<RightComponentSize, X>& rhs)
+		{
+			return type(x % rhs.x);
+		}
 
 		
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
@@ -191,33 +219,46 @@ namespace Math
 			return *this;
 		}
 
-		constexpr type& operator+=(const value_type& scalar) noexcept
+		template <typename T>
+		constexpr type& operator+=(const T& scalar) noexcept
 		{
 			x += scalar;
 			return *this;
 		}
 
-		constexpr type& operator-=(const value_type& scalar) noexcept
+		template <typename T>
+		constexpr type& operator-=(const T& scalar) noexcept
 		{
 			x -= scalar;
 			return *this;
 		}
-		
-		constexpr type& operator*=(const value_type& scalar) noexcept
+
+		template <typename T>
+		constexpr type& operator*=(const T& scalar) noexcept
 		{
 			x *= scalar;
 			return *this;
 		}
 
-		constexpr type& operator/=(const value_type& scalar)
+		template <typename T>
+		constexpr type& operator/=(const T& scalar)
 		{
 			x /= scalar;
 			return *this;
 		}
 
-		constexpr type& operator%=(const value_type& scalar)
+		template <typename T, std::enable_if_t<std::is_integral_v<T>, bool> = true>
+		constexpr type& operator%=(const T& scalar)
 		{
 			x %= scalar;
+			return *this;
+		}
+
+		template <typename T, std::enable_if_t<std::is_floating_point_v<T>, bool> = true>
+		constexpr type& operator%=(const T& scalar)
+		{
+
+			x %= std::fmod(x, scalar);
 			return *this;
 		}
 
@@ -225,12 +266,12 @@ namespace Math
 
 		[[nodiscard]] inline constexpr bool operator==(const type& rhs) noexcept
 		{
-			return this.x == rhs.x;
+			return this->x == rhs.x;
 		}
 
 		[[nodiscard]] constexpr bool operator!=(const type& rhs) noexcept
 		{
-			return this.x != rhs.x;
+			return this->x != rhs.x;
 		}
 
 		
@@ -280,5 +321,17 @@ namespace Math
 		}
 	};
 
-	
+
+	template<typename T>
+	constexpr Vector<1, T> operator+(const Vector<1, T>& vector) noexcept
+	{
+		return vector;
+	}
+
+	template<typename T>
+	constexpr Vector<1, T> operator-(const Vector<1, T>& vector) noexcept
+	{
+		return Vector<1, T>(
+			-vector.x);
+	}
 }
