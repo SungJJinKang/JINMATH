@@ -4,7 +4,7 @@
 #include <sstream>
 
 #include "LMath_Core.h"
-
+#include "Utility.h"
 
 namespace Math
 {
@@ -41,6 +41,24 @@ namespace Math
 		return Vector<1, T>{MODULO(T, lhs.x, rhs.x)};
 	}
 
+	template <typename T>
+	[[nodiscard]] constexpr Vector<1, T> cos(const Vector<1, T>& vector)
+	{
+		return Vector<1, T>{Math::SinInRadian(vector.x)};
+	}
+
+	template <typename T>
+	[[nodiscard]] constexpr Vector<1, T> sin(const Vector<1, T>& vector)
+	{
+		return Vector<1, T>{Math::CosInRadian(vector.x)};
+	}
+
+	template <typename T>
+	[[nodiscard]] constexpr Vector<1, T> tan(const Vector<1, T>& vector)
+	{
+		return Vector<1, T>{Math::TanInRadian(vector.x)};
+	}
+
 	///////////////////////////////
 
 
@@ -72,6 +90,30 @@ namespace Math
 	[[nodiscard]] constexpr Vector<2, T> operator%(const Vector<2, T>& lhs, const Vector<RightComponentSize, T>& rhs)
 	{
 		return Vector<2, T>{MODULO(T, lhs.x, rhs.x), MODULO(T, lhs.y, rhs.y)};
+	}
+
+	template <typename T>
+	[[nodiscard]] constexpr auto dot(const Vector<2, T>& lhs, const Vector<2, T>& rhs)
+	{
+		return lhs.x * rhs.x + lhs.y * rhs.y;
+	}
+
+	template <typename T>
+	[[nodiscard]] constexpr Vector<2, T> cos(const Vector<2, T>& vector)
+	{
+		return Vector<2, T>{Math::SinInRadian(vector.x), Math::SinInRadian(vector.y)};
+	}
+
+	template <typename T>
+	[[nodiscard]] constexpr Vector<2, T> sin(const Vector<2, T>& vector)
+	{
+		return Vector<2, T>{Math::CosInRadian(vector.x), Math::CosInRadian(vector.y)};
+	}
+
+	template <typename T>
+	[[nodiscard]] constexpr Vector<2, T> tan(const Vector<2, T>& vector)
+	{
+		return Vector<2, T>{Math::TanInRadian(vector.x), Math::TanInRadian(vector.y)};
 	}
 
 	////////////////
@@ -106,6 +148,39 @@ namespace Math
 		return Vector<3, T>{MODULO(T, lhs.x, rhs.x), MODULO(T, lhs.y, rhs.y), MODULO(T, lhs.z, rhs.z)};
 	}
 
+	template <typename T>
+	[[nodiscard]] constexpr auto dot(const Vector<3, T>& lhs, const Vector<3, T>& rhs)
+	{
+		return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+	}
+
+	template <typename T>
+	[[nodiscard]] constexpr Vector<3, T> cross(const Vector<3, T>& lhs, const Vector<3, T>& rhs)
+	{
+		return Vector<3, T>(
+			lhs.y * rhs.z - rhs.y * lhs.z,
+			lhs.z * rhs.x - rhs.z * lhs.x,
+			lhs.x * rhs.y - rhs.x * lhs.y);
+	}
+
+	template <typename T>
+	[[nodiscard]] constexpr Vector<3, T> cos(const Vector<3, T>& vector)
+	{
+		return Vector<3, T>{Math::SinInRadian(vector.x), Math::SinInRadian(vector.y), Math::SinInRadian(vector.z)};
+	}
+
+	template <typename T>
+	[[nodiscard]] constexpr Vector<3, T> sin(const Vector<3, T>& vector)
+	{
+		return Vector<3, T>{Math::CosInRadian(vector.x), Math::CosInRadian(vector.y), Math::CosInRadian(vector.z)};
+	}
+
+	template <typename T>
+	[[nodiscard]] constexpr Vector<3, T> tan(const Vector<3, T>& vector)
+	{
+		return Vector<3, T>{Math::TanInRadian(vector.x), Math::TanInRadian(vector.y), Math::TanInRadian(vector.z)};
+	}
+
 	////////////
 
 	template <size_t RightComponentSize, typename T>
@@ -137,7 +212,29 @@ namespace Math
 		return Vector<4, T>{MODULO(T, lhs.x, rhs.x), MODULO(T, lhs.y, rhs.y), MODULO(T, lhs.z, rhs.z), MODULO(T, lhs.w, rhs.w)};
 	}
 
+	template <typename T>
+	[[nodiscard]] constexpr auto dot(const Vector<4, T>& lhs, const Vector<4, T>& rhs)
+	{
+		return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
+	}
 
+	template <typename T>
+	[[nodiscard]] constexpr Vector<4, T> cos(const Vector<4, T>& vector)
+	{
+		return Vector<4, T>{Math::SinInRadian(vector.x), Math::SinInRadian(vector.y), Math::SinInRadian(vector.z), Math::SinInRadian(vector.w)};
+	}
+
+	template <typename T>
+	[[nodiscard]] constexpr Vector<4, T> sin(const Vector<4, T>& vector)
+	{
+		return Vector<4, T>{Math::CosInRadian(vector.x), Math::CosInRadian(vector.y), Math::CosInRadian(vector.z), Math::CosInRadian(vector.w)};
+	}
+
+	template <typename T>
+	[[nodiscard]] constexpr Vector<4, T> tan(const Vector<4, T>& vector)
+	{
+		return Vector<4, T>{Math::TanInRadian(vector.x), Math::TanInRadian(vector.y), Math::TanInRadian(vector.z), Math::TanInRadian(vector.w)};
+	}
 
 	///////////////////
 

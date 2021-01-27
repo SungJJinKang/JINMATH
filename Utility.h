@@ -33,22 +33,22 @@ namespace Math
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Acos(T value)
+	inline constexpr auto Acos(T value)
 	{
 		return std::acos(value);
 	}
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Asin(T value)
+	inline constexpr auto Asin(T value)
 	{
 		return std::asin(value);
 	}
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Atan(T value)
+	inline constexpr auto Atan(T value)
 	{
 		return std::atan(value);
 	}
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Atan2(T value1, T value2)
+	inline constexpr auto Atan2(T value1, T value2)
 	{
 		return std::atan2(value1, value2);
 	}
@@ -70,13 +70,13 @@ namespace Math
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> CosInDegree(T degree)
+	inline constexpr auto CosInDegree(T degree)
 	{
 		return std::cos(DegreeToRadin(degree));
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> CosInRadian(T radian)
+	inline constexpr auto CosInRadian(T radian)
 	{
 		return std::cos(radian);
 	}
@@ -117,25 +117,25 @@ namespace Math
 	
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Log(T value)
+	inline constexpr auto Log(T value)
 	{
 		return std::log(value);
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Log10(T value)
+	inline constexpr auto Log10(T value)
 	{
 		return std::log10(value);
 	}
 
-	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Max(T x, T y)
+	template<typename X, typename Y>
+	inline constexpr auto Max(X x, Y y)
 	{
 		return (std::max)(x, y);
 	}
 
-	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> Min(T x, T y)
+	template<typename X, typename Y>
+	inline constexpr auto Min(X x, Y y)
 	{
 		return (std::min)(x, y);
 	}
@@ -143,54 +143,40 @@ namespace Math
 	template<typename T>
 	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> PerlinNoise(T value);
 
-	template<typename X, typename Y, typename std::enable_if_t<std::is_arithmetic_v<Y> && std::is_floating_point_v<Y>, bool> = true>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<X> && std::is_floating_point_v<X>, X> Pow(X value, Y exp)
-	{
-		return std::pow(value, exp);
-	}
-
-	template<typename X, typename Y, 
-	typename std::enable_if_t<std::is_arithmetic_v<X> && std::is_arithmetic_v<Y>, bool> = true,
-	typename std::enable_if_t<!std::is_floating_point_v<X> || !std::is_floating_point_v<Y>, bool> = true
-	>
-	inline constexpr double Pow(X value, Y exp)
+	template<typename X, typename Y>
+	inline constexpr auto Pow(X value, Y exp)
 	{
 		return std::pow(value, exp);
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> SinInDegree(T degree)
+	inline constexpr auto SinInDegree(T degree)
 	{
 		return std::sin(DegreeToRadin(degree));
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> SinInRadian(T radian)
+	inline constexpr auto SinInRadian(T radian)
 	{
 		return std::sin(radian);
 	}
 
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T)&& std::is_floating_point_v<T>, T> Sqrt(T value)
+	inline constexpr auto Sqrt(T value)
 	{
 		return std::sqrt(value);
 	}
 
-	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T)&& !std::is_floating_point_v<T>, double> Sqrt(T value)
-	{
-		return std::sqrt(value);
-	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> TanInDegree(T degree)
+	inline constexpr auto TanInDegree(T degree)
 	{
 		return std::tan(DegreeToRadin(degree));
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> TanInRadian(T radian)
+	inline constexpr auto TanInRadian(T radian)
 	{
 		return std::tan(radian);
 	}

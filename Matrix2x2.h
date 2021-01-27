@@ -85,7 +85,7 @@ namespace Math
 		{
 		}
 
-		constexpr explicit Matrix(const Matrix<2, 2, T>& matrix) noexcept
+		constexpr explicit Matrix(const type& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1] }
 		{
 		}
@@ -121,7 +121,7 @@ namespace Math
 			return *this;
 		}
 
-		constexpr type& operator=(const Matrix<2, 2, T>& matrix) noexcept
+		constexpr type& operator=(const type& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -398,6 +398,7 @@ namespace Math
 			return this->toString();
 		}
 
+		template <typename U = T, std::enable_if_t<std::is_signed_v<U>, bool> = true>
 		constexpr type inverse()
 		{
 			value_type OneOverDetercolumnsinant = static_cast<value_type>(1) / (

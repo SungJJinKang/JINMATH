@@ -47,7 +47,7 @@ namespace Math
 		{
 		}
 
-		constexpr explicit Matrix(const Matrix<1, 1, T>& matrix) noexcept
+		constexpr explicit Matrix(const type& matrix) noexcept
 			: columns{ matrix.columns[0] }
 		{
 		}
@@ -82,7 +82,7 @@ namespace Math
 			return *this;
 		}
 
-		constexpr type& operator=(const Matrix<1, 1, T>& matrix) noexcept
+		constexpr type& operator=(const type& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			return *this;

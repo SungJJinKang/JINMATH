@@ -99,7 +99,7 @@ namespace Math
 		{
 		}
 
-		constexpr explicit Matrix(const Matrix<4, 4, T>& matrix) noexcept
+		constexpr explicit Matrix(const type& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1], matrix.columns[2], matrix.columns[3] }
 		{
 		}
@@ -137,7 +137,7 @@ namespace Math
 			return *this;
 		}
 
-		constexpr type& operator=(const Matrix<4, 4, T>& matrix) noexcept
+		constexpr type& operator=(const type& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -528,6 +528,7 @@ namespace Math
 			return Result;
 		}
 
+		template <typename U = T, std::enable_if_t<std::is_signed_v<U>, bool> = true>
 		constexpr value_type determinant()
 		{
 			value_type SubFactor00 = columns[2][2] * columns[3][3] - columns[3][2] * columns[2][3];
@@ -548,6 +549,7 @@ namespace Math
 				columns[0][2] * DetCof[2] + columns[0][3] * DetCof[3];
 		}
 
+		
 		constexpr auto trace()
 		{
 			return columns[0][0] + columns[1][1] + columns[2][2] + columns[3][3];

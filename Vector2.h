@@ -42,7 +42,7 @@ namespace Math
 		{
 		}
 
-		constexpr explicit Vector(const Vector<2, T>& vector) noexcept
+		constexpr explicit Vector(const type& vector) noexcept
 			: value{ vector.x , vector.y}
 		{
 		}
@@ -78,7 +78,7 @@ namespace Math
 			return *this;
 		}
 
-		constexpr type& operator=(const Vector<2, T>& vector) noexcept
+		constexpr type& operator=(const type& vector) noexcept
 		{
 			x = vector.x;
 			y = vector.y;
@@ -129,17 +129,17 @@ namespace Math
 			return ss.str();
 		}
 
-		[[nodiscard]] inline static constexpr size_t length(){ return 2; }
+		[[nodiscard]] inline static constexpr size_t componentCount(){ return 2; }
 
 		[[nodiscard]] value_type& operator[](size_t i)
 		{
-			assert(i >= 0 || i < length());
+			assert(i >= 0 || i < componentCount());
 			return value[i];
 		}
 
 		[[nodiscard]] constexpr const value_type& operator[](size_t i) const
 		{
-			assert(i >= 0 || i < length());
+			assert(i >= 0 || i < componentCount());
 			return value[i];
 		}
 		
