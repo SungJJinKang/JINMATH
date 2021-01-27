@@ -30,73 +30,49 @@ namespace Math
 		}
 
 		constexpr explicit Vector(T xValue)  noexcept
+			: value{ xValue , xValue , xValue , xValue }
 		{
-			x = xValue;
-			y = xValue;
-			z = xValue;
-			w = xValue;
 		}
 
 		template <typename X>
 		constexpr Vector(X xValue)  noexcept
+			: value{ static_cast<T>(xValue) , static_cast<T>(xValue) , static_cast<T>(xValue) , static_cast<T>(xValue) }
 		{
-			x = static_cast<T>(xValue);
-			y = static_cast<T>(xValue);
-			z = static_cast<T>(xValue);
-			w = static_cast<T>(xValue);
 		}
 
 		template <typename X, typename Y, typename Z, typename W>
 		constexpr Vector(X xValue, Y yValue, Z zValue, W wValue) noexcept
+			: value{ static_cast<T>(xValue) , static_cast<T>(yValue) , static_cast<T>(zValue) , static_cast<T>(wValue) }
 		{
-			x = static_cast<T>(xValue);
-			y = static_cast<T>(yValue);
-			z = static_cast<T>(zValue);
-			w = static_cast<T>(wValue);
 		}
 			
 		constexpr explicit Vector(const Vector<4, T>& vector) noexcept
+			: value{ vector.x , vector.y, vector.z, vector.w }
 		{
-			x = vector.x;
-			y = vector.y;
-			z = vector.z;
-			w = vector.w;
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<1, X>& vector) noexcept
+			: value{ static_cast<T>(vector.x) , 0, 0, 0 }
 		{
-			x = static_cast<T>(vector.x);
-			y = 0;
-			z = 0;
-			w = 0;
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<2, X>& vector) noexcept
+			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y), 0, 0 }
 		{
-			x = static_cast<T>(vector.x);
-			y = static_cast<T>(vector.y);
-			z = 0;
-			w = 0;
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<3, X>& vector) noexcept
+			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y), static_cast<T>(vector.z), 0 }
 		{
-			x = static_cast<T>(vector.x);
-			y = static_cast<T>(vector.y);
-			z = static_cast<T>(vector.z);
-			w = 0;
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<4, X>& vector) noexcept
+			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y), static_cast<T>(vector.z), static_cast<T>(vector.w) }
 		{
-			x = static_cast<T>(vector.x);
-			y = static_cast<T>(vector.y);
-			z = static_cast<T>(vector.z);
-			w = static_cast<T>(vector.w);
 		}
 
 		constexpr type& operator=(value_type xValue) noexcept

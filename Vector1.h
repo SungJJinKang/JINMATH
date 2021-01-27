@@ -23,44 +23,46 @@ namespace Math
 
 		}
 
-		constexpr explicit Vector(T xValue)  noexcept : value{ xValue }
+		constexpr explicit Vector(T xValue)  noexcept 
+			: value{ xValue }
 		{
 
 		}
 
 		template <typename X>
-		constexpr Vector(X xValue)  noexcept : value{ static_cast<T>(xValue) }
+		constexpr Vector(X xValue)  noexcept 
+			: value{ static_cast<T>(xValue) }
 		{
 
 		}
 		
 		constexpr explicit Vector(const Vector<1, T>& vector) noexcept
+			: value{ vector.x }
 		{
-			x = vector.x;
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<1, X>& vector) noexcept
+			: value{ static_cast<T>(vector.x) }
 		{
-			x = static_cast<T>(vector.x);
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<2, X>& vector) noexcept
+			: value{ static_cast<T>(vector.x) }
 		{
-			x = static_cast<T>(vector.x);
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<3, X>& vector) noexcept
+			: value { static_cast<T>(vector.x) }
 		{
-			x = static_cast<T>(vector.x);
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<4, X>& vector) noexcept
+			: value{ static_cast<T>(vector.x) }
 		{
-			x = static_cast<T>(vector.x);
 		}
 
 		constexpr type& operator=(value_type xValue)  noexcept

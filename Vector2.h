@@ -26,59 +26,49 @@ namespace Math
 		}
 
 		constexpr explicit Vector(T xValue)  noexcept
+			: value{ xValue , xValue }
 		{
-			x = xValue;
-			y = xValue;
 		}
 
 		template <typename X>
 		constexpr Vector(X xValue)  noexcept
+			: value{ static_cast<T>(xValue) , static_cast<T>(xValue) }
 		{
-			x = static_cast<T>(xValue);
-			y = static_cast<T>(xValue);
 		}
-
-		
 
 		template <typename X, typename Y>
 		constexpr Vector(X xValue, Y yValue) noexcept
+			: value{ static_cast<T>(xValue) , static_cast<T>(yValue) }
 		{
-			x = static_cast<T>(xValue);
-			y = static_cast<T>(yValue);
 		}
 
 		constexpr explicit Vector(const Vector<2, T>& vector) noexcept
+			: value{ vector.x , vector.y}
 		{
-			x = vector.x;
-			y = vector.y;
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<1, X>& vector) noexcept
+			: value{ static_cast<T>(vector.x) , 0}
 		{
-			x = static_cast<T>(vector.x);
-			y = 0;
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<2, X>& vector) noexcept
+			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y)}
 		{
-			x = static_cast<T>(vector.x);
-			y = static_cast<T>(vector.y);
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<3, X>& vector) noexcept
+			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y)}
 		{
-			x = static_cast<T>(vector.x);
-			y = static_cast<T>(vector.y);
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<4, X>& vector) noexcept
+			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y)}
 		{
-			x = static_cast<T>(vector.x);
-			y = static_cast<T>(vector.y);
 		}
 
 		constexpr type& operator=(value_type xValue) noexcept
