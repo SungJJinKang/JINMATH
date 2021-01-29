@@ -13,65 +13,61 @@ namespace Math
 		using value_type = typename T;
 		using type = typename Vector<3, T>;
 
-		value_type value[3];
+		union { T x, r; };
+		union { T y, g; };
+		union { T z, b; };
 
-		value_type& x = value[0];
-		value_type& y = value[1];
-		value_type& z = value[2];
+		
 
-		value_type& r = value[0];
-		value_type& g = value[1];
-		value_type& b = value[2];
-
-		constexpr Vector() noexcept : value{}
+		constexpr Vector() noexcept : x{}
 		{
 
 		}
 
 		constexpr explicit Vector(T xValue)  noexcept
-			: value{ xValue , xValue, xValue }
+			: x{ xValue }, y{ xValue }, z{ xValue }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(X xValue)  noexcept
-			: value{ static_cast<T>(xValue) , static_cast<T>(xValue), static_cast<T>(xValue) }
+			: x{ static_cast<T>(xValue) }, y{ static_cast<T>(xValue) }, z{ static_cast<T>(xValue) }
 		{
 		}
 
 
 		template <typename X, typename Y, typename Z>
 		constexpr Vector(X xValue, Y yValue, Z zValue) noexcept
-			: value{ static_cast<T>(xValue) , static_cast<T>(yValue), static_cast<T>(zValue) }
+			: x{ static_cast<T>(xValue) }, y{ static_cast<T>(yValue) }, z{ static_cast<T>(zValue) }
 		{
 		}
 
 		constexpr explicit Vector(const type& vector) noexcept
-			: value{ x , y, z }
+			: x{ x }, y{ y }, z{ z }
 		{
 		}
 		
 		template <typename X>
 		constexpr Vector(const Vector<1, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) , 0, 0 }
+			: x{ static_cast<T>(vector.x) }, y{ 0 }, z{ 0 }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<2, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y), 0 }
+			: x{ static_cast<T>(vector.x) }, y{ static_cast<T>(vector.y) }, z{ 0 }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<3, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y), static_cast<T>(vector.z) }
+			: x{ static_cast<T>(vector.x) }, y{ static_cast<T>(vector.y) }, z{ static_cast<T>(vector.z) }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<4, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y), static_cast<T>(vector.z)}
+			: x{ static_cast<T>(vector.x) }, y{ static_cast<T>(vector.y) }, z{ static_cast<T>(vector.z) }
 		{
 		}
 
@@ -145,13 +141,39 @@ namespace Math
 		[[nodiscard]] value_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < componentCount());
-			return value[i];
+			switch (i)
+			{
+			case 0:
+				return x;
+				break;
+			case 1:
+				return y;
+				break;
+			case 2:
+				return z;
+				break;
+			default:
+				__assume(0);
+			}
 		}
 
 		[[nodiscard]] constexpr const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
-			return value[i];
+			switch (i)
+			{
+			case 0:
+				return x;
+				break;
+			case 1:
+				return y;
+				break;
+			case 2:
+				return z;
+				break;
+			default:
+				__assume(0);
+			}
 		}
 
 

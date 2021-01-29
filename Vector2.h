@@ -12,62 +12,57 @@ namespace Math
 		using value_type = typename T;
 		using type = typename Vector<2, T>;
 
-		value_type value[2];
-		
-		value_type& x = value[0];
-		value_type& y = value[1];
+		union { T x, r; };
+		union { T y, g; };
 
-		value_type& r = value[0];
-		value_type& g = value[1];
-
-		constexpr Vector() noexcept : value{}
+		constexpr Vector() noexcept : x{}, y{}
 		{
 
 		}
 
 		constexpr explicit Vector(T xValue)  noexcept
-			: value{ xValue , xValue }
+			: x{ xValue }, y { xValue }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(X xValue)  noexcept
-			: value{ static_cast<T>(xValue) , static_cast<T>(xValue) }
+			: x{ static_cast<T>(xValue) }, y{ static_cast<T>(xValue) }
 		{
 		}
 
 		template <typename X, typename Y>
 		constexpr Vector(X xValue, Y yValue) noexcept
-			: value{ static_cast<T>(xValue) , static_cast<T>(yValue) }
+			: x{ static_cast<T>(xValue) }, y{ static_cast<T>(yValue) }
 		{
 		}
 
 		constexpr explicit Vector(const type& vector) noexcept
-			: value{ vector.x , vector.y}
+			: x{ vector.x }, y{ vector.y}
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<1, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) , 0}
+			: x{ static_cast<T>(vector.x) }, y{ 0}
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<2, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y)}
+			: x{ static_cast<T>(vector.x) }, y{ static_cast<T>(vector.y)}
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<3, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y)}
+			: x{ static_cast<T>(vector.x) }, y{ static_cast<T>(vector.y)}
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<4, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y)}
+			: x{ static_cast<T>(vector.x) }, y{ static_cast<T>(vector.y)}
 		{
 		}
 
@@ -134,13 +129,33 @@ namespace Math
 		[[nodiscard]] value_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < componentCount());
-			return value[i];
+			switch (i)
+			{
+			case 0:
+				return x;
+				break;
+			case 1:
+				return y;
+				break;
+			default:
+				__assume(0);
+			}
 		}
 
 		[[nodiscard]] constexpr const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
-			return value[i];
+			switch (i)
+			{
+			case 0:
+				return x;
+				break;
+			case 1:
+				return y;
+				break;
+			default:
+				__assume(0);
+			}
 		}
 		
 

@@ -210,7 +210,7 @@ namespace Math
 			return *this;
 		}
 
-		template <typename X>
+		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
 		constexpr type& operator*=(X s) noexcept
 		{
 			*this = type(this->x * s, this->y * s, this->z * s, this->w * s);
@@ -218,7 +218,7 @@ namespace Math
 		}
 
 
-		template <typename X>
+		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
 		constexpr type& operator/=(X s)
 		{
 			*this = type(this->x / s, this->y / s, this->z / s, this->w / s);
@@ -405,7 +405,7 @@ namespace Math
 	//
 
 	template<typename T>
-	constexpr Vector<3, T>operator*(Quaternion<T> const& q, Vector<3, T>const& v)
+	constexpr Vector<3, T>operator*(const Quaternion<T>& q, const Vector<3, T>& v)
 	{
 		const Vector<3, T> QuatVector(q.x, q.y, q.z);
 		const Vector<3, T> uv(cross(QuatVector, v));
@@ -415,7 +415,7 @@ namespace Math
 	}
 
 	template<typename T>
-	constexpr Vector<3, T>operator*(Vector<3, T>const& v, Quaternion<T> const& q)
+	constexpr Vector<3, T>operator*(const Vector<3, T>& v, const Quaternion<T>& q)
 	{
 		return inverse(q) * v;
 	}
@@ -432,20 +432,20 @@ namespace Math
 		return inverse(q) * v;
 	}
 
-	template<typename T>
+	template<typename T, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
 	constexpr Quaternion<T> operator*(const Quaternion<T>& q, const T& s)
 	{
 		return Quaternion<T>(
 			q.w * s, q.x * s, q.y * s, q.z * s);
 	}
 
-	template<typename T>
+	template<typename T, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
 	constexpr Quaternion<T> operator*(const T& s, const Quaternion<T>& q)
 	{
 		return q * s;
 	}
 
-	template<typename T>
+	template<typename T, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
 	constexpr Quaternion<T> operator/(const Quaternion<T>& q, const T& s)
 	{
 		return Quaternion<T>(

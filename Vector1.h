@@ -12,56 +12,52 @@ namespace Math
 		using value_type = typename T;
 		using type = typename Vector<1, T>;
 
-		value_type value;
+		union { T x, r; };
 
-		value_type& x = value;
-
-		value_type& r = value;
-
-		constexpr Vector()  noexcept : value{}
+		constexpr Vector()  noexcept : x{}
 		{
 
 		}
 
 		constexpr explicit Vector(T xValue)  noexcept 
-			: value{ xValue }
+			: x{ xValue }
 		{
 
 		}
 
 		template <typename X>
 		constexpr Vector(X xValue)  noexcept 
-			: value{ static_cast<T>(xValue) }
+			: x{ static_cast<T>(xValue) }
 		{
 
 		}
 		
 		constexpr explicit Vector(const type& vector) noexcept
-			: value{ vector.x }
+			: x{ vector.x }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<1, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) }
+			: x{ static_cast<T>(vector.x) }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<2, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) }
+			: x{ static_cast<T>(vector.x) }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<3, X>& vector) noexcept
-			: value { static_cast<T>(vector.x) }
+			: x { static_cast<T>(vector.x) }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<4, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) }
+			: x{ static_cast<T>(vector.x) }
 		{
 		}
 
@@ -124,13 +120,27 @@ namespace Math
 		[[nodiscard]] value_type& operator[](size_t i)
 		{
 			assert(i == 0);
-			return value;
+			switch (i)
+			{
+			case 0:
+				return x;
+				break;
+			default:
+				__assume(0);
+			}
 		}
 
 		[[nodiscard]] constexpr const value_type& operator[](size_t i) const
 		{
 			assert(i == 0);
-			return value;
+			switch (i)
+			{
+			case 0:
+				return x;
+				break;
+			default:
+				__assume(0);
+			}
 		}
 
 		[[nodiscard]] inline constexpr auto sqrMagnitude() noexcept

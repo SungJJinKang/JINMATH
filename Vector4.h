@@ -12,66 +12,59 @@ namespace Math
 		using value_type = typename T;
 		using type = typename Vector<4, T>;
 
-		value_type value[4];
+		union { T x, r; };
+		union { T y, g; };
+		union { T z, b; };
+		union { T w, a; };
 
-		value_type& x = value[0];
-		value_type& y = value[1];
-		value_type& z = value[2];
-		value_type& w = value[3];
-
-		value_type& r = value[0];
-		value_type& g = value[1];
-		value_type& b = value[2];
-		value_type& a = value[3];
-
-		constexpr Vector() noexcept : value{}
+		constexpr Vector() noexcept : x{ }, y{ }, z{ }, w{ }
 		{
 
 		}
 
 		constexpr explicit Vector(T xValue)  noexcept
-			: value{ xValue , xValue , xValue , xValue }
+			: x{ xValue }, y{ xValue }, z{ xValue }, w{ xValue }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(X xValue)  noexcept
-			: value{ static_cast<T>(xValue) , static_cast<T>(xValue) , static_cast<T>(xValue) , static_cast<T>(xValue) }
+			: x{ static_cast<T>(xValue) }, y{ static_cast<T>(xValue) }, z{ static_cast<T>(xValue) }, w{ static_cast<T>(xValue) }
 		{
 		}
 
 		template <typename X, typename Y, typename Z, typename W>
 		constexpr Vector(X xValue, Y yValue, Z zValue, W wValue) noexcept
-			: value{ static_cast<T>(xValue) , static_cast<T>(yValue) , static_cast<T>(zValue) , static_cast<T>(wValue) }
+			: x{ static_cast<T>(xValue) }, y{ static_cast<T>(yValue) }, z{ static_cast<T>(zValue) }, w{ static_cast<T>(wValue) }
 		{
 		}
 			
 		constexpr explicit Vector(const type& vector) noexcept
-			: value{ vector.x , vector.y, vector.z, vector.w }
+			: x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<1, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) , 0, 0, 0 }
+			: x{ static_cast<T>(vector.x) }, y{ 0 }, z{ 0 }, w{ 0 }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<2, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y), 0, 0 }
+			: x{ static_cast<T>(vector.x) }, y{ static_cast<T>(vector.y) }, z{ 0 }, w{ 0 }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<3, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y), static_cast<T>(vector.z), 0 }
+			: x{ static_cast<T>(vector.x) }, y{ static_cast<T>(vector.y) }, z{ static_cast<T>(vector.z) }, w{ 0 }
 		{
 		}
 
 		template <typename X>
 		constexpr Vector(const Vector<4, X>& vector) noexcept
-			: value{ static_cast<T>(vector.x) , static_cast<T>(vector.y), static_cast<T>(vector.z), static_cast<T>(vector.w) }
+			: x{ static_cast<T>(vector.x) }, y{ static_cast<T>(vector.y) }, z{ static_cast<T>(vector.z) }, w{ static_cast<T>(vector.w) }
 		{
 		}
 
@@ -150,13 +143,45 @@ namespace Math
 		[[nodiscard]] value_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < componentCount());
-			return value[i];
+			switch (i)
+			{
+			case 0:
+				return x;
+				break;
+			case 1:
+				return y;
+				break;
+			case 2:
+				return z;
+				break;
+			case 3:
+				return w;
+				break;
+			default:
+				__assume(0);
+			}
 		}
 
 		[[nodiscard]] constexpr const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
-			return value[i];
+			switch (i)
+			{
+			case 0:
+				return x;
+				break;
+			case 1:
+				return y;
+				break;
+			case 2:
+				return z;
+				break;
+			case 3:
+				return w;
+				break;
+			default:
+				__assume(0);
+			}
 		}
 
 		
