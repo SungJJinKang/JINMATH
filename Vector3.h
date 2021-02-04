@@ -17,7 +17,9 @@ namespace math
 		union { T y, g; };
 		union { T z, b; };
 
-		
+		static type forward;
+		static type right;
+		static type up;
 
 		constexpr Vector() noexcept : x{}
 		{
@@ -34,7 +36,6 @@ namespace math
 			: x{ static_cast<T>(xValue) }, y{ static_cast<T>(xValue) }, z{ static_cast<T>(xValue) }
 		{
 		}
-
 
 		template <typename X, typename Y, typename Z>
 		constexpr Vector(X xValue, Y yValue, Z zValue) noexcept

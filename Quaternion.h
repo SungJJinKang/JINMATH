@@ -14,13 +14,13 @@
 namespace math
 {
 	template <typename T>
-	struct Quaternion
+	struct Quaternion_common
 	{
 		static_assert(CHECK_IS_NUMBER(T));
 		static_assert(CHECK_IS_NOT_CV(T));
 
 		using value_type = typename T;
-		using type = typename Quaternion<T>;
+		using type = typename Quaternion_common<T>;
 
 		Vector<4, T> value;
 
@@ -34,45 +34,45 @@ namespace math
 		value_type& b = value.z;
 		value_type& a = value.w;
 
-		constexpr Quaternion() noexcept : value{}
+		constexpr Quaternion_common() noexcept : value{}
 		{
 
 		}
 	
-		constexpr Quaternion(T xValue, T yValue, T zValue, T wValue) noexcept
+		constexpr Quaternion_common(T xValue, T yValue, T zValue, T wValue) noexcept
 			: value{ xValue , yValue , zValue , wValue }
 		{
 		}
 
 		template <typename X, typename Y, typename Z, typename W>
-		constexpr Quaternion(X xValue, Y yValue, Z zValue, W wValue) noexcept
+		constexpr Quaternion_common(X xValue, Y yValue, Z zValue, W wValue) noexcept
 			: value{ static_cast<T>(xValue) , static_cast<T>(yValue) , static_cast<T>(zValue) , static_cast<T>(wValue) }
 		{
 		}
 
-		constexpr explicit Quaternion(const type& vector) noexcept
+		constexpr explicit Quaternion_common(const type& vector) noexcept
 			: value{ vector.value }
 		{
 		}
 
 		template <typename X>
-		constexpr Quaternion(const Quaternion<X>& vector) noexcept
+		constexpr Quaternion_common(const Quaternion_common<X>& vector) noexcept
 			: value{ vector.value }
 		{
 		}
 
-		constexpr Quaternion(T s, const Vector<3, T>& vector) noexcept
+		constexpr Quaternion_common(T s, const Vector<3, T>& vector) noexcept
 			: value{ vector.x, vector.y, vector.z, s }
 		{
 		}
 
 		template <typename X, typename Y>
-		constexpr Quaternion(X s, const Vector<3, Y>& vector) noexcept
+		constexpr Quaternion_common(X s, const Vector<3, Y>& vector) noexcept
 			: value{ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(vector.z), static_cast<T>(s) }
 		{
 		}
 
-		constexpr Quaternion(const Vector<3, T>& eulerAngle) noexcept
+		constexpr Quaternion_common(const Vector<3, T>& eulerAngle) noexcept
 		{
 			Vector<3, T> c = math::cos(eulerAngle * T(0.5));
 			Vector<3, T> s = math::sin(eulerAngle * T(0.5));
@@ -108,31 +108,31 @@ namespace math
 				biggestIndex = 3;
 			}
 
-			T biggestVal = static_cast<T>(math::Sqrt(fourBiggestSquaredMinus1 + static_cast<T>(1)) * static_cast<T>(0.5));
+			T biggestVal = static_cast<T>(math::sqrt(fourBiggestSquaredMinus1 + static_cast<T>(1)) * static_cast<T>(0.5));
 			T mult = static_cast<T>(0.25) / biggestVal;
 
 			switch (biggestIndex)
 			{
 			case 0:
-				return Quaternion<T>(biggestVal, (m[1][2] - m[2][1]) * mult, (m[2][0] - m[0][2]) * mult, (m[0][1] - m[1][0]) * mult);
+				return Quaternion_common<T>(biggestVal, (m[1][2] - m[2][1]) * mult, (m[2][0] - m[0][2]) * mult, (m[0][1] - m[1][0]) * mult);
 			case 1:
-				return Quaternion<T>((m[1][2] - m[2][1]) * mult, biggestVal, (m[0][1] + m[1][0]) * mult, (m[2][0] + m[0][2]) * mult);
+				return Quaternion_common<T>((m[1][2] - m[2][1]) * mult, biggestVal, (m[0][1] + m[1][0]) * mult, (m[2][0] + m[0][2]) * mult);
 			case 2:
-				return Quaternion<T>((m[2][0] - m[0][2]) * mult, (m[0][1] + m[1][0]) * mult, biggestVal, (m[1][2] + m[2][1]) * mult);
+				return Quaternion_common<T>((m[2][0] - m[0][2]) * mult, (m[0][1] + m[1][0]) * mult, biggestVal, (m[1][2] + m[2][1]) * mult);
 			case 3:
-				return Quaternion<T>((m[0][1] - m[1][0]) * mult, (m[2][0] + m[0][2]) * mult, (m[1][2] + m[2][1]) * mult, biggestVal);
+				return Quaternion_common<T>((m[0][1] - m[1][0]) * mult, (m[2][0] + m[0][2]) * mult, (m[1][2] + m[2][1]) * mult, biggestVal);
 			default: // Silence a -Wswitch-default warning in GCC. Should never actually get here. Assert is just for sanity.
 				assert(false);
-				return Quaternion<T>(1, 0, 0, 0);
+				return Quaternion_common<T>(1, 0, 0, 0);
 			}
 		}
 
-		constexpr explicit Quaternion(const Matrix<3, 3, T>& m) noexcept
+		constexpr explicit Quaternion_common(const Matrix<3, 3, T>& m) noexcept
 		{
 			mat2Quaternion(m);
 		}
 
-		constexpr explicit Quaternion(const Matrix<4, 4, T>& m) noexcept
+		constexpr explicit Quaternion_common(const Matrix<4, 4, T>& m) noexcept
 		{
 			mat2Quaternion(m);
 		}
@@ -144,11 +144,23 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Quaternion<X>& vector) noexcept
+		constexpr type& operator=(const Quaternion_common<X>& vector) noexcept
 		{
 			value = vector.value;
 			return *this;
 		}
+
+		constexpr type& operator=(const Matrix<3, 3, T>& m) noexcept
+		{
+			mat2Quaternion(m);
+			return *this;
+		}
+
+		constexpr type& operator=(const Matrix<4, 4, T>& m) noexcept
+		{
+			mat2Quaternion(m);
+			return *this;
+		} 
 
 		// 		Quaternion(const type&) = default;
 		// 		Quaternion(type&&) = default;
@@ -178,7 +190,7 @@ namespace math
 
 
 		template <typename X>
-		constexpr type& operator+=(const Quaternion<X>& rhs) noexcept
+		constexpr type& operator+=(const Quaternion_common<X>& rhs) noexcept
 		{
 			x += rhs.x;
 			y += rhs.y;
@@ -188,7 +200,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator-=(const Quaternion<X>& rhs) noexcept
+		constexpr type& operator-=(const Quaternion_common<X>& rhs) noexcept
 		{
 			x -= rhs.x;
 			y -= rhs.y;
@@ -198,10 +210,10 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator*=(const Quaternion<X>& rhs) noexcept
+		constexpr type& operator*=(const Quaternion_common<X>& rhs) noexcept
 		{
-			const Quaternion<T> p(*this);
-			const Quaternion<T> q(r);
+			const Quaternion_common<T> p(*this);
+			const Quaternion_common<T> q(rhs);
 
 			this->w = p.w * q.w - p.x * q.x - p.y * q.y - p.z * q.z;
 			this->x = p.w * q.x + p.x * q.w + p.y * q.z - p.z * q.y;
@@ -210,43 +222,49 @@ namespace math
 			return *this;
 		}
 
-		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
+		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
 		constexpr type& operator*=(X s) noexcept
 		{
-			*this = type(this->x * s, this->y * s, this->z * s, this->w * s);
+			x *= s;
+			y *= s;
+			z *= s;
+			w *= s;
 			return *this;
 		}
 
 
-		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
+		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
 		constexpr type& operator/=(X s)
 		{
-			*this = type(this->x / s, this->y / s, this->z / s, this->w / s);
+			x /= s;
+			y /= s;
+			z /= s;
+			w /= s;
 			return *this;
 		}
 
 	
 
 		template <typename X>
-		constexpr type operator+(const Quaternion<X>& rhs) noexcept
+		constexpr type operator+(const Quaternion_common<X>& rhs) noexcept
 		{
 			return *this += rhs;
 		}
 
 		template <typename X>
-		constexpr type operator-(const Quaternion<X>& rhs) noexcept
+		constexpr type operator-(const Quaternion_common<X>& rhs) noexcept
 		{
 			return *this -= rhs;
 		}
 
 		template <typename X>
-		constexpr type operator*(const Quaternion<X>& rhs) noexcept
+		constexpr type operator*(const Quaternion_common<X>& rhs) noexcept
 		{
 			return *this *= rhs;
 		}
 
 		template <typename X>
-		constexpr type operator/(const Quaternion<X>& rhs)
+		constexpr type operator/(const Quaternion_common<X>& rhs)
 		{
 			return *this /= rhs;
 		}
@@ -355,16 +373,16 @@ namespace math
 	};
 
 	template<typename T>
-	constexpr Quaternion<T> dot(const Quaternion<T>& a, const Quaternion<T>& b)
+	constexpr Quaternion_common<T> dot(const Quaternion_common<T>& a, const Quaternion_common<T>& b)
 	{
 		Vector<4, T> tmp(a.w * b.w, a.x * b.x, a.y * b.y, a.z * b.z);
 		return (tmp.x + tmp.y) + (tmp.z + tmp.w);
 	}
 
 	template<typename T>
-	constexpr Quaternion<T> cross(const Quaternion<T>& q1, const Quaternion<T>& q2)
+	constexpr Quaternion_common<T> cross(const Quaternion_common<T>& q1, const Quaternion_common<T>& q2)
 	{
-		return Quaternion<T>(
+		return Quaternion_common<T>(
 			q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z,
 			q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y,
 			q1.w * q2.y + q1.y * q2.w + q1.z * q2.x - q1.x * q2.z,
@@ -372,13 +390,13 @@ namespace math
 	}
 
 	template<typename T>
-	constexpr Quaternion<T> conjugate(const Quaternion<T>& q)
+	constexpr Quaternion_common<T> conjugate(const Quaternion_common<T>& q)
 	{
-		return Quaternion<T>(q.w, -q.x, -q.y, -q.z);
+		return Quaternion_common<T>(q.w, -q.x, -q.y, -q.z);
 	}
 
 	template<typename T>
-	constexpr Quaternion<T> inverse(const Quaternion<T>& q)
+	constexpr Quaternion_common<T> inverse(const Quaternion_common<T>& q)
 	{
 		return conjugate(q) / dot(q, q);
 	}
@@ -386,15 +404,15 @@ namespace math
 
 
 	template<typename T>
-	constexpr Quaternion<T> operator+(const Quaternion<T>& vector) noexcept
+	constexpr Quaternion_common<T> operator+(const Quaternion_common<T>& vector) noexcept
 	{
 		return vector;
 	}
 
 	template<typename T>
-	constexpr Quaternion<T> operator-(const Quaternion<T>& vector) noexcept
+	constexpr Quaternion_common<T> operator-(const Quaternion_common<T>& vector) noexcept
 	{
-		return Quaternion<T>(
+		return Quaternion_common<T>(
 			-vector.x,
 			-vector.y,
 			-vector.z,
@@ -405,7 +423,7 @@ namespace math
 	//
 
 	template<typename T>
-	constexpr Vector<3, T>operator*(const Quaternion<T>& q, const Vector<3, T>& v)
+	constexpr Vector<3, T>operator*(const Quaternion_common<T>& q, const Vector<3, T>& v)
 	{
 		const Vector<3, T> QuatVector(q.x, q.y, q.z);
 		const Vector<3, T> uv(cross(QuatVector, v));
@@ -415,44 +433,44 @@ namespace math
 	}
 
 	template<typename T>
-	constexpr Vector<3, T>operator*(const Vector<3, T>& v, const Quaternion<T>& q)
+	constexpr Vector<3, T>operator*(const Vector<3, T>& v, const Quaternion_common<T>& q)
 	{
 		return inverse(q) * v;
 	}
 
 	template<typename T>
-	constexpr Vector<4, T>operator*(const Quaternion<T>& q, const Vector<4, T>& v)
+	constexpr Vector<4, T>operator*(const Quaternion_common<T>& q, const Vector<4, T>& v)
 	{
 		return Vector<4, T>(q * Vector<3, T>(v), v.w);
 	}
 
 	template<typename T>
-	constexpr Vector<4, T>operator*(const Vector<4, T>& v, const Quaternion<T>& q)
+	constexpr Vector<4, T>operator*(const Vector<4, T>& v, const Quaternion_common<T>& q)
 	{
 		return inverse(q) * v;
 	}
 
 	template<typename T, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
-	constexpr Quaternion<T> operator*(const Quaternion<T>& q, const T& s)
+	constexpr Quaternion_common<T> operator*(const Quaternion_common<T>& q, const T& s)
 	{
-		return Quaternion<T>(
+		return Quaternion_common<T>(
 			q.w * s, q.x * s, q.y * s, q.z * s);
 	}
 
 	template<typename T, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
-	constexpr Quaternion<T> operator*(const T& s, const Quaternion<T>& q)
+	constexpr Quaternion_common<T> operator*(const T& s, const Quaternion_common<T>& q)
 	{
 		return q * s;
 	}
 
 	template<typename T, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
-	constexpr Quaternion<T> operator/(const Quaternion<T>& q, const T& s)
+	constexpr Quaternion_common<T> operator/(const Quaternion_common<T>& q, const T& s)
 	{
-		return Quaternion<T>(
+		return Quaternion_common<T>(
 			q.w / s, q.x / s, q.y / s, q.z / s);
 	}
 
 
-
+	using Quaternion = typename Quaternion_common<float>;
 
 }

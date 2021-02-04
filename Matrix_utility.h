@@ -60,11 +60,63 @@ namespace math
 	template<typename T>
 	math::Matrix<4, 4, T> lookAt(const math::Vector<3, T>& eye, const math::Vector<3, T>& center, const math::Vector<3, T>& up)
 	{
-#       if (CURRENT_COORDINATE_SYSTEM & LEFT_HAND)
+#       if (CURRENT_COORDINATE_SYSTEM == LEFT_HAND)
 		return lookAtLH(eye, center, up);
 #       else
 		return lookAtRH(eye, center, up);
 #       endif
+	}
+
+	template<typename T>
+	math::Matrix<4, 4, T> orthoLH_ZO(T left, T right, T bottom, T top, T zNear, T zFar)
+	{
+		math::Matrix<4, 4, T> Result(1);
+		Result[0][0] = static_cast<T>(2) / (right - left);
+		Result[1][1] = static_cast<T>(2) / (top - bottom);
+		Result[2][2] = static_cast<T>(1) / (zFar - zNear);
+		Result[3][0] = -(right + left) / (right - left);
+		Result[3][1] = -(top + bottom) / (top - bottom);
+		Result[3][2] = -zNear / (zFar - zNear);
+		return Result;
+	}
+
+	template<typename T>
+	math::Matrix<4, 4, T> orthoLH_NO(T left, T right, T bottom, T top, T zNear, T zFar)
+	{
+		math::Matrix<4, 4, T> Result(1);
+		Result[0][0] = static_cast<T>(2) / (right - left);
+		Result[1][1] = static_cast<T>(2) / (top - bottom);
+		Result[2][2] = static_cast<T>(2) / (zFar - zNear);
+		Result[3][0] = -(right + left) / (right - left);
+		Result[3][1] = -(top + bottom) / (top - bottom);
+		Result[3][2] = -(zFar + zNear) / (zFar - zNear);
+		return Result;
+	}
+
+	template<typename T>
+	math::Matrix<4, 4, T> orthoRH_ZO(T left, T right, T bottom, T top, T zNear, T zFar)
+	{
+		math::Matrix<4, 4, T> Result(1);
+		Result[0][0] = static_cast<T>(2) / (right - left);
+		Result[1][1] = static_cast<T>(2) / (top - bottom);
+		Result[2][2] = -static_cast<T>(1) / (zFar - zNear);
+		Result[3][0] = -(right + left) / (right - left);
+		Result[3][1] = -(top + bottom) / (top - bottom);
+		Result[3][2] = -zNear / (zFar - zNear);
+		return Result;
+	}
+
+	template<typename T>
+	math::Matrix<4, 4, T> orthoRH_NO(T left, T right, T bottom, T top, T zNear, T zFar)
+	{
+		math::Matrix<4, 4, T> Result(1);
+		Result[0][0] = static_cast<T>(2) / (right - left);
+		Result[1][1] = static_cast<T>(2) / (top - bottom);
+		Result[2][2] = -static_cast<T>(2) / (zFar - zNear);
+		Result[3][0] = -(right + left) / (right - left);
+		Result[3][1] = -(top + bottom) / (top - bottom);
+		Result[3][2] = -(zFar + zNear) / (zFar - zNear);
+		return Result;
 	}
 
 	template<typename T>
@@ -80,26 +132,97 @@ namespace math
 	}
 
 	template<typename T>
-	math::Matrix<4, 4, T> ortho(const T& left, const T& right, const T& bottom, const T& top, const T& zNear, const T& zFar);
-
-	template<typename T>
-	math::Matrix<4, 4, T> perspective(const T& fovy, const T& aspect, const T& zNear, const T& zFar)
+	math::Matrix<4, 4, T> ortho(T left, T right, T bottom, T top, T zNear, T zFar)
 	{
-		//( CURRENT_CLIP_RANGE & CLIP_RANGE_NEGATIVE_ONE_TO_ONE ) (CURRENT_COORDINATE_SYSTEM & LEFT_HAND)
-
-#		if GLM_CONFIG_CLIP_CONTROL == GLM_CLIP_CONTROL_LH_ZO
-		return perspectiveLH_ZO(fovy, aspect, zNear, zFar);
-#		elif GLM_CONFIG_CLIP_CONTROL == GLM_CLIP_CONTROL_LH_NO
-		return perspectiveLH_NO(fovy, aspect, zNear, zFar);
-#		elif GLM_CONFIG_CLIP_CONTROL == GLM_CLIP_CONTROL_RH_ZO
-		return perspectiveRH_ZO(fovy, aspect, zNear, zFar);
-#		elif GLM_CONFIG_CLIP_CONTROL == GLM_CLIP_CONTROL_RH_NO
-		return perspectiveRH_NO(fovy, aspect, zNear, zFar);
+#		if CURRENT_SETTING == LEFT_HAND_ZERO_TO_ONE
+		return orthoLH_ZO(left, right, bottom, top, zNear, zFar);
+#		elif CURRENT_SETTING == LEFT_HAND_NEGATIVE_ONE_TO_ONE
+		return orthoLH_NO(left, right, bottom, top, zNear, zFar);
+#		elif CURRENT_SETTING == RIGHT_HAND_ZERO_TO_ONE
+		return orthoRH_ZO(left, right, bottom, top, zNear, zFar);
+#		elif CURRENT_SETTING == RIGHT_HAND_NEGATIVE_ONE_TO_ONE
+		return orthoRH_NO(left, right, bottom, top, zNear, zFar);
 #		endif
 	}
 
 	template<typename T>
-	math::Matrix<4, 4, T> perspective(const T& fov, const T& width, const T& height, const T& zNear, const T& zFar);
+	math::Matrix<4, 4, T> perspectiveRH_ZO(T fovy, T aspect, T zNear, T zFar)
+	{
+		assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
+
+		T const tanHalfFovy = tan(fovy / static_cast<T>(2));
+
+		math::Matrix<4, 4, T> Result(static_cast<T>(0));
+		Result[0][0] = static_cast<T>(1) / (aspect * tanHalfFovy);
+		Result[1][1] = static_cast<T>(1) / (tanHalfFovy);
+		Result[2][2] = zFar / (zNear - zFar);
+		Result[2][3] = -static_cast<T>(1);
+		Result[3][2] = -(zFar * zNear) / (zFar - zNear);
+		return Result;
+	}
+
+	template<typename T>
+	math::Matrix<4, 4, T> perspectiveRH_NO(T fovy, T aspect, T zNear, T zFar)
+	{
+		assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
+
+		T const tanHalfFovy = tan(fovy / static_cast<T>(2));
+
+		math::Matrix<4, 4, T> Result(static_cast<T>(0));
+		Result[0][0] = static_cast<T>(1) / (aspect * tanHalfFovy);
+		Result[1][1] = static_cast<T>(1) / (tanHalfFovy);
+		Result[2][2] = -(zFar + zNear) / (zFar - zNear);
+		Result[2][3] = -static_cast<T>(1);
+		Result[3][2] = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
+		return Result;
+	}
+
+	template<typename T>
+	math::Matrix<4, 4, T> perspectiveLH_ZO(T fovy, T aspect, T zNear, T zFar)
+	{
+		assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
+
+		T const tanHalfFovy = tan(fovy / static_cast<T>(2));
+
+		math::Matrix<4, 4, T> Result(static_cast<T>(0));
+		Result[0][0] = static_cast<T>(1) / (aspect * tanHalfFovy);
+		Result[1][1] = static_cast<T>(1) / (tanHalfFovy);
+		Result[2][2] = zFar / (zFar - zNear);
+		Result[2][3] = static_cast<T>(1);
+		Result[3][2] = -(zFar * zNear) / (zFar - zNear);
+		return Result;
+	}
+
+	template<typename T>
+	math::Matrix<4, 4, T> perspectiveLH_NO(T fovy, T aspect, T zNear, T zFar)
+	{
+		assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
+
+		T const tanHalfFovy = tan(fovy / static_cast<T>(2));
+
+		math::Matrix<4, 4, T> Result(static_cast<T>(0));
+		Result[0][0] = static_cast<T>(1) / (aspect * tanHalfFovy);
+		Result[1][1] = static_cast<T>(1) / (tanHalfFovy);
+		Result[2][2] = (zFar + zNear) / (zFar - zNear);
+		Result[2][3] = static_cast<T>(1);
+		Result[3][2] = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
+		return Result;
+	}
+
+	template<typename T>
+	math::Matrix<4, 4, T> perspective(const T& fovy, const T& aspect, const T& zNear, const T& zFar)
+	{
+#		if CURRENT_SETTING == LEFT_HAND_ZERO_TO_ONE
+			return perspectiveLH_ZO(fovy, aspect, zNear, zFar);
+#		elif CURRENT_SETTING == LEFT_HAND_NEGATIVE_ONE_TO_ONE
+			return perspectiveLH_NO(fovy, aspect, zNear, zFar);
+#		elif CURRENT_SETTING == RIGHT_HAND_ZERO_TO_ONE
+			return perspectiveRH_ZO(fovy, aspect, zNear, zFar);
+#		elif CURRENT_SETTING == RIGHT_HAND_NEGATIVE_ONE_TO_ONE
+			return perspectiveRH_NO(fovy, aspect, zNear, zFar);
+#		endif
+	}
+
 
 	/*
 	template<typename T, typename U>
@@ -143,7 +266,7 @@ namespace math
 	template<typename T, typename U>
 	math::Vector<3, T> project(const math::Vector<3, T>& obj, const math::Matrix<4, 4, T>& model, const math::Matrix<4, 4, T>& proj, const math::Vector<4, U>& viewport)
 	{
-#		if CURRENT_CLIP_RANGE & CLIP_RANGE_NEGATIVE_ONE_TO_ONE
+#		if CURRENT_CLIP_RANGE == CLIP_RANGE_NEGATIVE_ONE_TO_ONE
 		return projectZeroToOne(obj, model, proj, viewport);
 #		else
 		return projectNOneToOne(obj, model, proj, viewport);
@@ -154,8 +277,8 @@ namespace math
 	math::Matrix<4, 4, T> rotate(const math::Matrix<4, 4, T>& m, const T& angle, const math::Vector<3, T>& v)
 	{
 		const T a = angle;
-		const T c = math::CosInRadian(a);
-		const T s = math::SinInRadian(a);
+		const T c = math::cosInRadian(a);
+		const T s = math::sinInRadian(a);
 
 		math::Vector<3, T> axis(v.normalized());
 		math::Vector<3, T> temp((T(1) - c) * axis);
