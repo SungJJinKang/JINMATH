@@ -3,7 +3,7 @@
 
 #include "Vector.h"
 
-namespace Math
+namespace math
 {
 	template <size_t ComponentCount1, size_t ComponentCount2, typename T>
 	struct Matrix;

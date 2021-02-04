@@ -1,6 +1,6 @@
 # LightMath_Cpp
 
-Light Math Library For Game Development.
+Light math Library For Game Development.
 
 ## Feature
    * Unstable. Need More Test

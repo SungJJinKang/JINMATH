@@ -1,6 +1,6 @@
 #include "Quaternion.h"
 
-using namespace Math;
+using namespace math;
 
 template struct Quaternion<float>;
 template struct Quaternion<float>;

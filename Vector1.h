@@ -1,7 +1,7 @@
 #pragma once
 #include "Vector.h"
 
-namespace Math
+namespace math
 {
 	template <typename T>
 	struct Vector<1, T>

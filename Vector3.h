@@ -2,7 +2,7 @@
 #include "Vector.h"
 
 
-namespace Math
+namespace math
 {
 	template <typename T>
 	struct Vector<3, T>

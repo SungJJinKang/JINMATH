@@ -4,7 +4,7 @@
 #include "Matrix3x3.h"
 #include "Matrix4x4.h"
 
-using namespace Math;
+using namespace math;
 
 template struct Matrix<1, 1, float>;
 template struct Matrix<2, 2, float>;

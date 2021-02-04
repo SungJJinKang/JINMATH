@@ -4,7 +4,7 @@
 #include "Vector3.h"
 #include "Vector4.h"
 
-using namespace Math;
+using namespace math;
 
 template struct Vector<1, float>;
 template struct Vector<2, float>;

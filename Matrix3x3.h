@@ -2,7 +2,7 @@
 #include "Matrix.h"
 
 #include "Vector3.h"
-namespace Math
+namespace math
 {
 	template <typename T>
 	struct Matrix<3, 3, T>

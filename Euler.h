@@ -2,7 +2,7 @@
 
 #include "LMath_Core.h"
 
-namespace Math
+namespace math
 {
 
 }

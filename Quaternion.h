@@ -11,7 +11,7 @@
 
 #include "Utility.h"
 
-namespace Math
+namespace math
 {
 	template <typename T>
 	struct Quaternion
@@ -74,8 +74,8 @@ namespace Math
 
 		constexpr Quaternion(const Vector<3, T>& eulerAngle) noexcept
 		{
-			Vector<3, T> c = Math::cos(eulerAngle * T(0.5));
-			Vector<3, T> s = Math::sin(eulerAngle * T(0.5));
+			Vector<3, T> c = math::cos(eulerAngle * T(0.5));
+			Vector<3, T> s = math::sin(eulerAngle * T(0.5));
 
 			this->w = c.x * c.y * c.z + s.x * s.y * s.z;
 			this->x = s.x * c.y * c.z - c.x * s.y * s.z;
@@ -108,7 +108,7 @@ namespace Math
 				biggestIndex = 3;
 			}
 
-			T biggestVal = static_cast<T>(Math::Sqrt(fourBiggestSquaredMinus1 + static_cast<T>(1)) * static_cast<T>(0.5));
+			T biggestVal = static_cast<T>(math::Sqrt(fourBiggestSquaredMinus1 + static_cast<T>(1)) * static_cast<T>(0.5));
 			T mult = static_cast<T>(0.25) / biggestVal;
 
 			switch (biggestIndex)
@@ -281,7 +281,7 @@ namespace Math
 
 		operator Matrix<4, 4, T>() const
 		{
-			return Matrix<4, 4, T>(this->operator Math::Matrix<3, 3, T>());
+			return Matrix<4, 4, T>(this->operator math::Matrix<3, 3, T>());
 		}
 
 		[[nodiscard]] inline constexpr bool operator==(const type& rhs) noexcept
