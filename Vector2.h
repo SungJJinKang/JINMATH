@@ -15,6 +15,10 @@ namespace math
 		union { T x, r; };
 		union { T y, g; };
 
+		static const type right;
+		static const type up;
+
+
 		constexpr Vector() noexcept : x{}, y{}
 		{
 

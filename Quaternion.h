@@ -269,8 +269,14 @@ namespace math
 			return *this /= rhs;
 		}
 
+		/*
+		static Matrix<3, 3, T> convert_quaternion_to_matrix(const Quaternion& quaternion)
+		{
 
-		operator Matrix<3, 3, T>() const 
+		}
+		*/
+
+		operator Matrix<3, 3, T>() const noexcept
 		{
 			Matrix<3, 3, T> Result(T(1));
 			T qxx(this->x * this->x);
@@ -297,7 +303,7 @@ namespace math
 			return Result;
 		}
 
-		operator Matrix<4, 4, T>() const
+		operator Matrix<4, 4, T>() const noexcept
 		{
 			return Matrix<4, 4, T>(this->operator math::Matrix<3, 3, T>());
 		}

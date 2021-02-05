@@ -17,11 +17,11 @@ namespace math
 		union { T y, g; };
 		union { T z, b; };
 
-		static type forward;
-		static type right;
-		static type up;
+		static const type forward;
+		static const type right;
+		static const type up;
 
-		constexpr Vector() noexcept : x{}
+		constexpr Vector() noexcept : x{}, y{}, z{}
 		{
 
 		}

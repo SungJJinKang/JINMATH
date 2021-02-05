@@ -2,6 +2,7 @@
 #include "Matrix.h"
 
 #include "Vector4.h"
+#include "Quaternion.h"
 namespace math
 {
 	template <typename T>
@@ -18,6 +19,8 @@ namespace math
 
 		[[nodiscard]] inline static constexpr size_t columnCount()  noexcept { return 4; }
 		col_type columns[4];
+
+		static const type identify;
 
 		constexpr Matrix() noexcept : columns{}
 		{
@@ -44,7 +47,7 @@ namespace math
 		/// <typeparam name="X"></typeparam>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		template <typename X>
+		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
 		constexpr Matrix(X value) noexcept
 			: columns{ 
 			col_type(value, 0, 0, 0), 

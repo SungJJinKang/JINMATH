@@ -19,6 +19,8 @@ namespace math
 		[[nodiscard]] inline static constexpr size_t columnCount()  noexcept { return 2; }
 		col_type columns[2];
 
+		static const type identify;
+
 		constexpr Matrix() noexcept : columns{}
 		{
 
@@ -42,7 +44,7 @@ namespace math
 		/// <typeparam name="X"></typeparam>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		template <typename X>
+		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
 		constexpr Matrix(X value) noexcept
 			: columns{ 
 			col_type(value, 0), 
