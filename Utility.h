@@ -21,16 +21,12 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T) && !std::is_unsigned_v<T>, T> abs(T value)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> abs(T value)
 	{
 		return std::abs(value);
 	}
 
-	template<typename T>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T) && std::is_unsigned_v<T>, T> abs(T value)
-	{
-		return value;
-	}
+	
 
 	template<typename T>
 	inline constexpr auto acos(T value)
@@ -70,13 +66,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr auto cosInDegree(T degree)
-	{
-		return std::cos(DEGREE_TO_RADIAN(degree));
-	}
-
-	template<typename T>
-	inline constexpr auto cosInRadian(T radian)
+	inline constexpr auto cos(T radian)
 	{
 		return std::cos(radian);
 	}
@@ -150,13 +140,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr auto sinInDegree(T degree)
-	{
-		return std::sin(DEGREE_TO_RADIAN(degree));
-	}
-
-	template<typename T>
-	inline constexpr auto sinInRadian(T radian)
+	inline constexpr auto sin(T radian)
 	{
 		return std::sin(radian);
 	}
@@ -175,13 +159,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr auto tanInDegree(T degree)
-	{
-		return std::tan(DEGREE_TO_RADIAN(degree));
-	}
-
-	template<typename T>
-	inline constexpr auto tanInRadian(T radian)
+	inline constexpr auto tan(T radian)
 	{
 		return std::tan(radian);
 	}

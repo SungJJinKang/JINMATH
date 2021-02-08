@@ -44,19 +44,19 @@ namespace math
 	template <typename T>
 	[[nodiscard]] constexpr Vector<1, T> cos(const Vector<1, T>& vector)
 	{
-		return Vector<1, T>{math::sinInRadian(vector.x)};
+		return Vector<1, T>{math::sin(vector.x)};
 	}
 
 	template <typename T>
 	[[nodiscard]] constexpr Vector<1, T> sin(const Vector<1, T>& vector)
 	{
-		return Vector<1, T>{math::cosInRadian(vector.x)};
+		return Vector<1, T>{math::cos(vector.x)};
 	}
 
 	template <typename T>
 	[[nodiscard]] constexpr Vector<1, T> tan(const Vector<1, T>& vector)
 	{
-		return Vector<1, T>{math::tanInRadian(vector.x)};
+		return Vector<1, T>{math::tan(vector.x)};
 	}
 
 	template <typename T>
@@ -113,19 +113,19 @@ namespace math
 	template <typename T>
 	[[nodiscard]] constexpr Vector<2, T> cos(const Vector<2, T>& vector)
 	{
-		return Vector<2, T>{math::sinInRadian(vector.x), math::sinInRadian(vector.y)};
+		return Vector<2, T>{math::sin(vector.x), math::sin(vector.y)};
 	}
 
 	template <typename T>
 	[[nodiscard]] constexpr Vector<2, T> sin(const Vector<2, T>& vector)
 	{
-		return Vector<2, T>{math::cosInRadian(vector.x), math::cosInRadian(vector.y)};
+		return Vector<2, T>{math::cos(vector.x), math::cos(vector.y)};
 	}
 
 	template <typename T>
 	[[nodiscard]] constexpr Vector<2, T> tan(const Vector<2, T>& vector)
 	{
-		return Vector<2, T>{math::tanInRadian(vector.x), math::tanInRadian(vector.y)};
+		return Vector<2, T>{math::tan(vector.x), math::tan(vector.y)};
 	}
 	
 	template <typename T>
@@ -196,19 +196,19 @@ namespace math
 	template <typename T>
 	[[nodiscard]] constexpr Vector<3, T> cos(const Vector<3, T>& vector)
 	{
-		return Vector<3, T>{math::sinInRadian(vector.x), math::sinInRadian(vector.y), math::sinInRadian(vector.z)};
+		return Vector<3, T>{math::sin(vector.x), math::sin(vector.y), math::sin(vector.z)};
 	}
 
 	template <typename T>
 	[[nodiscard]] constexpr Vector<3, T> sin(const Vector<3, T>& vector)
 	{
-		return Vector<3, T>{math::cosInRadian(vector.x), math::cosInRadian(vector.y), math::cosInRadian(vector.z)};
+		return Vector<3, T>{math::cos(vector.x), math::cos(vector.y), math::cos(vector.z)};
 	}
 
 	template <typename T>
 	[[nodiscard]] constexpr Vector<3, T> tan(const Vector<3, T>& vector)
 	{
-		return Vector<3, T>{math::tanInRadian(vector.x), math::tanInRadian(vector.y), math::tanInRadian(vector.z)};
+		return Vector<3, T>{math::tan(vector.x), math::tan(vector.y), math::tan(vector.z)};
 	}
 
 	template <typename T>
@@ -269,19 +269,19 @@ namespace math
 	template <typename T>
 	[[nodiscard]] constexpr Vector<4, T> cos(const Vector<4, T>& vector)
 	{
-		return Vector<4, T>{math::sinInRadian(vector.x), math::sinInRadian(vector.y), math::sinInRadian(vector.z), math::sinInRadian(vector.w)};
+		return Vector<4, T>{math::sin(vector.x), math::sin(vector.y), math::sin(vector.z), math::sin(vector.w)};
 	}
 
 	template <typename T>
 	[[nodiscard]] constexpr Vector<4, T> sin(const Vector<4, T>& vector)
 	{
-		return Vector<4, T>{math::cosInRadian(vector.x), math::cosInRadian(vector.y), math::cosInRadian(vector.z), math::cosInRadian(vector.w)};
+		return Vector<4, T>{math::cos(vector.x), math::cos(vector.y), math::cos(vector.z), math::cos(vector.w)};
 	}
 
 	template <typename T>
 	[[nodiscard]] constexpr Vector<4, T> tan(const Vector<4, T>& vector)
 	{
-		return Vector<4, T>{math::tanInRadian(vector.x), math::tanInRadian(vector.y), math::tanInRadian(vector.z), math::tanInRadian(vector.w)};
+		return Vector<4, T>{math::tan(vector.x), math::tan(vector.y), math::tan(vector.z), math::tan(vector.w)};
 	}
 
 	template <typename T>

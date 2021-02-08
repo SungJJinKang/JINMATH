@@ -19,6 +19,11 @@ namespace math
 		[[nodiscard]] inline static constexpr size_t columnCount()  noexcept { return 2; }
 		col_type columns[2];
 
+		col_type* data()
+		{
+			return columns;
+		}
+
 		static const type identify;
 
 		constexpr Matrix() noexcept : columns{}

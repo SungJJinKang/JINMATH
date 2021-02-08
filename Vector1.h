@@ -14,6 +14,11 @@ namespace math
 
 		union { T x, r; };
 
+		T* data()
+		{
+			return &x;
+		}
+
 		constexpr Vector()  noexcept : x{}
 		{
 

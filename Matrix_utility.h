@@ -164,9 +164,9 @@ namespace math
 	template<typename T>
 	math::Matrix<4, 4, T> perspectiveRH_NO(T fovy, T aspect, T zNear, T zFar)
 	{
-		assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
+		assert(math::abs(aspect - math::epsilon<T>()) > static_cast<T>(0));
 
-		T const tanHalfFovy = tan(fovy / static_cast<T>(2));
+		T const tanHalfFovy = math::tan(fovy / static_cast<T>(2));
 
 		math::Matrix<4, 4, T> Result(static_cast<T>(0));
 		Result[0][0] = static_cast<T>(1) / (aspect * tanHalfFovy);
@@ -277,8 +277,8 @@ namespace math
 	math::Matrix<4, 4, T> rotate(const math::Matrix<4, 4, T>& m, const T& angle, const math::Vector<3, T>& v)
 	{
 		const T a = angle;
-		const T c = math::cosInRadian(a);
-		const T s = math::sinInRadian(a);
+		const T c = math::cos(a);
+		const T s = math::sin(a);
 
 		math::Vector<3, T> axis(v.normalized());
 		math::Vector<3, T> temp((T(1) - c) * axis);

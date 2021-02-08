@@ -17,6 +17,11 @@ namespace math
 		union { T y, g; };
 		union { T z, b; };
 
+		T* data()
+		{
+			return &x;
+		}
+
 		static const type forward;
 		static const type right;
 		static const type up;
