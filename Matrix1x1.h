@@ -19,9 +19,9 @@ namespace math
 		[[nodiscard]] inline static constexpr size_t columnCount()  noexcept { return 1; }
 		col_type columns[1]; // don't change to column
 
-		col_type* data()
+		const T* data() const
 		{
-			return columns;
+			return &(columns[0].x);
 		}
 
 		static const type identify;

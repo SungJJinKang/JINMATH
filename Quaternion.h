@@ -39,6 +39,17 @@ namespace math
 
 		}
 	
+		constexpr Quaternion_common(T value) noexcept
+			: value{ value , value , value , value }
+		{
+		}
+
+		template <typename X>
+		constexpr Quaternion_common(X xValue) noexcept
+			: value{ static_cast<T>(value) , static_cast<T>(value) , static_cast<T>(value) , static_cast<T>(value) }
+		{
+		}
+
 		constexpr Quaternion_common(T xValue, T yValue, T zValue, T wValue) noexcept
 			: value{ xValue , yValue , zValue , wValue }
 		{

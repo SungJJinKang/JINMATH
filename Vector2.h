@@ -15,7 +15,7 @@ namespace math
 		union { T x, r; };
 		union { T y, g; };
 
-		T* data()
+		const T* data() const
 		{
 			return &x;
 		}
