@@ -187,16 +187,13 @@ namespace math
 			return type{ static_cast<value_type>(x / mag), static_cast<value_type>(y / mag) };
 		}
 
-		constexpr type& Normalize()
+		constexpr void Normalize()
 		{
 			auto mag = magnitude();
-			if (mag == 0)
-				return *this;
-			else
+			if (mag > math::epsilon<T>())
 			{
 				x = static_cast<value_type>(x / mag);
 				y = static_cast<value_type>(y / mag);
-				return *this;
 			}
 		}
 

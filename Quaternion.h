@@ -34,7 +34,7 @@ namespace math
 		value_type& b = value.z;
 		value_type& a = value.w;
 
-		constexpr Quaternion_common() noexcept : value{}
+		constexpr Quaternion_common() noexcept : value{ 0,0,0,1.0f }
 		{
 
 		}
@@ -478,6 +478,12 @@ namespace math
 	constexpr Quaternion_common<T> operator*(const T& s, const Quaternion_common<T>& q)
 	{
 		return q * s;
+	}
+
+	template<typename T, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
+	constexpr Quaternion_common<T> operator*(const Quaternion_common<T>& p, const Quaternion_common<T>& q)
+	{
+		return p * q;
 	}
 
 	template<typename T, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>

@@ -163,10 +163,9 @@ namespace math
 			return type{ 1 };
 		}
 
-		constexpr type& Normalize()
+		constexpr void Normalize()
 		{
 			x = 1;
-			return *this;
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
