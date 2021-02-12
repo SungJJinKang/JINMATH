@@ -77,6 +77,7 @@ namespace math
 		{
 		}
 
+
 		template <typename X, typename Y>
 		constexpr Quaternion_common(X s, const Vector<3, Y>& vector) noexcept
 			: value{ static_cast<T>(vector.x), static_cast<T>(vector.y), static_cast<T>(vector.z), static_cast<T>(s) }
@@ -85,13 +86,7 @@ namespace math
 
 		constexpr Quaternion_common(const Vector<3, T>& eulerAngle) noexcept
 		{
-			Vector<3, T> c = math::cos(eulerAngle * T(0.5));
-			Vector<3, T> s = math::sin(eulerAngle * T(0.5));
-
-			this->w = c.x * c.y * c.z + s.x * s.y * s.z;
-			this->x = s.x * c.y * c.z - c.x * s.y * s.z;
-			this->y = c.x * s.y * c.z + s.x * c.y * s.z;
-			this->z = c.x * c.y * s.z - s.x * s.y * c.z;
+			*this = type::eulerAngle(eulerAngle);
 		}
 
 		static constexpr type mat2Quaternion(const Matrix<3, 3, T>& m)
@@ -161,17 +156,24 @@ namespace math
 			return *this;
 		}
 
+		constexpr type& operator=(const Matrix<4, 4, T>& m) noexcept
+		{
+			mat2Quaternion(m);
+			return *this;
+		}
+
 		constexpr type& operator=(const Matrix<3, 3, T>& m) noexcept
 		{
 			mat2Quaternion(m);
 			return *this;
 		}
 
-		constexpr type& operator=(const Matrix<4, 4, T>& m) noexcept
+		constexpr type& operator=(const Vector<3, T>& eulerAngle) noexcept
 		{
-			mat2Quaternion(m);
+			*this = type::eulerAngle(eulerAngle);
 			return *this;
 		} 
+
 
 		// 		Quaternion(const type&) = default;
 		// 		Quaternion(type&&) = default;
@@ -384,9 +386,77 @@ namespace math
 			return this->toString();
 		}
 
-		
+		/*
+		template<typename T>
+		static T angle(Quaternion_common<T> const& x)
+		{
+			if (abs(x.w) > cos_one_over_two<T>())
+			{
+				T const a = asin(sqrt(x.x * x.x + x.y * x.y + x.z * x.z)) * static_cast<T>(2);
+				if (x.w < static_cast<T>(0))
+					return pi<T>() * static_cast<T>(2) - a;
+				return a;
+			}
 
+			return acos(x.w) * static_cast<T>(2);
+		}
 
+		template<typename T>
+		static Vector<3, T> axis(qua<T, Q> const& x)
+		{
+			T const tmp1 = static_cast<T>(1) - x.w * x.w;
+			if (tmp1 <= static_cast<T>(0))
+				return vec<3, T, Q>(0, 0, 1);
+			T const tmp2 = static_cast<T>(1) / sqrt(tmp1);
+			return vec<3, T, Q>(x.x * tmp2, x.y * tmp2, x.z * tmp2);
+		}
+		*/
+
+		static Quaternion_common<T> angleAxis(const T& angle, const Vector<3, T>& v)
+		{
+			const T a{ angle };
+			const T s{ math::sin(a * static_cast<T>(0.5)) };
+
+			return Quaternion_common<T>(math::cos(a * static_cast<T>(0.5)), v * s);
+		}
+
+		template<typename X, typename Y>
+		static Quaternion_common<T> angleAxis(const X& angle, const Vector<3, Y>& v)
+		{
+			const T a{ angle };
+			const T s{ math::sin(a * static_cast<T>(0.5)) };
+
+			return Quaternion_common<T>(math::cos(a * static_cast<T>(0.5)), v * s);
+		}
+
+		static Quaternion_common<T> eulerAngle(const Vector<3, T>& eulerAngle) noexcept
+		{
+			Vector<3, T> c = math::cos(eulerAngle * T(0.5));
+			Vector<3, T> s = math::sin(eulerAngle * T(0.5));
+
+			return Quaternion_common<T>
+			{
+				s.x* c.y* c.z - c.x * s.y * s.z,
+				c.x* s.y* c.z + s.x * c.y * s.z,
+				c.x* c.y* s.z - s.x * s.y * c.z,
+				c.x* c.y* c.z + s.x * s.y * s.z
+			};
+		}
+
+		template<typename X>
+		static Quaternion_common<T> eulerAngle(const Vector<3, X>& eulerAngle) noexcept
+		{
+			Vector<3, T> c = math::cos(eulerAngle * T(0.5));
+			Vector<3, T> s = math::sin(eulerAngle * T(0.5));
+
+			return Quaternion_common<T>
+			{
+				s.x * c.y * c.z - c.x * s.y * s.z,
+				c.x * s.y * c.z + s.x * c.y * s.z,
+				c.x * c.y * s.z - s.x * s.y * c.z,
+				c.x * c.y * c.z + s.x * s.y * s.z
+			};
+		}
 	};
 
 	template<typename T>

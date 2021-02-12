@@ -99,7 +99,7 @@ namespace math
 
 		template <typename X>
 		constexpr Matrix(const Matrix<1, 1, X>& matrix) noexcept
-			: columns{ matrix.columns[0], 0 }
+			: columns{ matrix.columns[0], {0, 1} }
 		{
 		}
 
