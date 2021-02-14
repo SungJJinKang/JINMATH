@@ -354,6 +354,18 @@ namespace math
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1];
 		}
 
+		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
+		{
+			return this->columns[0] == number && this->columns[1] == number;
+		}
+
+		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
+		{
+			return this->columns[0] != number || this->columns[1] != number;
+		}
+
 		/// <summary>
 		/// prefix
 		/// </summary>

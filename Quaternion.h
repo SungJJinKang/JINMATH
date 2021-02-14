@@ -3,6 +3,7 @@
 #include "LMath_Core.h"
 
 #include "Vector.h"
+#include "Vector2.h"
 #include "Vector3.h"
 #include "Vector4.h"
 
@@ -331,6 +332,18 @@ namespace math
 			return this->x != rhs.x || this->y != rhs.y || this->z != rhs.z || this->w != rhs.w;
 		}
 
+		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
+		{
+			return this->x == number && this->y == number && this->z == number && this->w == number;
+		}
+
+		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
+		{
+			return this->x != number || this->y != number || this->z != number || this->w != number;
+		}
+
 		/// <summary>
 		/// prefix
 		/// </summary>
@@ -444,7 +457,7 @@ namespace math
 		}
 
 		template<typename X>
-		static Quaternion_common<T> eulerAngle(const Vector<3, X>& eulerAngle) noexcept
+		static Quaternion_common<T> EulerAngleToQuaternion(const Vector<3, X>& eulerAngle) noexcept
 		{
 			Vector<3, T> c = math::cos(eulerAngle * T(0.5));
 			Vector<3, T> s = math::sin(eulerAngle * T(0.5));
@@ -456,6 +469,49 @@ namespace math
 				c.x * c.y * s.z - s.x * s.y * c.z,
 				c.x * c.y * c.z + s.x * s.y * s.z
 			};
+		}
+
+
+		template<typename T>
+		static T roll(const Quaternion_common<T>& q)
+		{
+			const T y = static_cast<T>(2) * (q.x * q.y + q.w * q.z);
+			const T x = q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z;
+
+			T epsilon = math::epsilon<T>();
+			if (Vector<2, T>(x, y) == epsilon && Vector<2, T>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
+			{
+				return static_cast<T>(0);
+			}
+			return static_cast<T>(math::atan2(y, x));
+		}
+
+		template<typename T>
+		static T pitch(const Quaternion_common<T>& q)
+		{
+			//return T(atan(T(2) * (q.y * q.z + q.w * q.x).w * q.w - q.x * q.x - q.y * q.y + q.z * q.z));
+			const T y = static_cast<T>(2) * (q.y * q.z + q.w * q.x);
+			const T x = q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z;
+
+			T epsilon = math::epsilon<T>();
+			if (Vector<2, T>(x, y) == epsilon && Vector<2, T>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
+			{
+				return static_cast<T>(static_cast<T>(2) * math::atan2(q.x, q.w));
+			}
+
+			return static_cast<T>(math::atan2(y, x));
+		}
+
+		template<typename T>
+		static T yaw(const Quaternion_common<T>& q)
+		{
+			return math::asin(math::clamp(static_cast<T>(-2) * (q.x * q.z - q.w * q.y), static_cast<T>(-1), static_cast<T>(1)));
+		}
+
+		template<typename T>
+		static Vector<3, T> QuaternionToEulerAngle(const Quaternion_common<T>& x)
+		{
+			return Vector<3, T>(Quaternion_common<T>::pitch(x), Quaternion_common<T>::yaw(x), Quaternion_common<T>::roll(x));
 		}
 	};
 
@@ -563,6 +619,39 @@ namespace math
 			q.w / s, q.x / s, q.y / s, q.z / s);
 	}
 
+
+	template<typename T>
+	T roll(const Quaternion_common<T>& q)
+	{
+		const T y = static_cast<T>(2) * (q.x * q.y + q.w * q.z);
+		const T x = q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z;
+
+		if (all(eqaul(Vector<2, T>(x, y), Vector<2, T>(0), epsilon<T>()))) //avoid atan2(0,0) - handle singularity - Matiis
+			return static_cast<T>(0);
+
+		return static_cast<T>(math::atan(y, x));
+	}
+
+	template<typename T>
+	T pitch(const Quaternion_common<T>& q)
+	{
+		//return T(atan(T(2) * (q.y * q.z + q.w * q.x).w * q.w - q.x * q.x - q.y * q.y + q.z * q.z));
+		const T y = static_cast<T>(2) * (q.y * q.z + q.w * q.x);
+		const T x = q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z;
+
+		if (all(eqaul(Vector<2, T>(x, y), Vector<2, T>(0), math::epsilon<T>()))) //avoid atan2(0,0) - handle singularity - Matiis
+			return static_cast<T>(static_cast<T>(2) * math::atan(q.x.w));
+
+		return static_cast<T>(math::atan(y, x));
+	}
+
+	template<typename T>
+	T yaw(const Quaternion_common<T>& q)
+	{
+		return math::asin(math::clamp(static_cast<T>(-2) * (q.x * q.z - q.w * q.y), static_cast<T>(-1), static_cast<T>(1)));
+	}
+
+	
 
 	using Quaternion = typename Quaternion_common<float>;
 

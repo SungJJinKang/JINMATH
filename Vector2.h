@@ -283,6 +283,18 @@ namespace math
 			return this->x != rhs.x || this->y != rhs.y;
 		}
 
+		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
+		{
+			return this->x == number && this->y == number;
+		}
+
+		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
+		{
+			return this->x != number || this->y != number;
+		}
+
 		//
 
 		template <typename X>
