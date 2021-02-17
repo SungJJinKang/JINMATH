@@ -98,6 +98,18 @@ namespace math
 		return Vector<1, T>{inverseSqrt(vector.x)};
 	}
 
+	template<typename T>
+	constexpr Vector<1, T> max(const Vector<1, T>& vector1, const Vector<1, T>& vector2)
+	{
+		return Vector<1, T>(math::max(vector1.x, vector2.x));
+	}
+
+	template<typename T>
+	constexpr Vector<1, T> min(const Vector<1, T>& vector1, const Vector<1, T>& vector2)
+	{
+		return Vector<1, T>(math::min(vector1.x, vector2.x));
+	}
+
 	///////////////////////////////
 
 
@@ -183,6 +195,18 @@ namespace math
 	[[nodiscard]] constexpr Vector<2, T> normalize(const Vector<2, T>& vector)
 	{
 		return vector * inverseSqrt(dot(vector, vector));
+	}
+
+	template<typename T>
+	constexpr Vector<2, T> max(const Vector<2, T>& vector1, const Vector<2, T>& vector2)
+	{
+		return Vector<2, T>(math::max(vector1.x, vector2.x), math::max(vector1.y, vector2.y));
+	}
+
+	template<typename T>
+	constexpr Vector<2, T> min(const Vector<2, T>& vector1, const Vector<2, T>& vector2)
+	{
+		return Vector<2, T>(math::min(vector1.x, vector2.x), math::min(vector1.y, vector2.y));
 	}
 
 	////////////////
@@ -280,6 +304,18 @@ namespace math
 		return vector * inverseSqrt(dot(vector, vector));
 	}
 
+	template<typename T>
+	constexpr Vector<3, T> max(const Vector<3, T>& vector1, const Vector<3, T>& vector2)
+	{
+		return Vector<3, T>(math::max(vector1.x, vector2.x), math::max(vector1.y, vector2.y), math::max(vector1.z, vector2.z));
+	}
+
+	template<typename T>
+	constexpr Vector<3, T> min(const Vector<3, T>& vector1, const Vector<3, T>& vector2)
+	{
+		return Vector<3, T>(math::min(vector1.x, vector2.x), math::min(vector1.y, vector2.y), math::min(vector1.z, vector2.z));
+	}
+
 	////////////
 
 	template <size_t RightComponentSize, typename T>
@@ -363,6 +399,18 @@ namespace math
 	[[nodiscard]] constexpr Vector<4, T> normalize(const Vector<4, T>& vector)
 	{
 		return vector * inverseSqrt(dot(vector, vector));
+	}
+
+	template<typename T>
+	constexpr Vector<4, T> max(const Vector<4, T>& vector1, const Vector<4, T>& vector2)
+	{
+		return Vector<4, T>(math::max(vector1.x, vector2.x), math::max(vector1.y, vector2.y), math::max(vector1.z, vector2.z), math::max(vector1.w, vector2.w));
+	}
+
+	template<typename T>
+	constexpr Vector<4, T> min(const Vector<4, T>& vector1, const Vector<4, T>& vector2)
+	{
+		return Vector<4, T>(math::min(vector1.x, vector2.x), math::min(vector1.y, vector2.y), math::min(vector1.z, vector2.z), math::min(vector1.w, vector2.w));
 	}
 	
 	///////////////////
