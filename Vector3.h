@@ -49,7 +49,7 @@ namespace math
 		}
 
 		constexpr explicit Vector(const type& vector) noexcept
-			: x{ x }, y{ y }, z{ z }
+			: x{ vector.x }, y{ vector.y }, z{ vector.z }
 		{
 		}
 		
