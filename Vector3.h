@@ -183,17 +183,17 @@ namespace math
 		}
 
 
-		[[nodiscard]] inline constexpr auto sqrMagnitude() noexcept
+		[[nodiscard]] inline constexpr auto sqrMagnitude() const noexcept
 		{
-			return std::pow(x, 2) + std::pow(y, 2) + std::pow(z, 2);
+			return math::pow(x, 2) + math::pow(y, 2) + math::pow(z, 2);
 		}
 
-		[[nodiscard]] inline constexpr auto magnitude() noexcept
+		[[nodiscard]] inline constexpr auto magnitude() const noexcept
 		{
-			return std::sqrt(sqrMagnitude());
+			return math::sqrt(sqrMagnitude());
 		}
 
-		[[nodiscard]] constexpr type normalized()
+		[[nodiscard]] constexpr type normalized() const
 		{
 			auto mag = magnitude();
 			if (mag == 0)
