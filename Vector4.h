@@ -148,7 +148,7 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] inline static constexpr size_t componentCount()  noexcept { return 4; }
+		[[nodiscard]] inline static constexpr size_t componentCount() noexcept { return 4; }
 
 		[[nodiscard]] value_type& operator[](size_t i)
 		{
@@ -196,14 +196,14 @@ namespace math
 
 		
 
-		[[nodiscard]] inline constexpr auto sqrMagnitude() noexcept
+		[[nodiscard]] inline constexpr auto sqrMagnitude() const noexcept
 		{
-			return std::pow(x, 2) + std::pow(y, 2) + std::pow(z, 2) + std::pow(w, 2);
+			return math::pow(x, 2) + math::pow(y, 2) + math::pow(z, 2) + math::pow(w, 2);
 		}
 
-		[[nodiscard]] inline constexpr auto magnitude() noexcept
+		[[nodiscard]] inline constexpr auto magnitude() const noexcept
 		{
-			return std::sqrt(sqrMagnitude());
+			return math::sqrt(sqrMagnitude());
 		}
 
 		[[nodiscard]] constexpr type normalized() const
