@@ -14,7 +14,7 @@ namespace math
 	template <size_t ComponentSize, typename T, typename Floating, typename std::enable_if_t<std::is_floating_point_v<Floating>, bool> = true>
 	[[nodiscard]] constexpr Vector<ComponentSize, T> lerpUnClamped(const Vector<ComponentSize, T>& start, const Vector<ComponentSize, T>& end, Floating t) noexcept
 	{
-		return start + (end - start) * t
+		return start + (end - start) * t;
 	}
 
 	template <size_t ComponentSize, typename T, typename Floating, typename std::enable_if_t<std::is_floating_point_v<Floating>, bool> = true>
