@@ -193,7 +193,7 @@ namespace math
 			return std::sqrt(sqrMagnitude());
 		}
 
-		[[nodiscard]] constexpr type normalized()
+		[[nodiscard]] constexpr type normalized() const
 		{
 			auto mag = magnitude();
 			if (mag == 0)

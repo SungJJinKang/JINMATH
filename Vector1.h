@@ -158,7 +158,7 @@ namespace math
 			return x;
 		}
 
-		[[nodiscard]] constexpr type normalized()
+		[[nodiscard]] constexpr type normalized() const
 		{
 			return type{ 1 };
 		}

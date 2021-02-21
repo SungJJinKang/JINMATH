@@ -11,6 +11,18 @@ namespace math
 	template <size_t ComponentCount, typename T>
 	struct Vector;
 
+	template <size_t ComponentSize, typename T, typename Floating, typename std::enable_if_t<std::is_floating_point_v<Floating>, bool> = true>
+	[[nodiscard]] constexpr Vector<ComponentSize, T> lerpUnClamped(const Vector<ComponentSize, T>& start, const Vector<ComponentSize, T>& end, Floating t) noexcept
+	{
+		return start + (end - start) * t
+	}
+
+	template <size_t ComponentSize, typename T, typename Floating, typename std::enable_if_t<std::is_floating_point_v<Floating>, bool> = true>
+	[[nodiscard]] constexpr Vector<ComponentSize, T> lerp(const Vector<ComponentSize, T>& start, const Vector<ComponentSize, T>& end, Floating t) noexcept
+	{
+		return lerpUnClamped(start, end, math::clamp01(t));
+	}
+
 	template <size_t RightComponentSize, typename T, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
 	[[nodiscard]] constexpr Vector<1, T> operator+(const Vector<1, T>& lhs, const Vector<RightComponentSize, T>& rhs) noexcept
 	{
