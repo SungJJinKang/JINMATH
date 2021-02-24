@@ -2,6 +2,10 @@
 #include "LMath_Core.h"
 
 #include "Vector.h"
+#include "Vector1.h"
+#include "Vector2.h"
+#include "Vector3.h"
+#include "Vector4.h"
 
 namespace math
 {
@@ -261,6 +265,17 @@ namespace math
 		return Matrix<3, 3, X>{lhs.columns[0] * scalar, lhs.columns[1] * scalar, lhs.columns[2] * scalar};
 	}
 
+	template <typename X>
+	[[nodiscard]] constexpr Vector<3, X> operator*(const Matrix<3, 3, X>& lhs, const Vector<3, X>& vector) noexcept
+	{
+		return  Vector<3, X>
+		{
+			lhs.columns[0][0] * vector[0] + lhs.columns[1][0] * vector[1] + lhs.columns[2][0] * vector[2],
+			lhs.columns[0][1] * vector[0] + lhs.columns[1][1] * vector[1] + lhs.columns[2][1] * vector[2],
+			lhs.columns[0][2] * vector[0] + lhs.columns[1][2] * vector[1] + lhs.columns[2][2] * vector[2]
+		};
+	}
+
 	template <typename X, typename Y>
 	[[nodiscard]] constexpr Matrix<3, 3, X> operator/(const Matrix<3, 3, X>& lhs, Y scalar)
 	{
@@ -286,10 +301,23 @@ namespace math
 	{
 		return Matrix<4, 4, X>{lhs.columns[0] - scalar, lhs.columns[1] - scalar, lhs.columns[2] - scalar, lhs.columns[3] - scalar};
 	}
+
 	template <typename X, typename Y>
 	[[nodiscard]] constexpr Matrix<4, 4, X> operator*(const Matrix<4, 4, X>& lhs, Y scalar) noexcept
 	{
 		return Matrix<4, 4, X>{lhs.columns[0] * scalar, lhs.columns[1] * scalar, lhs.columns[2] * scalar, lhs.columns[3] * scalar};
+	}
+
+	template <typename X>
+	[[nodiscard]] constexpr Vector<4, X> operator*(const Matrix<4, 4, X>& lhs, const Vector<4, X>& vector) noexcept
+	{
+		return  Vector<4, X>
+		{
+			lhs.columns[0][0] * vector[0] + lhs.columns[1][0] * vector[1] + lhs.columns[2][0] * vector[2] + lhs.columns[3][0] * vector[3],
+			lhs.columns[0][1] * vector[0] + lhs.columns[1][1] * vector[1] + lhs.columns[2][1] * vector[2] + lhs.columns[3][1] * vector[3],
+			lhs.columns[0][2] * vector[0] + lhs.columns[1][2] * vector[1] + lhs.columns[2][2] * vector[2] + lhs.columns[3][2] * vector[3],
+			lhs.columns[0][3] * vector[0] + lhs.columns[1][3] * vector[1] + lhs.columns[2][3] * vector[2] + lhs.columns[3][3] * vector[3]
+		};
 	}
 
 	template <typename X, typename Y>

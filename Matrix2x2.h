@@ -172,7 +172,7 @@ namespace math
 		// 		type& opreator=(const type&) = default;
 		// 		type& opreator=(type&&) = default;
 
-		constexpr std::basic_string<char> toString() noexcept
+		constexpr std::basic_string<char> toString() const noexcept
 		{
 			std::stringstream ss;
 			ss << columns[0].x << "  " << columns[1].x << '\n';

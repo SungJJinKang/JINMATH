@@ -150,7 +150,7 @@ namespace math
 
 		[[nodiscard]] inline constexpr auto sqrMagnitude() const noexcept
 		{
-			return std::pow(x, 2);
+			return x * x;
 		}
 
 		[[nodiscard]] inline constexpr auto magnitude() const noexcept

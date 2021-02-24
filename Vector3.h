@@ -134,7 +134,7 @@ namespace math
 // 		type& opreator=(const type&) = default;
 // 		type& opreator=(type&&) = default;
 
-		constexpr std::basic_string<char> toString() noexcept
+		constexpr std::basic_string<char> toString() const noexcept
 		{
 			std::stringstream ss;
 			ss << x << "  " << y << "  " << z;
@@ -185,12 +185,12 @@ namespace math
 
 		[[nodiscard]] inline constexpr auto sqrMagnitude() const noexcept
 		{
-			return math::pow(x, 2) + math::pow(y, 2) + math::pow(z, 2);
+			return x * x + y * y + z * z;
 		}
 
 		[[nodiscard]] inline constexpr auto magnitude() const noexcept
 		{
-			return math::sqrt(sqrMagnitude());
+			return static_cast<float>(math::sqrt(sqrMagnitude()));
 		}
 
 		[[nodiscard]] constexpr type normalized() const
