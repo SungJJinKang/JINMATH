@@ -50,12 +50,12 @@ namespace math
 	}
 
 	template<typename T, typename Limit, typename std::enable_if_t<std::is_arithmetic_v<Limit>, bool> = true>
-	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> clamp(T value, Limit min, Limit max)
+	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> clamp(T value, Limit Min, Limit Max)
 	{
-		if (value < min)
-			return min;
-		else if (value > max)
-			return max;
+		if (value < Min)
+			return Min;
+		else if (value > Max)
+			return Max;
 		return value;
 	}
 
@@ -119,15 +119,15 @@ namespace math
 	}
 
 	template<typename X, typename Y>
-	inline constexpr auto max(X x, Y y)
+	inline constexpr auto Max(X x, Y y)
 	{
-		return (std::max)(x, y);
+		return std::max(x, y);
 	}
 
 	template<typename X, typename Y>
-	inline constexpr auto min(X x, Y y)
+	inline constexpr auto Min(X x, Y y)
 	{
-		return (std::min)(x, y);
+		return std::min(x, y);
 	}
 
 	template<typename T>
