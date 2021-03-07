@@ -160,7 +160,7 @@ namespace math
 			columns[0] = matrix.columns[0];
 			columns[1] = 0;
 			columns[2] = 0;
-			columns[3] = 0;
+			columns[3] = { 0,0,0,1 };
 			return *this;
 		}
 
@@ -170,7 +170,7 @@ namespace math
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
 			columns[2] = 0;
-			columns[3] = 0;
+			columns[3] = { 0,0,0,1 };
 			return *this;
 		}
 
@@ -180,7 +180,7 @@ namespace math
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
 			columns[2] = matrix.columns[2];
-			columns[3] = 0;
+			columns[3] = { 0,0,0,1 };
 			return *this;
 		}
 
