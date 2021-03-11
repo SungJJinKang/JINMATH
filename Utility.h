@@ -62,7 +62,7 @@ namespace math
 	template<typename T>
 	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> clamp01(T value)
 	{
-		return Clamp(value, T{ 0 }, T{ 1 });
+		return math::clamp(value, T{ 0 }, T{ 1 });
 	}
 
 	template<typename T>
@@ -93,13 +93,13 @@ namespace math
 
 
 	template<typename Value, typename Floating, typename std::enable_if_t<std::is_floating_point_v<Floating>, bool> = true>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<Value>, Value> lerpUnClamped(Value value1, Value value2, Floating t)
+	inline constexpr typename Floating lerpUnClamped(Value value1, Value value2, Floating t)
 	{
 		return value1 + t * (value2 - value1);
 	}
 
 	template<typename Value, typename Floating, typename std::enable_if_t<std::is_floating_point_v<Floating>, bool> = true>
-	inline constexpr typename std::enable_if_t<std::is_arithmetic_v<Value>, Value> lerp(Value value1, Value value2, Floating t)
+	inline constexpr typename Floating lerp(Value value1, Value value2, Floating t)
 	{
 		return lerpUnClamped<Value, Floating>(value1, value2, clamp01<Floating>(t));
 	}
