@@ -164,7 +164,25 @@ namespace math
 		return std::tan(radian);
 	}
 
+	inline constexpr auto Equal(float a, float b)
+	{
+		return math::abs(a - b) < math::epsilon<float>();
+	}
 
+	inline constexpr auto Equal(double a, double b)
+	{
+		return math::abs(a - b) < math::epsilon<double>();
+	}
+
+	inline constexpr auto Equal(float a, double b)
+	{
+		return Equal(static_cast<double>(a), b);
+	}
+
+	inline constexpr auto Equal(double a, float b)
+	{
+		return Equal(a, static_cast<double>(b));
+	}
 	/////
 
 
