@@ -14,7 +14,7 @@ namespace math
 
 	
 
-	template<typename T>
+	template<typename T = float>
 	inline constexpr typename std::enable_if_t<CHECK_IS_NUMBER(T), T> epsilon()
 	{
 		return std::numeric_limits<T>::epsilon();
