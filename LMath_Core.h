@@ -32,3 +32,6 @@
 #define CURRENT_SETTING LEFT_HAND_ZERO_TO_ONE
 #endif
 
+#define SUPPORT_SIMD
+#include "SIMD.h"
+

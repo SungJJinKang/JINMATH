@@ -1,6 +1,8 @@
 #pragma once
 #include "Vector.h"
 
+
+
 namespace math
 {
 	template <typename T>
@@ -458,4 +460,19 @@ namespace math
 	}
 
 	using Vector4 = Vector<4, float>;
+
+
+
+
 }
+
+
+#ifdef ENABLE_SIMD
+
+// Include the specializations to avoid template errors.
+// For example, if you include vector.h, use Vector<float, 3>, and then
+// include vector_3.h, you the compiler will generate an error since you're
+// specializing something that has already been instantiated.
+#include "Vector4_SIMD.h" // 
+
+#endif
