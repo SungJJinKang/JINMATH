@@ -5,29 +5,27 @@
 #include "Quaternion.h"
 namespace math
 {
-	template <typename T>
-	struct Matrix<4, 4, T>
+	template <>
+	struct alignas(16) Matrix<4, 4, float>
 	{
-		static_assert(CHECK_IS_NUMBER(T));
-		static_assert(CHECK_IS_NOT_CV(T));
-
-		using value_type = typename T;
-		using type = typename Matrix<4, 4, T>;
+		using value_type = typename float;
+		using type = typename Matrix<4, 4, float>;
 		template <typename T2>
 		using col_type_template = Vector<4, T2>;
-		using col_type = Vector<4, T>;
 
-		[[nodiscard]] inline static constexpr size_t columnCount()  noexcept { return 4; }
+		using col_type = Vector<4, float>;
+
+		[[nodiscard]] inline static SIMD_CONSTEXPR size_t columnCount()  noexcept { return 4; }
 		col_type columns[4];
 
-		const T* data() const
+		const float* data() const
 		{
 			return &(columns[0].x);
 		}
 
 		static const type identify;
 
-		constexpr Matrix() noexcept : columns{}
+		SIMD_CONSTEXPR Matrix() noexcept : columns{}
 		{
 
 		}
@@ -37,7 +35,7 @@ namespace math
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		constexpr explicit Matrix(value_type value) noexcept
+		SIMD_CONSTEXPR explicit Matrix(value_type value) noexcept
 			: columns{ 
 			col_type(value, 0, 0, 0), 
 			col_type(0, value, 0, 0), 
@@ -53,7 +51,7 @@ namespace math
 		/// <param name="value"></param>
 		/// <returns></returns>
 		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
-		constexpr Matrix(X value) noexcept
+		SIMD_CONSTEXPR Matrix(X value) noexcept
 			: columns{ 
 			col_type(value, 0, 0, 0), 
 			col_type(0, value, 0, 0), 
@@ -62,7 +60,7 @@ namespace math
 		{
 		}
 
-		constexpr Matrix
+		SIMD_CONSTEXPR Matrix
 		(
 			value_type x0, value_type y0, value_type z0, value_type w0,
 			value_type x1, value_type y1, value_type z1, value_type w1,
@@ -82,7 +80,7 @@ namespace math
 			typename X2, typename Y2, typename Z2, typename W2,
 			typename X3, typename Y3, typename Z3, typename W3
 		>
-		constexpr Matrix
+		SIMD_CONSTEXPR Matrix
 		(
 			X0 x0, Y0 y0, Z0 z0, W0 w0,
 			X1 x1, Y1 y1, Z1 z1, W1 w1,
@@ -96,47 +94,47 @@ namespace math
 		{
 		}
 		
-		constexpr Matrix(col_type column0Value, col_type column1Value, col_type column2Value, col_type column3Value) noexcept
+		SIMD_CONSTEXPR Matrix(col_type column0Value, col_type column1Value, col_type column2Value, col_type column3Value) noexcept
 			: columns{ column0Value, column1Value, column2Value, column3Value }
 		{
 		}
 
 		template <typename X, typename Y, typename Z, typename W>
-		constexpr Matrix(col_type_template<X> column0, col_type_template<Y> column1, col_type_template<Z> column2, col_type_template<W> column3) noexcept
+		SIMD_CONSTEXPR Matrix(col_type_template<X> column0, col_type_template<Y> column1, col_type_template<Z> column2, col_type_template<W> column3) noexcept
 			: columns{ column0, column1, column2, column3 }
 		{
 		}
 
-		constexpr explicit Matrix(const type& matrix) noexcept
+		SIMD_CONSTEXPR explicit Matrix(const type& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1], matrix.columns[2], matrix.columns[3] }
 		{
 		}
 
 		template <typename X>
-		constexpr Matrix(const Matrix<1, 1, X>& matrix) noexcept
+		SIMD_CONSTEXPR Matrix(const Matrix<1, 1, X>& matrix) noexcept
 			: columns{ matrix.columns[0], {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1} }
 		{
 		}
 
 		template <typename X>
-		constexpr Matrix(const Matrix<2, 2, X>& matrix) noexcept
+		SIMD_CONSTEXPR Matrix(const Matrix<2, 2, X>& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1], {0, 0, 1, 0}, {0, 0, 0, 1} }
 		{
 		}
 
 		template <typename X>
-		constexpr Matrix(const Matrix<3, 3, X>& matrix) noexcept
+		SIMD_CONSTEXPR Matrix(const Matrix<3, 3, X>& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1], matrix.columns[2], {0, 0, 0, 1} }
 		{
 		}
 
 		template <typename X>
-		constexpr Matrix(const Matrix<4, 4, X>& matrix) noexcept
+		SIMD_CONSTEXPR Matrix(const Matrix<4, 4, X>& matrix) noexcept
 			: columns { matrix.columns[0], matrix.columns[1], matrix.columns[2], matrix.columns[3] }
 		{
 		}
 
-		constexpr type& operator=(value_type value) noexcept
+		SIMD_CONSTEXPR type& operator=(value_type value) noexcept
 		{
 			columns[0] = value;
 			columns[1] = value;
@@ -145,7 +143,7 @@ namespace math
 			return *this;
 		}
 
-		constexpr type& operator=(const type& matrix) noexcept
+		SIMD_CONSTEXPR type& operator=(const type& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -155,7 +153,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Matrix<1, 1, X>& matrix) noexcept
+		SIMD_CONSTEXPR type& operator=(const Matrix<1, 1, X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = 0;
@@ -165,7 +163,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Matrix<2, 2, X>& matrix) noexcept
+		SIMD_CONSTEXPR type& operator=(const Matrix<2, 2, X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -175,7 +173,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Matrix<3, 3, X>& matrix) noexcept
+		SIMD_CONSTEXPR type& operator=(const Matrix<3, 3, X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -185,7 +183,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Matrix<4, 4, X>& matrix) noexcept
+		SIMD_CONSTEXPR type& operator=(const Matrix<4, 4, X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -199,7 +197,7 @@ namespace math
 		// 		type& opreator=(const type&) = default;
 		// 		type& opreator=(type&&) = default;
 
-		constexpr std::basic_string<char> toString() const noexcept
+		std::basic_string<char> toString() const noexcept
 		{
 			std::stringstream ss;
 			ss << columns[0].x << "  " << columns[1].x << "  " << columns[2].x << "  " << columns[3].x << '\n';
@@ -209,13 +207,13 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] col_type& operator[](size_t i)
+		[[nodiscard]] SIMD_CONSTEXPR col_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
 		}
 
-		[[nodiscard]] constexpr const col_type& operator[](size_t i) const
+		[[nodiscard]] SIMD_CONSTEXPR const col_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
@@ -224,19 +222,19 @@ namespace math
 
 
 		template <typename X>
-		constexpr type operator+(const Matrix<4, 4, X>& rhs) noexcept
+		SIMD_CONSTEXPR type operator+(const Matrix<4, 4, X>& rhs) noexcept
 		{
 			return type(columns[0] + rhs.columns[0], columns[1] + rhs.columns[1], columns[2] + rhs.columns[2], columns[3] + rhs.columns[3]);
 		}
 
 		template <typename X>
-		constexpr type operator-(const Matrix<4, 4, X>& rhs) noexcept
+		SIMD_CONSTEXPR type operator-(const Matrix<4, 4, X>& rhs) noexcept
 		{
 			return type(columns[0] - rhs.columns[0], columns[1] - rhs.columns[1], columns[2] - rhs.columns[2], columns[3] - rhs.columns[3]);
 		}
 
 		template <typename X>
-		constexpr type operator*(const Matrix<4, 4, X>& rhs) noexcept
+		SIMD_CONSTEXPR type operator*(const Matrix<4, 4, X>& rhs) noexcept
 		{
 			const col_type SrcA0 = columns[0];
 			const col_type SrcA1 = columns[1];
@@ -248,7 +246,7 @@ namespace math
 			const col_type SrcB2 = rhs[2];
 			const col_type SrcB3 = rhs[3];
 
-			Matrix<4, 4, T> Result;
+			Matrix<4, 4, float> Result;
 			Result[0] = SrcA0 * SrcB0[0] + SrcA1 * SrcB0[1] + SrcA2 * SrcB0[2] + SrcA3 * SrcB0[3];
 			Result[1] = SrcA0 * SrcB1[0] + SrcA1 * SrcB1[1] + SrcA2 * SrcB1[2] + SrcA3 * SrcB1[3];
 			Result[2] = SrcA0 * SrcB2[0] + SrcA1 * SrcB2[1] + SrcA2 * SrcB2[2] + SrcA3 * SrcB2[3];
@@ -259,20 +257,20 @@ namespace math
 
 		/*
 		template <typename X>
-		constexpr type operator/(const Matrix<4, X>& rhs)
+		SIMD_CONSTEXPR type operator/(const Matrix<4, X>& rhs)
 		{
 			return type(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
 		}
 
 		template <typename X>
-		constexpr type operator%(const Matrix<4, X>& rhs)
+		SIMD_CONSTEXPR type operator%(const Matrix<4, X>& rhs)
 		{
 			return type(x % rhs.x, y % rhs.y, z % rhs.z, w % rhs.w);
 		}
 		*/
 
 		template <typename X>
-		constexpr type& operator+=(const Matrix<4, 4, X>& rhs) noexcept
+		SIMD_CONSTEXPR type& operator+=(const Matrix<4, 4, X>& rhs) noexcept
 		{
 			columns[0] += rhs.columns[0];
 			columns[1] += rhs.columns[1];
@@ -282,7 +280,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator-=(const Matrix<4, 4, X>& rhs) noexcept
+		SIMD_CONSTEXPR type& operator-=(const Matrix<4, 4, X>& rhs) noexcept
 		{
 			columns[0] -= rhs.columns[0];
 			columns[1] -= rhs.columns[1];
@@ -293,7 +291,7 @@ namespace math
 
 		
 		template <typename X>
-		constexpr type& operator*=(const Matrix<4, 4, X>& rhs) noexcept
+		SIMD_CONSTEXPR type& operator*=(const Matrix<4, 4, X>& rhs) noexcept
 		{
 			return (*this = *this * rhs);
 		}
@@ -302,7 +300,7 @@ namespace math
 
 		/*
 		template <typename X>
-		constexpr type& operator/=(const Matrix<4, X>& rhs)
+		SIMD_CONSTEXPR type& operator/=(const Matrix<4, X>& rhs)
 		{
 			x /= rhs.x;
 			y /= rhs.y;
@@ -312,7 +310,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator%=(const Matrix<4, X>& rhs)
+		SIMD_CONSTEXPR type& operator%=(const Matrix<4, X>& rhs)
 		{
 			x %= rhs.x;
 			y %= rhs.y;
@@ -324,7 +322,7 @@ namespace math
 		//
 
 		template <typename X>
-		constexpr type& operator+=(const X& scalar) noexcept
+		SIMD_CONSTEXPR type& operator+=(const X& scalar) noexcept
 		{
 			columns[0] += scalar;
 			columns[1] += scalar;
@@ -334,7 +332,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator-=(const X& scalar) noexcept
+		SIMD_CONSTEXPR type& operator-=(const X& scalar) noexcept
 		{
 			columns[0] -= scalar;
 			columns[1] -= scalar;
@@ -344,7 +342,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator*=(const X& scalar) noexcept
+		SIMD_CONSTEXPR type& operator*=(const X& scalar) noexcept
 		{
 			columns[0] *= scalar;
 			columns[1] *= scalar;
@@ -355,7 +353,7 @@ namespace math
 
 		/*
 		template <typename X>
-		constexpr type& operator/=(const X& scalar)
+		SIMD_CONSTEXPR type& operator/=(const X& scalar)
 		{
 			x /= scalar;
 			y /= scalar;
@@ -366,7 +364,7 @@ namespace math
 
 		
 		template <typename X, std::enable_if_t<std::is_integral_v<X>, bool> = true>
-		constexpr type& operator%=(const X& scalar)
+		SIMD_CONSTEXPR type& operator%=(const X& scalar)
 		{
 			x %= scalar;
 			y %= scalar;
@@ -376,7 +374,7 @@ namespace math
 		}
 
 		template <typename X, std::enable_if_t<std::is_floating_point_v<X>, bool> = true>
-		constexpr type& operator%=(const X& scalar)
+		SIMD_CONSTEXPR type& operator%=(const X& scalar)
 		{
 
 			x %= std::fmod(x, scalar);
@@ -389,24 +387,24 @@ namespace math
 
 		//
 
-		[[nodiscard]] inline constexpr bool operator==(const type& rhs) noexcept
+		[[nodiscard]] inline SIMD_CONSTEXPR bool operator==(const type& rhs) noexcept
 		{
 			return this->columns[0] == rhs.columns[0] && this->columns[1] == rhs.columns[1] && this->columns[2] == rhs.columns[2] && this->columns[3] == rhs.columns[3];
 		}
 
-		[[nodiscard]] constexpr bool operator!=(const type& rhs) noexcept
+		[[nodiscard]] SIMD_CONSTEXPR bool operator!=(const type& rhs) noexcept
 		{
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1] || this->columns[2] != rhs.columns[2] || this->columns[3] != rhs.columns[3];
 		}
 
 		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
-		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
+		[[nodiscard]] inline SIMD_CONSTEXPR bool operator==(const X& number) noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number && this->columns[2] == number && this->columns[3] == number;
 		}
 
 		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
-		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
+		[[nodiscard]] inline SIMD_CONSTEXPR bool operator!=(const X& number) noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number || this->columns[2] != number || this->columns[3] != number;
 		}
@@ -415,7 +413,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		constexpr type& operator++() noexcept
+		SIMD_CONSTEXPR type& operator++() noexcept
 		{
 			++columns[0];
 			++columns[1];
@@ -429,7 +427,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		constexpr type operator++(int) noexcept
+		SIMD_CONSTEXPR type operator++(int) noexcept
 		{
 			type Matrix{ *this };
 			++* this;
@@ -440,7 +438,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		constexpr type& operator--() noexcept
+		SIMD_CONSTEXPR type& operator--() noexcept
 		{
 			--columns[0];
 			--columns[1];
@@ -454,19 +452,19 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		constexpr type operator--(int) noexcept
+		SIMD_CONSTEXPR type operator--(int) noexcept
 		{
 			type Matrix{ *this };
 			--* this;
 			return Matrix;
 		}
 
-		constexpr operator std::basic_string<char>() noexcept
+		operator std::basic_string<char>() noexcept
 		{
 			return this->toString();
 		}
 
-		constexpr type inverse()
+		SIMD_CONSTEXPR type inverse()
 		{
 			value_type Coef00 = columns[2][2] * columns[3][3] - columns[3][2] * columns[2][3];
 			value_type Coef02 = columns[1][2] * columns[3][3] - columns[3][2] * columns[1][3];
@@ -523,7 +521,7 @@ namespace math
 			return type{ Inverse * OneOverDeterminant };
 		}
 
-		constexpr type transpose()
+		SIMD_CONSTEXPR type transpose()
 		{
 			type Result;
 			Result[0][0] = columns[0][0];
@@ -548,8 +546,8 @@ namespace math
 			return Result;
 		}
 
-		template <typename U = T, std::enable_if_t<std::is_signed_v<U>, bool> = true>
-		constexpr value_type determinant()
+		template <typename U = float, std::enable_if_t<std::is_signed_v<U>, bool> = true>
+		SIMD_CONSTEXPR value_type determinant()
 		{
 			value_type SubFactor00 = columns[2][2] * columns[3][3] - columns[3][2] * columns[2][3];
 			value_type SubFactor01 = columns[2][1] * columns[3][3] - columns[3][1] * columns[2][3];
@@ -570,22 +568,20 @@ namespace math
 		}
 
 		
-		constexpr auto trace()
+		SIMD_CONSTEXPR auto trace()
 		{
 			return columns[0][0] + columns[1][1] + columns[2][2] + columns[3][3];
 		}
 	};
 
-	template<typename T>
-	constexpr Matrix<4, 4, T> operator+(const Matrix<4, 4, T>& matrix) noexcept
+	SIMD_CONSTEXPR Matrix<4, 4, float> operator+(const Matrix<4, 4, float>& matrix) noexcept
 	{
 		return matrix;
 	}
 
-	template<typename T>
-	constexpr Matrix<4, 4, T> operator-(const Matrix<4, 4, T>& matrix) noexcept
+	SIMD_CONSTEXPR Matrix<4, 4, float> operator-(const Matrix<4, 4, float>& matrix) noexcept
 	{
-		return Matrix<4, 4, T>(
+		return Matrix<4, 4, float>(
 			-matrix.columns[0],
 			-matrix.columns[1],
 			-matrix.columns[2],
@@ -594,3 +590,7 @@ namespace math
 
 	using Matrix4x4 = typename Matrix<4, 4, float>;
 }
+
+#ifdef L_AVX
+#include "Matrix4x4_SIMD.h"
+#endif
