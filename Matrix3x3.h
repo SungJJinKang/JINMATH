@@ -19,12 +19,12 @@ namespace math
 		[[nodiscard]] inline static constexpr size_t columnCount()  noexcept { return 3; }
 		col_type columns[3];
 
-		constexpr float* data() noexcept
+		T* data() noexcept
 		{
 			return columns[0].data();
 		}
 
-		constexpr float* data() const noexcept
+		const T* data() const noexcept
 		{
 			return columns[0].data();
 		}
@@ -166,7 +166,7 @@ namespace math
 		// 		type& opreator=(const type&) = default;
 		// 		type& opreator=(type&&) = default;
 
-		constexpr std::basic_string<char> toString() const noexcept
+		std::basic_string<char> toString() const noexcept
 		{
 			std::stringstream ss;
 			ss << columns[0].x << "  " << columns[1].x << "  " << columns[2].x << '\n';
@@ -217,6 +217,17 @@ namespace math
 			Result[1] = SrcA0 * SrcB1[0] + SrcA1 * SrcB1[1] + SrcA2 * SrcB1[2];
 			Result[2] = SrcA0 * SrcB2[0] + SrcA1 * SrcB2[1] + SrcA2 * SrcB2[2];
 			return type{ Result };
+		}
+
+		template <typename X>
+		[[nodiscard]] constexpr Vector<3, X> operator*(const Vector<3, X>& vector) noexcept
+		{
+			return  Vector<3, X>
+			{
+				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2],
+					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2],
+					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2]
+			};
 		}
 
 		constexpr type operator+(float rhs) noexcept
@@ -427,7 +438,7 @@ namespace math
 			return Matrix;
 		}
 
-		constexpr operator std::basic_string<char>() noexcept
+		operator std::basic_string<char>() noexcept
 		{
 			return this->toString();
 		}

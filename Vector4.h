@@ -19,12 +19,12 @@ namespace math
 		union { T z, b; };
 		union { T w, a; };
 
-		constexpr T* data() noexcept
+		T* data() noexcept
 		{
 			return &x;
 		}
 
-		constexpr T* data() const noexcept
+		const T* data() const noexcept
 		{
 			return &x;
 		}
@@ -48,7 +48,7 @@ namespace math
 			: x{ xValue }, y{ yValue }, z{ zValue }, w{ wValue }
 		{
 		}
-			
+
 		constexpr explicit Vector(const type& vector) noexcept
 			: x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
 		{
@@ -136,12 +136,12 @@ namespace math
 			return *this;
 		}
 
-// 		Vector(const type&) = default;
-// 		Vector(type&&) = default;
-// 		type& opreator=(const type&) = default;
-// 		type& opreator=(type&&) = default;
+		// 		Vector(const type&) = default;
+		// 		Vector(type&&) = default;
+		// 		type& opreator=(const type&) = default;
+		// 		type& opreator=(type&&) = default;
 
-		constexpr std::basic_string<char> toString() const noexcept
+		std::basic_string<char> toString() const noexcept
 		{
 			std::stringstream ss;
 			ss << x << "  " << y << "  " << z << "  " << w;
@@ -194,8 +194,7 @@ namespace math
 			}
 		}
 
-		
-
+	
 		[[nodiscard]] inline constexpr auto sqrMagnitude() const noexcept
 		{
 			return x * x + y * y + z * z + w * w;
@@ -328,7 +327,7 @@ namespace math
 			w -= scalar;
 			return *this;
 		}
-		
+
 		template <typename X>
 		constexpr type& operator*=(const X& scalar) noexcept
 		{
@@ -432,13 +431,13 @@ namespace math
 			--* this;
 			return type{ Vector };
 		}
-		
-		constexpr operator std::basic_string<char>() noexcept
+
+		operator std::basic_string<char>() noexcept
 		{
 			return this->toString();
 		}
 
-		
+
 	};
 
 	template<typename T>
@@ -456,7 +455,19 @@ namespace math
 			-vector.z,
 			-vector.w);
 	}
+}
 
+
+// For the time being, Don't Add SIMD To Vector4Float.
+// It looks slower than scalar verison
+/*
+#ifdef SIMD_ENABLED
+#include "Vector4Float_Aligned.inl"
+#endif
+*/
+
+namespace math
+{
 	using Vector4 = Vector<4, float>;
 
 	extern template struct math::Vector<4, float>;
@@ -470,17 +481,7 @@ namespace math
 	extern template struct math::Vector<4, unsigned int>;
 	extern template struct math::Vector<4, unsigned long int>;
 	extern template struct math::Vector<4, unsigned long long int>;
-
-
 }
 
 
-#ifdef ENABLE_SIMD
 
-// Include the specializations to avoid template errors.
-// For example, if you include vector.h, use Vector<float, 3>, and then
-// include vector_3.h, you the compiler will generate an error since you're
-// specializing something that has already been instantiated.
-#include "Vector4_SIMD.h" // 
-
-#endif

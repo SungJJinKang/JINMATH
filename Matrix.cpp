@@ -57,12 +57,13 @@ template struct Matrix<3, 3, unsigned long long int>;
 
 
 template <typename T>
-const math::Matrix<1, 1, T> math::Matrix<1, 1, T>::identify{ 1 };
+const math::Matrix<1, 1, T> math::Matrix<1, 1, T>::identify{ static_cast<T>(1) };
 
 template <typename T>
-const math::Matrix<2, 2, T> math::Matrix<2, 2, T>::identify{ 1 };
+const math::Matrix<2, 2, T> math::Matrix<2, 2, T>::identify{ static_cast<T>(1) };
 
 template <typename T>
-const math::Matrix<3, 3, T> math::Matrix<3, 3, T>::identify{ 1 };
+const math::Matrix<3, 3, T> math::Matrix<3, 3, T>::identify{ static_cast<T>(1) };
 
-const math::Matrix<4, 4, float> math::Matrix<4, 4, float>::identify{ 1 };
+template <typename T>
+const math::Matrix<4, 4, T> math::Matrix<4, 4, T>::identify{ static_cast<T>(1) };

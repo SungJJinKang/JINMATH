@@ -1,13 +1,23 @@
 #pragma once
 
-#define ENABLE_SIMD
+#ifndef ACTIVATE_SIMD
+#define ACTIVATE_SIMD
+#endif
 
-#ifdef ENABLE_SIMD
+#ifdef ACTIVATE_SIMD
 
 #ifdef __AVX__
 
-#define L_AVX
+#ifndef SIMD_ENABLED
+#define SIMD_ENABLED
+#endif
 
+#ifndef L_AVX
+#define L_AVX
+#endif
+
+
+#ifdef SIMD_ENABLED
 #include <immintrin.h>
 
 // references :
@@ -27,24 +37,35 @@ typedef __m256	XMM256Float;
 typedef __m256d XMM256Double;
 typedef __m256i XMM256Int;
 
-
+#ifndef XMM128Float
 #define XMM128Float(VECTOR4FLOAT) *(XMM128Float*)(&VECTOR4FLOAT)
+#endif
+
+#ifndef XMM128Double
 #define XMM128Double(VECTOR4DOUBLE) *(XMM128Float*)(&VECTOR4DOUBLE)
+#endif
+
+#ifndef XMM128Int
 #define XMM128Int(VECTOR4INT) *(XMM128Float*)(&VECTOR4INT)
-
-
+#endif
 
 #endif
 
 
 
+
+#endif
 
 #endif
 
 //simd function is not markd as constexpr
 //so enclosing function decide whether to use constexpr according to whether to support simd
+#ifndef LMATH_CONSTEXPR
+
 #ifdef L_AVX
 #define LMATH_CONSTEXPR 
 #else
 #define LMATH_CONSTEXPR constexpr
+#endif
+
 #endif

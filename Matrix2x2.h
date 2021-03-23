@@ -16,15 +16,15 @@ namespace math
 		using col_type_template = Vector<2, T2>;
 		using col_type = Vector<2, T>;
 
-		[[nodiscard]] inline static constexpr size_t columnCount()  noexcept { return 2; }
+		[[nodiscard]] inline static constexpr size_t columnCount() noexcept { return 2; }
 		col_type columns[2];
 
-		constexpr float* data() noexcept
+		T* data() noexcept
 		{
 			return columns[0].data();
 		}
 
-		constexpr float* data() const noexcept
+		const T* data() const noexcept
 		{
 			return columns[0].data();
 		}
@@ -157,7 +157,7 @@ namespace math
 		// 		type& opreator=(const type&) = default;
 		// 		type& opreator=(type&&) = default;
 
-		constexpr std::basic_string<char> toString() const noexcept
+		std::basic_string<char> toString() const noexcept
 		{
 			std::stringstream ss;
 			ss << columns[0].x << "  " << columns[1].x << '\n';
@@ -205,7 +205,6 @@ namespace math
 			Result[1] = SrcA0 * SrcB1[0] + SrcA1 * SrcB1[1];
 			return type{ Result };
 		}
-
 
 		constexpr type operator+(T rhs) noexcept
 		{
@@ -409,7 +408,7 @@ namespace math
 			return Matrix;
 		}
 
-		constexpr operator std::basic_string<char>() noexcept
+		operator std::basic_string<char>() noexcept
 		{
 			return this->toString();
 		}

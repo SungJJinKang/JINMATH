@@ -181,7 +181,7 @@ namespace math
 		// 		type& opreator=(const type&) = default;
 		// 		type& opreator=(type&&) = default;
 
-		constexpr std::basic_string<char> toString() noexcept
+		std::basic_string<char> toString() noexcept
 		{
 			std::stringstream ss;
 			ss << x << "  " << y << "  " << z << "  " << w;
@@ -394,7 +394,7 @@ namespace math
 			return type{ Quaternion };
 		}
 
-		constexpr operator std::basic_string<char>() noexcept
+		operator std::basic_string<char>() noexcept
 		{
 			return this->toString();
 		}

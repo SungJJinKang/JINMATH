@@ -15,12 +15,12 @@ namespace math
 		union { T x, r; };
 		union { T y, g; };
 
-		constexpr T* data() noexcept
+		T* data() noexcept
 		{
 			return &x;
 		}
 
-		constexpr T* data() const noexcept
+		const T* data() const noexcept
 		{
 			return &x;
 		}
@@ -125,14 +125,14 @@ namespace math
 // 		type& opreator=(const type&) = default;
 // 		type& opreator=(type&&) = default;
 
-		constexpr std::basic_string<char> toString() const noexcept
+		std::basic_string<char> toString() const noexcept
 		{
 			std::stringstream ss;
 			ss << x << "  " << y;
 			return ss.str();
 		}
 
-		[[nodiscard]] inline static constexpr size_t componentCount(){ return 2; }
+		[[nodiscard]] inline static constexpr size_t componentCount() noexcept { return 2; }
 
 		[[nodiscard]] constexpr value_type& operator[](size_t i)
 		{
@@ -384,7 +384,7 @@ namespace math
 			return Vector;
 		}
 
-		constexpr operator std::basic_string<char>() noexcept
+		operator std::basic_string<char>() noexcept
 		{
 			return this->toString();
 		}
