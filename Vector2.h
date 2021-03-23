@@ -196,37 +196,37 @@ namespace math
 			}
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 2, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type operator+(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			return type(x + rhs.x, y + rhs.y);
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 2, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type operator-(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			return type(x - rhs.x, y - rhs.y);
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 2, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type operator*(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			return type(x * rhs.x, y * rhs.y);
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 2, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type operator/(const Vector<RightComponentSize, X>& rhs)
 		{
 			return type(x / rhs.x, y / rhs.y);
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 2, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type operator%(const Vector<RightComponentSize, X>& rhs)
 		{
 			return type(MODULO(T, x, rhs.x), MODULO(T, y, rhs.y));
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 2, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type& operator+=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x += rhs.x;
@@ -234,7 +234,7 @@ namespace math
 			return *this;
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 2, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type& operator-=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x -= rhs.x;
@@ -242,7 +242,7 @@ namespace math
 			return *this;
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 2, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type& operator*=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x *= rhs.x;
@@ -250,7 +250,7 @@ namespace math
 			return *this;
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 2, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type& operator/=(const Vector<RightComponentSize, X>& rhs)
 		{
 			x /= rhs.x;
@@ -258,7 +258,7 @@ namespace math
 			return *this;
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 2, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type& operator%=(const Vector<RightComponentSize, X>& rhs)
 		{
 			MODULO(T, x, rhs.x);
@@ -282,13 +282,13 @@ namespace math
 			return this->x != rhs.x || this->y != rhs.y;
 		}
 
-		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		template <typename X>
 		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
 		{
 			return this->x == number && this->y == number;
 		}
 
-		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		template <typename X>
 		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
 		{
 			return this->x != number || this->y != number;
@@ -388,6 +388,65 @@ namespace math
 		{
 			return this->toString();
 		}
+
+		// //////////////////////////////////////////////////////////////////
+
+		template <typename T>
+		[[nodiscard]] FORCE_INLINE constexpr auto dot(const Vector<2, T>& lhs, const Vector<2, T>& rhs)
+		{
+			return lhs.x * rhs.x + lhs.y * rhs.y;
+		}
+
+		template <typename T>
+		[[nodiscard]] FORCE_INLINE constexpr Vector<2, T> cos(const Vector<2, T>& vector)
+		{
+			return Vector<2, T>{math::sin(vector.x), math::sin(vector.y)};
+		}
+
+		template <typename T>
+		[[nodiscard]] FORCE_INLINE constexpr Vector<2, T> sin(const Vector<2, T>& vector)
+		{
+			return Vector<2, T>{math::cos(vector.x), math::cos(vector.y)};
+		}
+
+		template <typename T>
+		[[nodiscard]] FORCE_INLINE constexpr Vector<2, T> tan(const Vector<2, T>& vector)
+		{
+			return Vector<2, T>{math::tan(vector.x), math::tan(vector.y)};
+		}
+
+		template <typename T>
+		[[nodiscard]] FORCE_INLINE constexpr Vector<2, T> sqrt(const Vector<2, T>& vector)
+		{
+			return Vector<2, T>{sqrt(vector.x), sqrt(vector.y)};
+		}
+
+		template <typename T>
+		[[nodiscard]] FORCE_INLINE constexpr Vector<2, T> inverseSqrt(const Vector<2, T>& vector)
+		{
+			return Vector<2, T>{inverseSqrt(vector.x), inverseSqrt(vector.y)};
+		}
+
+		template <typename T>
+		[[nodiscard]] FORCE_INLINE constexpr Vector<2, T> normalize(const Vector<2, T>& vector)
+		{
+			return vector * inverseSqrt(dot(vector, vector));
+		}
+
+		template<typename T>
+		[[nodiscard]] FORCE_INLINE constexpr Vector<2, T> Max(const Vector<2, T>& vector1, const Vector<2, T>& vector2)
+		{
+			return Vector<2, T>(math::Max(vector1.x, vector2.x), math::Max(vector1.y, vector2.y));
+		}
+
+		template<typename T>
+		[[nodiscard]] FORCE_INLINE constexpr Vector<2, T> Min(const Vector<2, T>& vector1, const Vector<2, T>& vector2)
+		{
+			return Vector<2, T>(math::Min(vector1.x, vector2.x), math::Min(vector1.y, vector2.y));
+		}
+
+		// //////////////////////////////////////////////////////////////////
+
 	};
 
 	template<typename T>

@@ -201,8 +201,6 @@ namespace math
 			return columns[i];
 		}
 
-
-
 		template <typename X>
 		constexpr type operator+(const Matrix<4, 4, X>& rhs) noexcept
 		{
@@ -216,7 +214,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type operator*(const Matrix<4, 4, X>& rhs) noexcept
+		[[nodiscard]] constexpr type operator*(const Matrix<4, 4, X>& rhs) noexcept
 		{
 			const col_type SrcA0 = columns[0];
 			const col_type SrcA1 = columns[1];
@@ -233,13 +231,52 @@ namespace math
 			Result[1] = SrcA0 * SrcB1[0] + SrcA1 * SrcB1[1] + SrcA2 * SrcB1[2] + SrcA3 * SrcB1[3];
 			Result[2] = SrcA0 * SrcB2[0] + SrcA1 * SrcB2[1] + SrcA2 * SrcB2[2] + SrcA3 * SrcB2[3];
 			Result[3] = SrcA0 * SrcB3[0] + SrcA1 * SrcB3[1] + SrcA2 * SrcB3[2] + SrcA3 * SrcB3[3];
+			
 			return Result;
 		}
 
-		template <typename X>
-		constexpr type operator*(const Vector<4, X>& vector) noexcept
+		template <>
+		[[nodiscard]] type operator*(const Matrix<4, 4, float>& rhs) noexcept
 		{
-			return type
+			Matrix<4, 4, float> Result{};
+
+			const M128F* A = (const M128F*)this->data();
+			const M128F* B = (const M128F*)rhs.data();
+			M128F* R = (M128F*)Result.data();
+			M128F Temp;// , R0, R1, R2, R3;
+
+			// First row of result (Matrix1[0] * Matrix2).
+			Temp = M128F_MUL(M128F_REPLICATE(B[0], 0), A[0]);
+			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 1), A[1], Temp);
+			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 2), A[2], Temp);
+			R[0] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 3), A[3], Temp);
+
+			// Second row of result (Matrix1[1] * Matrix2).
+			Temp = M128F_MUL(M128F_REPLICATE(B[1], 0), A[0]);
+			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[1], 1), A[1], Temp);
+			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[1], 2), A[2], Temp);
+			R[1] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[1], 3), A[3], Temp);
+
+			// Third row of result (Matrix1[2] * Matrix2).
+			Temp = M128F_MUL(M128F_REPLICATE(B[2], 0), A[0]);
+			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[2], 1), A[1], Temp);
+			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[2], 2), A[2], Temp);
+			R[2] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[2], 3), A[3], Temp);
+
+			// Fourth row of result (Matrix1[3] * Matrix2).
+			Temp = M128F_MUL(M128F_REPLICATE(B[3], 0), A[0]);
+			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[3], 1), A[1], Temp);
+			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[3], 2), A[2], Temp);
+			R[3] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[3], 3), A[3], Temp);
+
+			return Result;
+		}
+
+
+		template <typename X>
+		[[nodiscard]] constexpr Vector<4, X> operator*(const Vector<4, X>& vector) noexcept
+		{
+			return Vector<4, X>
 			{
 				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2] + this->columns[3][0] * vector[3],
 					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2] + this->columns[3][1] * vector[3],
@@ -247,6 +284,25 @@ namespace math
 					this->columns[0][3] * vector[0] + this->columns[1][3] * vector[1] + this->columns[2][3] * vector[2] + this->columns[3][3] * vector[3]
 			};
 		}
+
+		
+		/// <summary>
+		/// SIMD VERSION
+		/// </summary>
+		/// <param name="vector"></param>
+		/// <returns></returns>
+		template <>
+		[[nodiscard]] Vector<4, float> operator*(const Vector<4, float>& vector) noexcept
+		{
+			return Vector<4, float>
+			{
+				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2] + this->columns[3][0] * vector[3],
+					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2] + this->columns[3][1] * vector[3],
+					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2] + this->columns[3][2] * vector[3],
+					this->columns[0][3] * vector[0] + this->columns[1][3] * vector[1] + this->columns[2][3] * vector[2] + this->columns[3][3] * vector[3]
+			};
+		}
+		
 
 		constexpr type operator+(float rhs) noexcept
 		{
@@ -402,13 +458,13 @@ namespace math
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1] || this->columns[2] != rhs.columns[2] || this->columns[3] != rhs.columns[3];
 		}
 
-		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		template <typename X>
 		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number && this->columns[2] == number && this->columns[3] == number;
 		}
 
-		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		template <typename X>
 		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number || this->columns[2] != number || this->columns[3] != number;

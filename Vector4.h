@@ -49,7 +49,7 @@ namespace math
 		{
 		}
 
-		constexpr explicit Vector(const type& vector) noexcept
+		inline constexpr explicit Vector(const type& vector) noexcept
 			: x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
 		{
 		}
@@ -226,37 +226,37 @@ namespace math
 			}
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type operator+(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			return type(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w);
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type operator-(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			return type(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w);
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type operator*(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			return type(x * rhs.x, y * rhs.y, z * rhs.z, w * rhs.w);
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type operator/(const Vector<RightComponentSize, X>& rhs)
 		{
 			return type(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type operator%(const Vector<RightComponentSize, X>& rhs)
 		{
 			return type(MODULO(T, x, rhs.x), MODULO(T, y, rhs.y), MODULO(T, z, rhs.z), MODULO(T, w, rhs.w));
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type& operator+=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x += rhs.x;
@@ -266,7 +266,7 @@ namespace math
 			return *this;
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type& operator-=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x -= rhs.x;
@@ -276,7 +276,7 @@ namespace math
 			return *this;
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type& operator*=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x *= rhs.x;
@@ -286,7 +286,7 @@ namespace math
 			return *this;
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type& operator/=(const Vector<RightComponentSize, X>& rhs)
 		{
 			x /= rhs.x;
@@ -296,7 +296,7 @@ namespace math
 			return *this;
 		}
 
-		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X>
 		constexpr type& operator%=(const Vector<RightComponentSize, X>& rhs)
 		{
 			MODULO(T, x, rhs.x);
@@ -370,13 +370,13 @@ namespace math
 			return this->x != rhs.x || this->y != rhs.y || this->z != rhs.z || this->w != rhs.w;
 		}
 
-		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		template <typename X>
 		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
 		{
 			return this->x == number && this->y == number && this->z == number && this->w == number;
 		}
 
-		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		template <typename X>
 		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
 		{
 			return this->x != number || this->y != number || this->z != number || this->w != number;
@@ -455,16 +455,75 @@ namespace math
 			-vector.z,
 			-vector.w);
 	}
+
+	// //////////////////////////////////////////////////////
+
+	template <typename T>
+	[[nodiscard]] FORCE_INLINE constexpr auto dot(const Vector<4, T>& lhs, const Vector<4, T>& rhs)
+	{
+		return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
+	}
+
+	template <typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, T> cos(const Vector<4, T>& vector)
+	{
+		return Vector<4, T>{math::sin(vector.x), math::sin(vector.y), math::sin(vector.z), math::sin(vector.w)};
+	}
+
+	template <typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, T> sin(const Vector<4, T>& vector)
+	{
+		return Vector<4, T>{math::cos(vector.x), math::cos(vector.y), math::cos(vector.z), math::cos(vector.w)};
+	}
+
+	template <typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, T> tan(const Vector<4, T>& vector)
+	{
+		return Vector<4, T>{math::tan(vector.x), math::tan(vector.y), math::tan(vector.z), math::tan(vector.w)};
+	}
+
+	template <typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, T> sqrt(const Vector<4, T>& vector)
+	{
+		return Vector<2, T>{sqrt(vector.x), sqrt(vector.y), sqrt(vector.z), sqrt(vector.w)};
+	}
+
+	template <typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, T> inverseSqrt(const Vector<4, T>& vector)
+	{
+		return Vector<2, T>{inverseSqrt(vector.x), inverseSqrt(vector.y), inverseSqrt(vector.z), inverseSqrt(vector.w)};
+	}
+
+	template <typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, T> normalize(const Vector<4, T>& vector)
+	{
+		return vector * inverseSqrt(dot(vector, vector));
+	}
+
+	template<typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, T> Max(const Vector<4, T>& vector1, const Vector<4, T>& vector2)
+	{
+		return Vector<4, T>(math::Max(vector1.x, vector2.x), math::Max(vector1.y, vector2.y), math::Max(vector1.z, vector2.z), math::Max(vector1.w, vector2.w));
+	}
+
+	template<typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, T> Min(const Vector<4, T>& vector1, const Vector<4, T>& vector2)
+	{
+		return Vector<4, T>(math::Min(vector1.x, vector2.x), math::Min(vector1.y, vector2.y), math::Min(vector1.z, vector2.z), math::Min(vector1.w, vector2.w));
+	}
+
+	// //////////////////////////////////////////////////////
 }
 
 
 // For the time being, Don't Add SIMD To Vector4Float.
 // It looks slower than scalar verison
-/*
+
+#include "SIMD_Core.h"
 #ifdef SIMD_ENABLED
 #include "Vector4Float_Aligned.inl"
 #endif
-*/
+
 
 namespace math
 {

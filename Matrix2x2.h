@@ -192,7 +192,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type operator*(const Matrix<2, 2, X>& rhs) noexcept
+		[[nodiscard]] constexpr type operator*(const Matrix<2, 2, X>& rhs) noexcept
 		{
 			const col_type SrcA0 = columns[0];
 			const col_type SrcA1 = columns[1];
@@ -204,6 +204,16 @@ namespace math
 			Result[0] = SrcA0 * SrcB0[0] + SrcA1 * SrcB0[1];
 			Result[1] = SrcA0 * SrcB1[0] + SrcA1 * SrcB1[1];
 			return type{ Result };
+		}
+
+		template <typename X>
+		[[nodiscard]] constexpr Vector<2, X> operator*(const Vector<2, X>& vector) noexcept
+		{
+			return  Vector<2, X>
+			{
+				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1],
+					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1],
+			};
 		}
 
 		constexpr type operator+(T rhs) noexcept
@@ -350,13 +360,13 @@ namespace math
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1];
 		}
 
-		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		template <typename X>
 		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number;
 		}
 
-		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
+		template <typename X>
 		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number;
