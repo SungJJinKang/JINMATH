@@ -13,32 +13,32 @@ namespace math
 	struct Matrix;
 
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, T> operator+(const Matrix<1, 1, T>& lhs, const Matrix<1, 1, T>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<1, 1, T> operator+(const Matrix<1, 1, T>& lhs, const Matrix<1, 1, T>& rhs) noexcept
 	{
 		return Matrix<1, 1, T>{lhs.columns[0] + rhs.columns[0]};
 	}
 
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, T> operator-(const Matrix<1, 1, T>& lhs, const Matrix<1, 1, T>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<1, 1, T> operator-(const Matrix<1, 1, T>& lhs, const Matrix<1, 1, T>& rhs) noexcept
 	{
 		return Matrix<1, 1, T>{lhs.columns[0] - rhs.columns[0]};
 	}
 
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, T> operator*(const Matrix<1, 1, T>& lhs, const Matrix<1, 1, T>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<1, 1, T> operator*(const Matrix<1, 1, T>& lhs, const Matrix<1, 1, T>& rhs) noexcept
 	{
 		return Matrix<1, 1, T>{lhs.columns[0] * rhs.columns[0]};
 	}
 
 	/*
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, T> operator/(const Matrix<1, 1, T>& lhs, const Matrix<1, 1, T>& rhs)
+	[[nodiscard]] constexpr Matrix<1, 1, T> operator/(const Matrix<1, 1, T>& lhs, const Matrix<1, 1, T>& rhs)
 	{
 		return Matrix<1, 1, T>{lhs.columns[0] / rhs.columns[0]};
 	}
 
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, T> operator%(const Matrix<1, 1, T>& lhs, const Matrix<1, 1, T>& rhs)
+	[[nodiscard]] constexpr Matrix<1, 1, T> operator%(const Matrix<1, 1, T>& lhs, const Matrix<1, 1, T>& rhs)
 	{
 		return Matrix<1, 1, T>{lhs.columns[0] % rhs.columns[0]};
 	}
@@ -47,19 +47,19 @@ namespace math
 
 
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, T> operator+(const Matrix<2, 2, T>& lhs, const Matrix<2, 2, T>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<2, 2, T> operator+(const Matrix<2, 2, T>& lhs, const Matrix<2, 2, T>& rhs) noexcept
 	{
 		return Matrix<2, 2, T>{lhs.columns[0] + rhs.columns[0], lhs.columns[1] + rhs.columns[1]};
 	}
 
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, T> operator-(const Matrix<2, 2, T>& lhs, const Matrix<2, 2, T>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<2, 2, T> operator-(const Matrix<2, 2, T>& lhs, const Matrix<2, 2, T>& rhs) noexcept
 	{
 		return Matrix<2, 2, T>{lhs.columns[0] - rhs.columns[0], lhs.columns[1] - rhs.columns[1]};
 
 	}
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, T> operator*(const Matrix<2, 2, T>& lhs, const Matrix<2, 2, T>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<2, 2, T> operator*(const Matrix<2, 2, T>& lhs, const Matrix<2, 2, T>& rhs) noexcept
 	{
 		const Vector<2, T> SrcA0 = lhs.columns[0];
 		const Vector<2, T> SrcA1 = lhs.columns[1];
@@ -75,13 +75,13 @@ namespace math
 
 	/*
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, T> operator/(const Matrix<2, 2, T>& lhs, const Matrix<2, 2, T>& rhs)
+	[[nodiscard]] constexpr Matrix<2, 2, T> operator/(const Matrix<2, 2, T>& lhs, const Matrix<2, 2, T>& rhs)
 	{
 		return Matrix<2, 2, T>{lhs.columns[0] / rhs.columns[0], lhs.columns[1] / rhs.columns[1]};
 	}
 
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, T> operator%(const Matrix<2, 2, T>& lhs, const Matrix<2, 2, T>& rhs)
+	[[nodiscard]] constexpr Matrix<2, 2, T> operator%(const Matrix<2, 2, T>& lhs, const Matrix<2, 2, T>& rhs)
 	{
 		return Matrix<2, 2, T>{lhs.columns[0] % rhs.columns[0], lhs.columns[1] % rhs.columns[1]};
 	}
@@ -89,19 +89,19 @@ namespace math
 	////////////////
 
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, T> operator+(const Matrix<3, 3, T>& lhs, const Matrix<3, 3, T>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<3, 3, T> operator+(const Matrix<3, 3, T>& lhs, const Matrix<3, 3, T>& rhs) noexcept
 	{
 		return Matrix<3, 3, T>{lhs.columns[0] + rhs.columns[0], lhs.columns[1] + rhs.columns[1], lhs.columns[2] + rhs.columns[2]};
 	}
 
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, T> operator-(const Matrix<3, 3, T>& lhs, const Matrix<3, 3, T>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<3, 3, T> operator-(const Matrix<3, 3, T>& lhs, const Matrix<3, 3, T>& rhs) noexcept
 	{
 		return Matrix<3, 3, T>{lhs.columns[0] - rhs.columns[0], lhs.columns[1] - rhs.columns[1], lhs.columns[2] - rhs.columns[2]};
 
 	}
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, T> operator*(const Matrix<3, 3, T>& lhs, const Matrix<3, 3, T>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<3, 3, T> operator*(const Matrix<3, 3, T>& lhs, const Matrix<3, 3, T>& rhs) noexcept
 	{
 		const Vector<3, T> SrcA0 = lhs.columns[0];
 		const Vector<3, T> SrcA1 = lhs.columns[1];
@@ -120,13 +120,13 @@ namespace math
 
 	/*
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, T> operator/(const Matrix<3, 3, T>& lhs, const Matrix<3, 3, T>& rhs)
+	[[nodiscard]] constexpr Matrix<3, 3, T> operator/(const Matrix<3, 3, T>& lhs, const Matrix<3, 3, T>& rhs)
 	{
 		return Matrix<3, 3, T>{lhs.columns[0] / rhs.columns[0], lhs.columns[1] / rhs.columns[1], lhs.columns[2] / rhs.columns[2]};
 	}
 
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, T> operator%(const Matrix<3, 3, T>& lhs, const Matrix<3, 3, T>& rhs)
+	[[nodiscard]] constexpr Matrix<3, 3, T> operator%(const Matrix<3, 3, T>& lhs, const Matrix<3, 3, T>& rhs)
 	{
 		return Matrix<3, 3, T>{lhs.columns[0] % rhs.columns[0], lhs.columns[1] % rhs.columns[1], lhs.columns[2] % rhs.columns[2]};
 	}
@@ -134,18 +134,18 @@ namespace math
 	////////////
 
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, T> operator+(const Matrix<4, 4, T>& lhs, const Matrix<4, 4, T>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<4, 4, T> operator+(const Matrix<4, 4, T>& lhs, const Matrix<4, 4, T>& rhs) noexcept
 	{
 		return Matrix<4, 4, T>{lhs.columns[0] + rhs.columns[0], lhs.columns[1] + rhs.columns[1], lhs.columns[2] + rhs.columns[2], lhs.columns[3] + rhs.columns[3]};
 	}
 
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, T> operator-(const Matrix<4, 4, T>& lhs, const Matrix<4, 4, T>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<4, 4, T> operator-(const Matrix<4, 4, T>& lhs, const Matrix<4, 4, T>& rhs) noexcept
 	{
 		return Matrix<4, 4, T>{lhs.columns[0] - rhs.columns[0], lhs.columns[1] - rhs.columns[1], lhs.columns[2] - rhs.columns[2], lhs.columns[3] - rhs.columns[3]};
 	}
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, T> operator*(const Matrix<4, 4, T>& lhs, const Matrix<4, 4, T>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<4, 4, T> operator*(const Matrix<4, 4, T>& lhs, const Matrix<4, 4, T>& rhs) noexcept
 	{
 		const Vector<4, T> SrcA0 = lhs.columns[0];
 		const Vector<4, T> SrcA1 = lhs.columns[1];
@@ -167,13 +167,13 @@ namespace math
 
 	/*
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, T> operator/(const Matrix<4, 4, T>& lhs, const Matrix<4, 4, T>& rhs)
+	[[nodiscard]] constexpr Matrix<4, 4, T> operator/(const Matrix<4, 4, T>& lhs, const Matrix<4, 4, T>& rhs)
 	{
 		return Matrix<4, 4, T>{lhs.columns[0] / rhs.columns[0], lhs.columns[1] / rhs.columns[1], lhs.columns[2] / rhs.columns[2], lhs.columns[3] / rhs.columns[3]};
 	}
 
 	template <typename T>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, T> operator%(const Matrix<4, 4, T>& lhs, const Matrix<4, 4, T>& rhs)
+	[[nodiscard]] constexpr Matrix<4, 4, T> operator%(const Matrix<4, 4, T>& lhs, const Matrix<4, 4, T>& rhs)
 	{
 		return Matrix<4, 4, T>{lhs.columns[0] % rhs.columns[0], lhs.columns[1] % rhs.columns[1], lhs.columns[2] % rhs.columns[2], lhs.columns[3] % rhs.columns[3]};
 	}
@@ -184,30 +184,30 @@ namespace math
 
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, X> operator+(const Matrix<1, 1, X>& lhs, Y scalar) noexcept
+	[[nodiscard]] constexpr Matrix<1, 1, X> operator+(const Matrix<1, 1, X>& lhs, Y scalar) noexcept
 	{
 		return Matrix<1, 1, X>{lhs.columns[0] + scalar};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, X> operator-(const Matrix<1, 1, X>& lhs, Y scalar) noexcept
+	[[nodiscard]] constexpr Matrix<1, 1, X> operator-(const Matrix<1, 1, X>& lhs, Y scalar) noexcept
 	{
 		return Matrix<1, 1, X>{lhs.columns[0] - scalar};
 	}
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, X> operator*(const Matrix<1, 1, X>& lhs, Y scalar) noexcept
+	[[nodiscard]] constexpr Matrix<1, 1, X> operator*(const Matrix<1, 1, X>& lhs, Y scalar) noexcept
 	{
 		return Matrix<1, 1, X>{lhs.columns[0] * scalar};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, X> operator/(const Matrix<1, 1, X>& lhs, Y scalar)
+	[[nodiscard]] constexpr Matrix<1, 1, X> operator/(const Matrix<1, 1, X>& lhs, Y scalar)
 	{
 		return Matrix<1, 1, X>{lhs.columns[0] / scalar};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, X> operator%(const Matrix<1, 1, X>& lhs, Y scalar)
+	[[nodiscard]] constexpr Matrix<1, 1, X> operator%(const Matrix<1, 1, X>& lhs, Y scalar)
 	{
 		return Matrix<1, 1, X>{lhs.columns[0] % scalar};
 	}
@@ -216,31 +216,31 @@ namespace math
 
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, X> operator+(const Matrix<2, 2, X>& lhs, Y scalar) noexcept
+	[[nodiscard]] constexpr Matrix<2, 2, X> operator+(const Matrix<2, 2, X>& lhs, Y scalar) noexcept
 	{
 		return Matrix<2, 2, X>{lhs.columns[0] + scalar, lhs.columns[1] + scalar};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, X> operator-(const Matrix<2, 2, X>& lhs, Y scalar) noexcept
+	[[nodiscard]] constexpr Matrix<2, 2, X> operator-(const Matrix<2, 2, X>& lhs, Y scalar) noexcept
 	{
 		return Matrix<2, 2, X>{lhs.columns[0] - scalar, lhs.columns[1] - scalar};
 
 	}
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, X> operator*(const Matrix<2, 2, X>& lhs, Y scalar) noexcept
+	[[nodiscard]] constexpr Matrix<2, 2, X> operator*(const Matrix<2, 2, X>& lhs, Y scalar) noexcept
 	{
 		return Matrix<2, 2, X>{lhs.columns[0] * scalar, lhs.columns[1] * scalar};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, X> operator/(const Matrix<2, 2, X>& lhs, Y scalar)
+	[[nodiscard]] constexpr Matrix<2, 2, X> operator/(const Matrix<2, 2, X>& lhs, Y scalar)
 	{
 		return Matrix<2, 2, X>{lhs.columns[0] / scalar, lhs.columns[1] / scalar};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, X> operator%(const Matrix<2, 2, X>& lhs, Y scalar)
+	[[nodiscard]] constexpr Matrix<2, 2, X> operator%(const Matrix<2, 2, X>& lhs, Y scalar)
 	{
 		return Matrix<2, 2, X>{lhs.columns[0] % scalar, lhs.columns[1] % scalar};
 	}
@@ -248,25 +248,25 @@ namespace math
 	////////////////
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, X> operator+(const Matrix<3, 3, X>& lhs, Y scalar) noexcept
+	[[nodiscard]] constexpr Matrix<3, 3, X> operator+(const Matrix<3, 3, X>& lhs, Y scalar) noexcept
 	{
 		return Matrix<3, 3, X>{lhs.columns[0] + scalar, lhs.columns[1] + scalar, lhs.columns[2] + scalar};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, X> operator-(const Matrix<3, 3, X>& lhs, Y scalar) noexcept
+	[[nodiscard]] constexpr Matrix<3, 3, X> operator-(const Matrix<3, 3, X>& lhs, Y scalar) noexcept
 	{
 		return Matrix<3, 3, X>{lhs.columns[0] - scalar, lhs.columns[1] - scalar, lhs.columns[2] - scalar};
 
 	}
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, X> operator*(const Matrix<3, 3, X>& lhs, Y scalar) noexcept
+	[[nodiscard]] constexpr Matrix<3, 3, X> operator*(const Matrix<3, 3, X>& lhs, Y scalar) noexcept
 	{
 		return Matrix<3, 3, X>{lhs.columns[0] * scalar, lhs.columns[1] * scalar, lhs.columns[2] * scalar};
 	}
 
 	template <typename X>
-	[[nodiscard]] SIMD_CONSTEXPR Vector<3, X> operator*(const Matrix<3, 3, X>& lhs, const Vector<3, X>& vector) noexcept
+	[[nodiscard]] constexpr Vector<3, X> operator*(const Matrix<3, 3, X>& lhs, const Vector<3, X>& vector) noexcept
 	{
 		return  Vector<3, X>
 		{
@@ -277,13 +277,13 @@ namespace math
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, X> operator/(const Matrix<3, 3, X>& lhs, Y scalar)
+	[[nodiscard]] constexpr Matrix<3, 3, X> operator/(const Matrix<3, 3, X>& lhs, Y scalar)
 	{
 		return Matrix<3, 3, X>{lhs.columns[0] / scalar, lhs.columns[1] / scalar, lhs.columns[2] / scalar};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, X> operator%(const Matrix<3, 3, X>& lhs, Y scalar)
+	[[nodiscard]] constexpr Matrix<3, 3, X> operator%(const Matrix<3, 3, X>& lhs, Y scalar)
 	{
 		return Matrix<3, 3, X>{lhs.columns[0] % scalar, lhs.columns[1] % scalar, lhs.columns[2] % scalar};
 	}
@@ -291,25 +291,25 @@ namespace math
 	////////////
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, X> operator+(const Matrix<4, 4, X>& lhs, Y scalar) noexcept
+	[[nodiscard]] constexpr Matrix<4, 4, X> operator+(const Matrix<4, 4, X>& lhs, Y scalar) noexcept
 	{
 		return Matrix<4, 4, X>{lhs.columns[0] + scalar, lhs.columns[1] + scalar, lhs.columns[2] + scalar, lhs.columns[3] + scalar};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, X> operator-(const Matrix<4, 4, X>& lhs, Y scalar) noexcept
+	[[nodiscard]] constexpr Matrix<4, 4, X> operator-(const Matrix<4, 4, X>& lhs, Y scalar) noexcept
 	{
 		return Matrix<4, 4, X>{lhs.columns[0] - scalar, lhs.columns[1] - scalar, lhs.columns[2] - scalar, lhs.columns[3] - scalar};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, X> operator*(const Matrix<4, 4, X>& lhs, Y scalar) noexcept
+	[[nodiscard]] constexpr Matrix<4, 4, X> operator*(const Matrix<4, 4, X>& lhs, Y scalar) noexcept
 	{
 		return Matrix<4, 4, X>{lhs.columns[0] * scalar, lhs.columns[1] * scalar, lhs.columns[2] * scalar, lhs.columns[3] * scalar};
 	}
 
 	template <typename X>
-	[[nodiscard]] SIMD_CONSTEXPR Vector<4, X> operator*(const Matrix<4, 4, X>& lhs, const Vector<4, X>& vector) noexcept
+	[[nodiscard]] constexpr Vector<4, X> operator*(const Matrix<4, 4, X>& lhs, const Vector<4, X>& vector) noexcept
 	{
 		return  Vector<4, X>
 		{
@@ -321,7 +321,7 @@ namespace math
 	}
 
 	template <typename X>
-	[[nodiscard]] SIMD_CONSTEXPR Vector<4, X> operator*(const Matrix<4, 4, X>& lhs, const Vector<3, X>& vector) noexcept
+	[[nodiscard]] constexpr Vector<4, X> operator*(const Matrix<4, 4, X>& lhs, const Vector<3, X>& vector) noexcept
 	{
 		return  Vector<4, X>
 		{
@@ -333,13 +333,13 @@ namespace math
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, X> operator/(const Matrix<4, 4, X>& lhs, Y scalar)
+	[[nodiscard]] constexpr Matrix<4, 4, X> operator/(const Matrix<4, 4, X>& lhs, Y scalar)
 	{
 		return Matrix<4, 4, X>{lhs.columns[0] / scalar, lhs.columns[1] / scalar, lhs.columns[2] / scalar, lhs.columns[3] / scalar};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, X> operator%(const Matrix<4, 4, X>& lhs, Y scalar)
+	[[nodiscard]] constexpr Matrix<4, 4, X> operator%(const Matrix<4, 4, X>& lhs, Y scalar)
 	{
 		return Matrix<4, 4, X>{lhs.columns[0] % scalar, lhs.columns[1] % scalar, lhs.columns[2] % scalar, lhs.columns[3] % scalar};
 	}
@@ -347,30 +347,30 @@ namespace math
 	////////////////////////////////
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, Y> operator+(X scalar, const Matrix<1, 1, Y>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<1, 1, Y> operator+(X scalar, const Matrix<1, 1, Y>& rhs) noexcept
 	{
 		return Matrix<1, 1, Y>{scalar + rhs.columns[0]};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, Y> operator-(X scalar, const Matrix<1, 1, Y>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<1, 1, Y> operator-(X scalar, const Matrix<1, 1, Y>& rhs) noexcept
 	{
 		return Matrix<1, 1, Y>{scalar - rhs.columns[0]};
 	}
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, Y> operator*(X scalar, const Matrix<1, 1, Y>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<1, 1, Y> operator*(X scalar, const Matrix<1, 1, Y>& rhs) noexcept
 	{
 		return Matrix<1, 1, Y>{scalar * rhs.columns[0]};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, Y> operator/(X scalar, const Matrix<1, 1, Y>& rhs)
+	[[nodiscard]] constexpr Matrix<1, 1, Y> operator/(X scalar, const Matrix<1, 1, Y>& rhs)
 	{
 		return Matrix<1, 1, Y>{scalar / rhs.columns[0]};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<1, 1, Y> operator%(X scalar, const Matrix<1, 1, Y>& rhs)
+	[[nodiscard]] constexpr Matrix<1, 1, Y> operator%(X scalar, const Matrix<1, 1, Y>& rhs)
 	{
 		return Matrix<1, 1, Y>{scalar % rhs.columns[0]};
 	}
@@ -379,31 +379,31 @@ namespace math
 
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, Y> operator+(X scalar, const Matrix<2, 2, Y>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<2, 2, Y> operator+(X scalar, const Matrix<2, 2, Y>& rhs) noexcept
 	{
 		return Matrix<2, 2, Y>{scalar + rhs.columns[0], scalar + rhs.columns[1]};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, Y> operator-(X scalar, const Matrix<2, 2, Y>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<2, 2, Y> operator-(X scalar, const Matrix<2, 2, Y>& rhs) noexcept
 	{
 		return Matrix<2, 2, Y>{scalar - rhs.columns[0], scalar - rhs.columns[1]};
 
 	}
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, Y> operator*(X scalar, const Matrix<2, 2, Y>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<2, 2, Y> operator*(X scalar, const Matrix<2, 2, Y>& rhs) noexcept
 	{
 		return Matrix<2, 2, Y>{scalar * rhs.columns[0], scalar * rhs.columns[1]};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, Y> operator/(X scalar, const Matrix<2, 2, Y>& rhs)
+	[[nodiscard]] constexpr Matrix<2, 2, Y> operator/(X scalar, const Matrix<2, 2, Y>& rhs)
 	{
 		return Matrix<2, 2, Y>{scalar / rhs.columns[0], scalar / rhs.columns[1]};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<2, 2, Y> operator%(X scalar, const Matrix<2, 2, Y>& rhs)
+	[[nodiscard]] constexpr Matrix<2, 2, Y> operator%(X scalar, const Matrix<2, 2, Y>& rhs)
 	{
 		return Matrix<2, 2, Y>{scalar % rhs.columns[0], scalar % rhs.columns[1]};
 	}
@@ -411,31 +411,31 @@ namespace math
 	////////////////
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, Y> operator+(X scalar, const Matrix<3, 3, Y>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<3, 3, Y> operator+(X scalar, const Matrix<3, 3, Y>& rhs) noexcept
 	{
 		return Matrix<3, 3, Y>{scalar + rhs.columns[0], scalar + rhs.columns[1], scalar + rhs.columns[2]};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, Y> operator-(X scalar, const Matrix<3, 3, Y>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<3, 3, Y> operator-(X scalar, const Matrix<3, 3, Y>& rhs) noexcept
 	{
 		return Matrix<3, 3, Y>{scalar - rhs.columns[0], scalar - rhs.columns[1], scalar - rhs.columns[2]};
 
 	}
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, Y> operator*(X scalar, const Matrix<3, 3, Y>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<3, 3, Y> operator*(X scalar, const Matrix<3, 3, Y>& rhs) noexcept
 	{
 		return Matrix<3, 3, Y>{scalar * rhs.columns[0], scalar * rhs.columns[1], scalar * rhs.columns[2]};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, Y> operator/(X scalar, const Matrix<3, 3, Y>& rhs)
+	[[nodiscard]] constexpr Matrix<3, 3, Y> operator/(X scalar, const Matrix<3, 3, Y>& rhs)
 	{
 		return Matrix<3, 3, Y>{scalar / rhs.columns[0], scalar / rhs.columns[1], scalar / rhs.columns[2]};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<3, 3, Y> operator%(X scalar, const Matrix<3, 3, Y>& rhs)
+	[[nodiscard]] constexpr Matrix<3, 3, Y> operator%(X scalar, const Matrix<3, 3, Y>& rhs)
 	{
 		return Matrix<3, 3, Y>{scalar % rhs.columns[0], scalar % rhs.columns[1], scalar % rhs.columns[2]};
 	}
@@ -443,30 +443,30 @@ namespace math
 	////////////
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, Y> operator+(X scalar, const Matrix<4, 4, Y>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<4, 4, Y> operator+(X scalar, const Matrix<4, 4, Y>& rhs) noexcept
 	{
 		return Matrix<4, 4, Y>{scalar + rhs.columns[0], scalar + rhs.columns[1], scalar + rhs.columns[2], scalar + rhs.columns[3]};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, Y> operator-(X scalar, const Matrix<4, 4, Y>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<4, 4, Y> operator-(X scalar, const Matrix<4, 4, Y>& rhs) noexcept
 	{
 		return Matrix<4, 4, Y>{scalar - rhs.columns[0], scalar - rhs.columns[1], scalar - rhs.columns[2], scalar - rhs.columns[3]};
 	}
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, Y> operator*(X scalar, const Matrix<4, 4, Y>& rhs) noexcept
+	[[nodiscard]] constexpr Matrix<4, 4, Y> operator*(X scalar, const Matrix<4, 4, Y>& rhs) noexcept
 	{
 		return Matrix<4, 4, Y>{scalar * rhs.columns[0], scalar * rhs.columns[1], scalar * rhs.columns[2], rhs.columns[3] * scalar};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, Y> operator/(X scalar, const Matrix<4, 4, Y>& rhs)
+	[[nodiscard]] constexpr Matrix<4, 4, Y> operator/(X scalar, const Matrix<4, 4, Y>& rhs)
 	{
 		return Matrix<4, 4, Y>{scalar / rhs.columns[0], scalar / rhs.columns[1], scalar / rhs.columns[2], scalar / rhs.columns[3]};
 	}
 
 	template <typename X, typename Y>
-	[[nodiscard]] SIMD_CONSTEXPR Matrix<4, 4, Y> operator%(X scalar, const Matrix<4, 4, Y>& rhs)
+	[[nodiscard]] constexpr Matrix<4, 4, Y> operator%(X scalar, const Matrix<4, 4, Y>& rhs)
 	{
 		return Matrix<4, 4, Y>{scalar % rhs.columns[0], scalar % rhs.columns[1], scalar % rhs.columns[2], scalar % rhs.columns[3]};
 	}

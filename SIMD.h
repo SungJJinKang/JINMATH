@@ -41,10 +41,10 @@ typedef __m256i XMM256Int;
 
 #endif
 
-//simd function is not markd as SIMD_CONSTEXPR
-//so enclosing function decide whether to use SIMD_CONSTEXPR according to whether to support simd
+//simd function is not markd as constexpr
+//so enclosing function decide whether to use constexpr according to whether to support simd
 #ifdef L_AVX
-#define SIMD_CONSTEXPR 
+#define LMATH_CONSTEXPR 
 #else
-#define SIMD_CONSTEXPR constexpr
+#define LMATH_CONSTEXPR constexpr
 #endif

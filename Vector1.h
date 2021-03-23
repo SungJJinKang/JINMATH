@@ -19,88 +19,88 @@ namespace math
 			return &x;
 		}
 
-		SIMD_CONSTEXPR Vector()  noexcept : x{}
+		constexpr Vector()  noexcept : x{}
 		{
 
 		}
 
-		SIMD_CONSTEXPR explicit Vector(T xValue)  noexcept 
+		constexpr explicit Vector(T xValue)  noexcept 
 			: x{ xValue }
 		{
 
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR Vector(X xValue)  noexcept 
+		constexpr Vector(X xValue)  noexcept 
 			: x{ static_cast<T>(xValue) }
 		{
 
 		}
 		
-		SIMD_CONSTEXPR explicit Vector(const type& vector) noexcept
+		constexpr explicit Vector(const type& vector) noexcept
 			: x{ vector.x }
 		{
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR Vector(const Vector<1, X>& vector) noexcept
+		constexpr Vector(const Vector<1, X>& vector) noexcept
 			: x{ static_cast<T>(vector.x) }
 		{
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR Vector(const Vector<2, X>& vector) noexcept
+		constexpr Vector(const Vector<2, X>& vector) noexcept
 			: x{ static_cast<T>(vector.x) }
 		{
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR Vector(const Vector<3, X>& vector) noexcept
+		constexpr Vector(const Vector<3, X>& vector) noexcept
 			: x { static_cast<T>(vector.x) }
 		{
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR Vector(const Vector<4, X>& vector) noexcept
+		constexpr Vector(const Vector<4, X>& vector) noexcept
 			: x{ static_cast<T>(vector.x) }
 		{
 		}
 
-		SIMD_CONSTEXPR type& operator=(value_type xValue)  noexcept
+		constexpr type& operator=(value_type xValue)  noexcept
 		{
 			x = xValue;
 			return *this;
 		}
 
-		SIMD_CONSTEXPR type& operator=(const type& vector) noexcept
+		constexpr type& operator=(const type& vector) noexcept
 		{
 			x = vector.x;
 			return *this;
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR type& operator=(const Vector<1, X>& vector) noexcept
+		constexpr type& operator=(const Vector<1, X>& vector) noexcept
 		{
 			x = vector.x;
 			return *this;
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR type& operator=(const Vector<2, X>& vector) noexcept
+		constexpr type& operator=(const Vector<2, X>& vector) noexcept
 		{
 			x = vector.x;
 			return *this;
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR type& operator=(const Vector<3, X>& vector) noexcept
+		constexpr type& operator=(const Vector<3, X>& vector) noexcept
 		{
 			x = vector.x;
 			return *this;
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR type& operator=(const Vector<4, X>& vector) noexcept
+		constexpr type& operator=(const Vector<4, X>& vector) noexcept
 		{
 			x = vector.x;
 			return *this;
@@ -113,16 +113,16 @@ namespace math
 // 		type& opreator=(const type&) = default;
 // 		type& opreator=(type&&) = default;
 		
-		SIMD_CONSTEXPR std::basic_string<char> toString() const noexcept
+		constexpr std::basic_string<char> toString() const noexcept
 		{
 			std::stringstream ss;
 			ss << "x : " << x;
 			return ss.str();
 		}
 
-		[[nodiscard]] inline static SIMD_CONSTEXPR size_t componentCount(){ return 1; }
+		[[nodiscard]] inline static constexpr size_t componentCount(){ return 1; }
 
-		[[nodiscard]] SIMD_CONSTEXPR value_type& operator[](size_t i)
+		[[nodiscard]] constexpr value_type& operator[](size_t i)
 		{
 			assert(i == 0);
 			switch (i)
@@ -135,7 +135,7 @@ namespace math
 			}
 		}
 
-		[[nodiscard]] SIMD_CONSTEXPR const value_type& operator[](size_t i) const
+		[[nodiscard]] constexpr const value_type& operator[](size_t i) const
 		{
 			assert(i == 0);
 			switch (i)
@@ -148,122 +148,122 @@ namespace math
 			}
 		}
 
-		[[nodiscard]] inline SIMD_CONSTEXPR auto sqrMagnitude() const noexcept
+		[[nodiscard]] inline constexpr auto sqrMagnitude() const noexcept
 		{
 			return x * x;
 		}
 
-		[[nodiscard]] inline SIMD_CONSTEXPR auto magnitude() const noexcept
+		[[nodiscard]] inline constexpr auto magnitude() const noexcept
 		{
 			return x;
 		}
 
-		[[nodiscard]] SIMD_CONSTEXPR type normalized() const
+		[[nodiscard]] constexpr type normalized() const
 		{
 			return type{ 1 };
 		}
 
-		SIMD_CONSTEXPR void Normalize()
+		constexpr void Normalize()
 		{
 			x = 1;
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		SIMD_CONSTEXPR type operator+(const Vector<RightComponentSize, X>& rhs) noexcept
+		constexpr type operator+(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			return type(x + rhs.x);
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		SIMD_CONSTEXPR type operator-(const Vector<RightComponentSize, X>& rhs) noexcept
+		constexpr type operator-(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			return type(x - rhs.x);
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		SIMD_CONSTEXPR type operator*(const Vector<RightComponentSize, X>& rhs) noexcept
+		constexpr type operator*(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			return type(x * rhs.x);
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		SIMD_CONSTEXPR type operator/(const Vector<RightComponentSize, X>& rhs)
+		constexpr type operator/(const Vector<RightComponentSize, X>& rhs)
 		{
 			return type(x / rhs.x);
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		SIMD_CONSTEXPR type operator%(const Vector<RightComponentSize, X>& rhs)
+		constexpr type operator%(const Vector<RightComponentSize, X>& rhs)
 		{
 			return type(MODULO(T, x, rhs.x));
 		}
 
 		
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		SIMD_CONSTEXPR type& operator+=(const Vector<RightComponentSize, X>& rhs) noexcept
+		constexpr type& operator+=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x += rhs.x;
 			return *this;
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		SIMD_CONSTEXPR type& operator-=(const Vector<RightComponentSize, X>& rhs) noexcept
+		constexpr type& operator-=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x -= rhs.x;
 			return *this;
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		SIMD_CONSTEXPR type& operator*=(const Vector<RightComponentSize, X>& rhs) noexcept
+		constexpr type& operator*=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x *= rhs.x;
 			return *this;
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		SIMD_CONSTEXPR type& operator/=(const Vector<RightComponentSize, X>& rhs)
+		constexpr type& operator/=(const Vector<RightComponentSize, X>& rhs)
 		{
 			x /= rhs.x;
 			return *this;
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 1, bool> = true>
-		SIMD_CONSTEXPR type& operator%=(const Vector<RightComponentSize, X>& rhs)
+		constexpr type& operator%=(const Vector<RightComponentSize, X>& rhs)
 		{
 			MODULO(T, x, rhs.x);
 			return *this;
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR type& operator+=(const X& scalar) noexcept
+		constexpr type& operator+=(const X& scalar) noexcept
 		{
 			x += scalar;
 			return *this;
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR type& operator-=(const X& scalar) noexcept
+		constexpr type& operator-=(const X& scalar) noexcept
 		{
 			x -= scalar;
 			return *this;
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR type& operator*=(const X& scalar) noexcept
+		constexpr type& operator*=(const X& scalar) noexcept
 		{
 			x *= scalar;
 			return *this;
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR type& operator/=(const X& scalar)
+		constexpr type& operator/=(const X& scalar)
 		{
 			x /= scalar;
 			return *this;
 		}
 
 		template <typename X>
-		SIMD_CONSTEXPR type& operator%=(const X& scalar)
+		constexpr type& operator%=(const X& scalar)
 		{
 			MODULO(T, x, scalar);
 			return *this;
@@ -271,24 +271,24 @@ namespace math
 
 		//
 
-		[[nodiscard]] inline SIMD_CONSTEXPR bool operator==(const type& rhs) noexcept
+		[[nodiscard]] inline constexpr bool operator==(const type& rhs) noexcept
 		{
 			return this->x == rhs.x;
 		}
 
-		[[nodiscard]] SIMD_CONSTEXPR bool operator!=(const type& rhs) noexcept
+		[[nodiscard]] constexpr bool operator!=(const type& rhs) noexcept
 		{
 			return this->x != rhs.x;
 		}
 
 		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
-		[[nodiscard]] inline SIMD_CONSTEXPR bool operator==(const X& number) noexcept
+		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
 		{
 			return this->x == number;
 		}
 
 		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
-		[[nodiscard]] inline SIMD_CONSTEXPR bool operator!=(const X& number) noexcept
+		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
 		{
 			return this->x != number;
 		}
@@ -297,7 +297,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		SIMD_CONSTEXPR type& operator++() noexcept
+		constexpr type& operator++() noexcept
 		{
 			++x;
 			return *this;
@@ -308,7 +308,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		SIMD_CONSTEXPR type operator++(int) noexcept
+		constexpr type operator++(int) noexcept
 		{
 			type Vector{ *this };
 			++*this;
@@ -319,7 +319,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		SIMD_CONSTEXPR type& operator--() noexcept
+		constexpr type& operator--() noexcept
 		{
 			--x;
 			return *this;
@@ -330,14 +330,14 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		SIMD_CONSTEXPR type operator--(int) noexcept
+		constexpr type operator--(int) noexcept
 		{
 			type Vector{ *this };
 			--*this;
 			return Vector;
 		}
 
-		SIMD_CONSTEXPR operator std::basic_string<char>() noexcept
+		constexpr operator std::basic_string<char>() noexcept
 		{
 			return this->toString();
 		}
@@ -345,13 +345,13 @@ namespace math
 
 
 	template<typename T>
-	SIMD_CONSTEXPR Vector<1, T> operator+(const Vector<1, T>& vector) noexcept
+	constexpr Vector<1, T> operator+(const Vector<1, T>& vector) noexcept
 	{
 		return vector;
 	}
 
 	template<typename T>
-	SIMD_CONSTEXPR Vector<1, T> operator-(const Vector<1, T>& vector) noexcept
+	constexpr Vector<1, T> operator-(const Vector<1, T>& vector) noexcept
 	{
 		return Vector<1, T>(
 			-vector.x);
