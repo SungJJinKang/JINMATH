@@ -17,7 +17,12 @@ namespace math
 		union { T y, g; };
 		union { T z, b; };
 
-		const T* data() const
+		constexpr T* data() noexcept
+		{
+			return &x;
+		}
+
+		constexpr T* data() const noexcept
 		{
 			return &x;
 		}
@@ -36,15 +41,8 @@ namespace math
 		{
 		}
 
-		template <typename X>
-		constexpr Vector(X xValue)  noexcept
-			: x{ static_cast<T>(xValue) }, y{ static_cast<T>(xValue) }, z{ static_cast<T>(xValue) }
-		{
-		}
-
-		template <typename X, typename Y, typename Z>
-		constexpr Vector(X xValue, Y yValue, Z zValue) noexcept
-			: x{ static_cast<T>(xValue) }, y{ static_cast<T>(yValue) }, z{ static_cast<T>(zValue) }
+		constexpr Vector(T xValue, T yValue, T zValue) noexcept
+			: x{ xValue }, y{ yValue }, z{ zValue }
 		{
 		}
 
@@ -429,4 +427,16 @@ namespace math
 	}
 
 	using Vector3 = Vector<3, float>;
+
+	extern template struct math::Vector<3, float>;
+	extern template struct math::Vector<3, double>;
+	extern template struct math::Vector<3, long double>;
+	extern template struct math::Vector<3, short int>;
+	extern template struct math::Vector<3, int>;
+	extern template struct math::Vector<3, long int>;
+	extern template struct math::Vector<3, long long int>;
+	extern template struct math::Vector<3, unsigned short int>;
+	extern template struct math::Vector<3, unsigned int>;
+	extern template struct math::Vector<3, unsigned long int>;
+	extern template struct math::Vector<3, unsigned long long int>;
 }

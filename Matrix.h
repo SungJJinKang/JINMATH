@@ -12,6 +12,7 @@ namespace math
 	template <size_t ComponentCount1, size_t ComponentCount2, typename T>
 	struct Matrix;
 
+	/*
 	template <typename T>
 	[[nodiscard]] constexpr Matrix<1, 1, T> operator+(const Matrix<1, 1, T>& lhs, const Matrix<1, 1, T>& rhs) noexcept
 	{
@@ -30,7 +31,7 @@ namespace math
 		return Matrix<1, 1, T>{lhs.columns[0] * rhs.columns[0]};
 	}
 
-	/*
+	
 	template <typename T>
 	[[nodiscard]] constexpr Matrix<1, 1, T> operator/(const Matrix<1, 1, T>& lhs, const Matrix<1, 1, T>& rhs)
 	{
@@ -42,7 +43,7 @@ namespace math
 	{
 		return Matrix<1, 1, T>{lhs.columns[0] % rhs.columns[0]};
 	}
-	*/
+	
 	///////////////////////////////
 
 
@@ -73,7 +74,7 @@ namespace math
 		return Result;
 	}
 
-	/*
+	
 	template <typename T>
 	[[nodiscard]] constexpr Matrix<2, 2, T> operator/(const Matrix<2, 2, T>& lhs, const Matrix<2, 2, T>& rhs)
 	{
@@ -85,7 +86,7 @@ namespace math
 	{
 		return Matrix<2, 2, T>{lhs.columns[0] % rhs.columns[0], lhs.columns[1] % rhs.columns[1]};
 	}
-	*/
+	
 	////////////////
 
 	template <typename T>
@@ -118,7 +119,7 @@ namespace math
 		return Result;
 	}
 
-	/*
+	
 	template <typename T>
 	[[nodiscard]] constexpr Matrix<3, 3, T> operator/(const Matrix<3, 3, T>& lhs, const Matrix<3, 3, T>& rhs)
 	{
@@ -130,7 +131,7 @@ namespace math
 	{
 		return Matrix<3, 3, T>{lhs.columns[0] % rhs.columns[0], lhs.columns[1] % rhs.columns[1], lhs.columns[2] % rhs.columns[2]};
 	}
-	*/
+	
 	////////////
 
 	template <typename T>
@@ -165,7 +166,7 @@ namespace math
 		return Result;
 	}
 
-	/*
+	
 	template <typename T>
 	[[nodiscard]] constexpr Matrix<4, 4, T> operator/(const Matrix<4, 4, T>& lhs, const Matrix<4, 4, T>& rhs)
 	{
@@ -177,7 +178,7 @@ namespace math
 	{
 		return Matrix<4, 4, T>{lhs.columns[0] % rhs.columns[0], lhs.columns[1] % rhs.columns[1], lhs.columns[2] % rhs.columns[2], lhs.columns[3] % rhs.columns[3]};
 	}
-	*/
+	
 
 
 	///////////////////
@@ -471,6 +472,6 @@ namespace math
 		return Matrix<4, 4, Y>{scalar % rhs.columns[0], scalar % rhs.columns[1], scalar % rhs.columns[2], scalar % rhs.columns[3]};
 	}
 
-
+	*/
 
 }

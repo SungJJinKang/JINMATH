@@ -16,11 +16,22 @@ namespace math
 		using col_type = Vector<4, float>;
 
 		[[nodiscard]] inline static constexpr size_t columnCount()  noexcept { return 4; }
+
+		/// <summary>
+		/// All columns always is aligned to 16 byte, because Matrix<4, 4, float> class is aligned to 16byte
+		/// columns[0] start from address of Matrix class
+		/// Vector<4, float> is 16 byte -> columns[1] is also aligned to 16 byte
+		/// </summary>
 		col_type columns[4];
 
-		const float* data() const
+		constexpr float* data() noexcept
 		{
-			return &(columns[0].x);
+			return columns[0].data();
+		}
+
+		constexpr float* data() const noexcept
+		{
+			return columns[0].data();
 		}
 
 		static const type identify;
@@ -44,22 +55,6 @@ namespace math
 		{
 		}
 
-		/// <summary>
-		/// diagonal matrix
-		/// </summary>
-		/// <typeparam name="X"></typeparam>
-		/// <param name="value"></param>
-		/// <returns></returns>
-		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
-		constexpr Matrix(X value) noexcept
-			: columns{ 
-			col_type(value, 0, 0, 0), 
-			col_type(0, value, 0, 0), 
-			col_type(0, 0, value, 0), 
-			col_type(0, 0, 0, value) }
-		{
-		}
-
 		constexpr Matrix
 		(
 			value_type x0, value_type y0, value_type z0, value_type w0,
@@ -74,26 +69,6 @@ namespace math
 		{
 		}
 
-		template <
-			typename X0, typename Y0, typename Z0, typename W0,
-			typename X1, typename Y1, typename Z1, typename W1,
-			typename X2, typename Y2, typename Z2, typename W2,
-			typename X3, typename Y3, typename Z3, typename W3
-		>
-		constexpr Matrix
-		(
-			X0 x0, Y0 y0, Z0 z0, W0 w0,
-			X1 x1, Y1 y1, Z1 z1, W1 w1,
-			X2 x2, Y2 y2, Z2 z2, W2 w2,
-			X3 x3, Y3 y3, Z3 z3, W3 w3
-		) noexcept : columns{
-			col_type(x0, x1, x2, x3),
-			col_type(y0, y1, y2, y3),
-			col_type(z0, z1, z2, z3),
-			col_type(w0, w1, w2, w3)}
-		{
-		}
-		
 		constexpr Matrix(col_type column0Value, col_type column1Value, col_type column2Value, col_type column3Value) noexcept
 			: columns{ column0Value, column1Value, column2Value, column3Value }
 		{
@@ -140,6 +115,15 @@ namespace math
 			columns[1] = value;
 			columns[2] = value;
 			columns[3] = value;
+			return *this;
+		}
+
+		constexpr type& operator=(col_type column) noexcept
+		{
+			columns[0] = column;
+			columns[1] = column;
+			columns[2] = column;
+			columns[3] = column;
 			return *this;
 		}
 
@@ -254,6 +238,20 @@ namespace math
 			return Result;
 		}
 		
+		constexpr type operator+(float rhs) noexcept
+		{
+			return type(columns[0] + rhs, columns[1] + rhs, columns[2] + rhs, columns[3] + rhs);
+		}
+
+		constexpr type operator-(float rhs) noexcept
+		{
+			return type(columns[0] - rhs, columns[1] - rhs, columns[2] - rhs, columns[3] - rhs);
+		}
+
+		constexpr type operator*(float rhs) noexcept
+		{
+			return type(columns[0] * rhs, columns[1] * rhs, columns[2] * rhs, columns[3] * rhs);
+		}
 
 		/*
 		template <typename X>
@@ -321,8 +319,7 @@ namespace math
 		*/
 		//
 
-		template <typename X>
-		constexpr type& operator+=(const X& scalar) noexcept
+		constexpr type& operator+=(float scalar) noexcept
 		{
 			columns[0] += scalar;
 			columns[1] += scalar;
@@ -331,8 +328,7 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		constexpr type& operator-=(const X& scalar) noexcept
+		constexpr type& operator-=(float scalar) noexcept
 		{
 			columns[0] -= scalar;
 			columns[1] -= scalar;
@@ -341,8 +337,7 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		constexpr type& operator*=(const X& scalar) noexcept
+		constexpr type& operator*=(float scalar) noexcept
 		{
 			columns[0] *= scalar;
 			columns[1] *= scalar;
@@ -589,6 +584,8 @@ namespace math
 	}
 
 	using Matrix4x4 = typename Matrix<4, 4, float>;
+
+	extern template struct math::Matrix<4, 4, float>;
 }
 
 #ifdef L_AVX

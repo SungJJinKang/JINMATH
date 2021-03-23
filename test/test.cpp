@@ -9,6 +9,8 @@ int main()
 	math::Matrix4x4 a{ 1.0f };
 	math::Matrix4x4 b{ 2.0f };
 
+	std::cout << __alignof(math::Matrix<4, 4, float>) << std::endl;
+
 	auto c = a * b;
 
 	auto end = std::chrono::high_resolution_clock::now();

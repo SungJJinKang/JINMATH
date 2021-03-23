@@ -7,8 +7,9 @@ Light math Library For Game Development.
    
    * C++17
    * Header Only
-   * Suport Mata Programming
+   * Support Constexpr
+   * Support SIMD
 
 ## Roadmap
-   * Support SIMD
+  
    * Optimization

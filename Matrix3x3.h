@@ -19,9 +19,14 @@ namespace math
 		[[nodiscard]] inline static constexpr size_t columnCount()  noexcept { return 3; }
 		col_type columns[3];
 
-		const T* data() const
+		constexpr float* data() noexcept
 		{
-			return &(columns[0].x);
+			return columns[0].data();
+		}
+
+		constexpr float* data() const noexcept
+		{
+			return columns[0].data();
 		}
 
 		static const type identify;
@@ -44,21 +49,6 @@ namespace math
 		{
 		}
 
-		/// <summary>
-		/// diagonal matrix
-		/// </summary>
-		/// <typeparam name="X"></typeparam>
-		/// <param name="value"></param>
-		/// <returns></returns>
-		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true >
-		constexpr Matrix(X value) noexcept
-			: columns{ 
-			col_type(value, 0, 0), 
-			col_type(0, value, 0), 
-			col_type(0, 0, value) }
-		{
-		}
-
 		constexpr Matrix
 		(
 			value_type x0, value_type y0, value_type z0,
@@ -68,23 +58,6 @@ namespace math
 			col_type(x0, x1, x2),
 			col_type(y0, y1, y2),
 			col_type(z0, z1, z2) }
-		{
-		}
-
-		template <
-			typename X0, typename Y0, typename Z0,
-			typename X1, typename Y1, typename Z1,
-			typename X2, typename Y2, typename Z2
-		>
-			constexpr Matrix
-			(
-				X0 x0, Y0 y0, Z0 z0,
-				X1 x1, Y1 y1, Z1 z1,
-				X2 x2, Y2 y2, Z2 z2
-			) noexcept : columns{
-				col_type(x0, x1, x2),
-				col_type(y0, y1, y2),
-				col_type(z0, z1, z2)}
 		{
 		}
 
@@ -133,6 +106,14 @@ namespace math
 			columns[0] = value;
 			columns[1] = value;
 			columns[2] = value;
+			return *this;
+		}
+
+		constexpr type& operator=(col_type column) noexcept
+		{
+			columns[0] = column;
+			columns[1] = column;
+			columns[2] = column;
 			return *this;
 		}
 
@@ -238,7 +219,20 @@ namespace math
 			return type{ Result };
 		}
 
+		constexpr type operator+(float rhs) noexcept
+		{
+			return type(columns[0] + rhs, columns[1] + rhs, columns[2] + rhs);
+		}
 
+		constexpr type operator-(float rhs) noexcept
+		{
+			return type(columns[0] - rhs, columns[1] - rhs, columns[2] - rhs);
+		}
+
+		constexpr type operator*(float rhs) noexcept
+		{
+			return type(columns[0] * rhs, columns[1] * rhs, columns[2] * rhs);
+		}
 		/*
 		template <typename X>
 		constexpr type operator/(const Matrix<4, X>& rhs)
@@ -303,8 +297,7 @@ namespace math
 		*/
 		//
 
-		template <typename X>
-		constexpr type& operator+=(const X& scalar) noexcept
+		constexpr type& operator+=(T scalar) noexcept
 		{
 			columns[0] += scalar;
 			columns[1] += scalar;
@@ -312,8 +305,7 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		constexpr type& operator-=(const X& scalar) noexcept
+		constexpr type& operator-=(T scalar) noexcept
 		{
 			columns[0] -= scalar;
 			columns[1] -= scalar;
@@ -321,8 +313,7 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		constexpr type& operator*=(const X& scalar) noexcept
+		constexpr type& operator*=(T scalar) noexcept
 		{
 			columns[0] *= scalar;
 			columns[1] *= scalar;
@@ -510,4 +501,7 @@ namespace math
 	}
 
 	using Matrix3x3 = typename Matrix<3, 3, float>;
+
+	extern template struct math::Matrix<3, 3, float>;
+	extern template struct math::Matrix<3, 3, double>;
 }

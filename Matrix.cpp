@@ -15,6 +15,7 @@ template struct Matrix<4, 4, float>;
 template struct Matrix<1, 1, double>;
 template struct Matrix<2, 2, double>;
 template struct Matrix<3, 3, double>;
+template struct Matrix<4, 4, double>;
 
 /*
 template struct Matrix<1, 1, long double>;

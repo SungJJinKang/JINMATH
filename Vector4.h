@@ -6,7 +6,7 @@
 namespace math
 {
 	template <typename T>
-	struct alignas(16) Vector<4, T>
+	struct Vector<4, T>
 	{
 		static_assert(CHECK_IS_NUMBER(T));
 		static_assert(CHECK_IS_NOT_CV(T));
@@ -19,7 +19,12 @@ namespace math
 		union { T z, b; };
 		union { T w, a; };
 
-		const T* data() const
+		constexpr T* data() noexcept
+		{
+			return &x;
+		}
+
+		constexpr T* data() const noexcept
 		{
 			return &x;
 		}
@@ -39,15 +44,8 @@ namespace math
 		{
 		}
 
-		template <typename X>
-		constexpr Vector(X xValue)  noexcept
-			: x{ static_cast<T>(xValue) }, y{ static_cast<T>(xValue) }, z{ static_cast<T>(xValue) }, w{ static_cast<T>(xValue) }
-		{
-		}
-
-		template <typename X, typename Y, typename Z, typename W>
-		constexpr Vector(X xValue, Y yValue, Z zValue, W wValue) noexcept
-			: x{ static_cast<T>(xValue) }, y{ static_cast<T>(yValue) }, z{ static_cast<T>(zValue) }, w{ static_cast<T>(wValue) }
+		constexpr Vector(T xValue, T yValue, T zValue, T wValue) noexcept
+			: x{ xValue }, y{ yValue }, z{ zValue }, w{ wValue }
 		{
 		}
 			
@@ -461,7 +459,17 @@ namespace math
 
 	using Vector4 = Vector<4, float>;
 
-
+	extern template struct math::Vector<4, float>;
+	extern template struct math::Vector<4, double>;
+	extern template struct math::Vector<4, long double>;
+	extern template struct math::Vector<4, short int>;
+	extern template struct math::Vector<4, int>;
+	extern template struct math::Vector<4, long int>;
+	extern template struct math::Vector<4, long long int>;
+	extern template struct math::Vector<4, unsigned short int>;
+	extern template struct math::Vector<4, unsigned int>;
+	extern template struct math::Vector<4, unsigned long int>;
+	extern template struct math::Vector<4, unsigned long long int>;
 
 
 }

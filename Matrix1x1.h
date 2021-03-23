@@ -19,9 +19,14 @@ namespace math
 		[[nodiscard]] inline static constexpr size_t columnCount()  noexcept { return 1; }
 		col_type columns[1]; // don't change to column
 
-		const T* data() const
+		constexpr float* data() noexcept
 		{
-			return &(columns[0].x);
+			return columns[0].data();
+		}
+
+		constexpr float* data() const noexcept
+		{
+			return columns[0].data();
 		}
 
 		static const type identify;
@@ -32,16 +37,9 @@ namespace math
 		}
 
 		constexpr explicit Matrix(value_type value) noexcept
-			: columns{ value }
+			: columns{ col_type(value) }
 		{
 		}
-
-		template <typename X, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true>
-		constexpr Matrix(X value) noexcept
-			: columns{ static_cast<T>(value) }
-		{
-		}
-
 
 		constexpr Matrix(col_type column0Value) noexcept
 			: columns{ column0Value }
@@ -86,6 +84,12 @@ namespace math
 		constexpr type& operator=(value_type value) noexcept
 		{
 			columns[0] = value;
+			return *this;
+		}
+
+		constexpr type& operator=(col_type column) noexcept
+		{
+			columns[0] = column;
 			return *this;
 		}
 
@@ -168,6 +172,21 @@ namespace math
 		}
 
 
+		constexpr type operator+(T rhs) noexcept
+		{
+			return type(columns[0] + rhs);
+		}
+
+		constexpr type operator-(T rhs) noexcept
+		{
+			return type(columns[0] - rhs);
+		}
+
+		constexpr type operator*(T rhs) noexcept
+		{
+			return type(columns[0] * rhs);
+
+		}
 		/*
 		template <typename X>
 		constexpr type operator/(const Matrix<4, X>& rhs)
@@ -228,22 +247,19 @@ namespace math
 		*/
 		//
 
-		template <typename X>
-		constexpr type& operator+=(const X& scalar) noexcept
+		constexpr type& operator+=(T scalar) noexcept
 		{
 			columns[0] += scalar;
 			return *this;
 		}
 
-		template <typename X>
-		constexpr type& operator-=(const X& scalar) noexcept
+		constexpr type& operator-=(T scalar) noexcept
 		{
 			columns[0] -= scalar;
 			return *this;
 		}
 
-		template <typename X>
-		constexpr type& operator*=(const X& scalar) noexcept
+		constexpr type& operator*=(T scalar) noexcept
 		{
 			columns[0] *= scalar;
 			return *this;
@@ -383,4 +399,7 @@ namespace math
 	}
 
 	using Matrix1x1 = typename Matrix<1, 1, float>;
+
+	extern template struct math::Matrix<1, 1, float>;
+	extern template struct math::Matrix<1, 1, double>;
 }

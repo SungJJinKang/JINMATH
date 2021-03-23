@@ -14,7 +14,12 @@ namespace math
 
 		union { T x, r; };
 
-		const T* data() const
+		constexpr T* data() noexcept
+		{
+			return &x;
+		}
+
+		constexpr T* data() const noexcept
 		{
 			return &x;
 		}
@@ -24,19 +29,11 @@ namespace math
 
 		}
 
-		constexpr explicit Vector(T xValue)  noexcept 
+		constexpr explicit Vector(T xValue)  noexcept
 			: x{ xValue }
 		{
-
 		}
 
-		template <typename X>
-		constexpr Vector(X xValue)  noexcept 
-			: x{ static_cast<T>(xValue) }
-		{
-
-		}
-		
 		constexpr explicit Vector(const type& vector) noexcept
 			: x{ vector.x }
 		{
@@ -358,4 +355,16 @@ namespace math
 	}
 
 	using Vector1 = Vector<1, float>;
+
+	extern template struct math::Vector<1, float>;
+	extern template struct math::Vector<1, double>;
+	extern template struct math::Vector<1, long double>;
+	extern template struct math::Vector<1, short int>;
+	extern template struct math::Vector<1, int>;
+	extern template struct math::Vector<1, long int>;
+	extern template struct math::Vector<1, long long int>;
+	extern template struct math::Vector<1, unsigned short int>;
+	extern template struct math::Vector<1, unsigned int>;
+	extern template struct math::Vector<1, unsigned long int>;
+	extern template struct math::Vector<1, unsigned long long int>;
 }
