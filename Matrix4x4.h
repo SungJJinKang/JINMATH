@@ -18,7 +18,7 @@ namespace math
 
 		using col_type = Vector<4, T>;
 
-		[[nodiscard]] inline static constexpr size_t columnCount() noexcept { return 4; }
+		[[nodiscard]] FORCE_INLINE static constexpr size_t columnCount() noexcept { return 4; }
 
 		/// <summary>
 		/// All columns always is aligned to 16 byte, because Matrix<4, 4, T> class is aligned to 16byte
@@ -72,13 +72,13 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE constexpr Matrix(col_type column0Value, col_type column1Value, col_type column2Value, col_type column3Value) noexcept
+		FORCE_INLINE constexpr Matrix(const col_type& column0Value, const col_type& column1Value, const col_type& column2Value, const col_type& column3Value) noexcept
 			: columns{ column0Value, column1Value, column2Value, column3Value }
 		{
 		}
 
 		template <typename X, typename Y, typename Z, typename W>
-		FORCE_INLINE constexpr Matrix(col_type_template<X> column0, col_type_template<Y> column1, col_type_template<Z> column2, col_type_template<W> column3) noexcept
+		FORCE_INLINE constexpr Matrix(const col_type_template<X>& column0, const col_type_template<Y>& column1, const col_type_template<Z>& column2, const col_type_template<W>& column3) noexcept
 			: columns{ column0, column1, column2, column3 }
 		{
 		}
@@ -334,7 +334,7 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr type& operator%=(const Matrix<4, X>& rhs)
+		FORCE_INLINE type& operator%=(const Matrix<4, X>& rhs)
 		{
 			x %= rhs.x;
 			y %= rhs.y;
@@ -385,7 +385,7 @@ namespace math
 
 		
 		template <typename X, std::enable_if_t<std::is_integral_v<X>, bool> = true>
-		FORCE_INLINE constexpr type& operator%=(const X& scalar)
+		FORCE_INLINE type& operator%=(const X& scalar)
 		{
 			x %= scalar;
 			y %= scalar;
@@ -395,7 +395,7 @@ namespace math
 		}
 
 		template <typename X, std::enable_if_t<std::is_floating_point_v<X>, bool> = true>
-		FORCE_INLINE constexpr type& operator%=(const X& scalar)
+		FORCE_INLINE type& operator%=(const X& scalar)
 		{
 
 			x %= std::fmod(x, scalar);
@@ -418,14 +418,12 @@ namespace math
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1] || this->columns[2] != rhs.columns[2] || this->columns[3] != rhs.columns[3];
 		}
 
-		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const X& number) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator==(T number) const noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number && this->columns[2] == number && this->columns[3] == number;
 		}
 
-		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const X& number) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(T number) const noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number || this->columns[2] != number || this->columns[3] != number;
 		}

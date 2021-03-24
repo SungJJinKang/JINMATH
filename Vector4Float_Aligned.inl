@@ -44,21 +44,22 @@ namespace math
 
 		}
 
-		FORCE_INLINE constexpr explicit Vector(float xValue)  noexcept
-			: x{ xValue }, y{ xValue }, z{ xValue }, w{ xValue }
-		{
-		}
+ 		FORCE_INLINE constexpr explicit Vector(float xValue)  noexcept
+ 			: x{ xValue }, y{ xValue }, z{ xValue }, w{ xValue }
+ 		{
+ 		}
 
+		// This is more slow than scalar version
+// 		FORCE_INLINE explicit Vector(float xValue)  noexcept
+// 		{
+// 			*reinterpret_cast<M128F*>(this) = _mm_set1_ps(xValue);
+// 		}
+		
 		FORCE_INLINE constexpr Vector(float xValue, float yValue, float zValue, float wValue) noexcept
 			: x{ xValue }, y{ yValue }, z{ zValue }, w{ wValue }
 		{
 		}
-
-		FORCE_INLINE constexpr explicit Vector(const type& vector) noexcept
-			: x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
-		{
-		}
-
+		
 		template <typename X>
 		FORCE_INLINE constexpr Vector(const Vector<1, X>& vector) noexcept
 			: x{ static_cast<float>(vector.x) }, y{ 0 }, z{ 0 }, w{ 0 }
@@ -71,10 +72,28 @@ namespace math
 		{
 		}
 
+		/// <summary>
+		/// When passed parameter have same value type
+		/// </summary>
+		/// <param name="vector"></param>
+		/// <returns></returns>
+		FORCE_INLINE explicit Vector(const Vector<3, float>& vector) noexcept
+		{
+			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
+			std::memcpy(this, &vector, sizeof(float) * 3);
+			this->w = 0;
+		}
+
 		template <typename X>
 		FORCE_INLINE constexpr Vector(const Vector<3, X>& vector) noexcept
 			: x{ static_cast<float>(vector.x) }, y{ static_cast<float>(vector.y) }, z{ static_cast<float>(vector.z) }, w{ 0 }
 		{
+		}
+
+		FORCE_INLINE explicit Vector(const type& vector) noexcept
+		{
+			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
+			std::memcpy(this, &vector, sizeof(type));
 		}
 
 		template <typename X>
@@ -91,16 +110,7 @@ namespace math
 			w = xValue;
 			return *this;
 		}
-
-		FORCE_INLINE constexpr type& operator=(const type& vector) noexcept
-		{
-			x = vector.x;
-			y = vector.y;
-			z = vector.z;
-			w = vector.w;
-			return *this;
-		}
-
+		
 		template <typename X>
 		FORCE_INLINE constexpr type& operator=(const Vector<1, X>& vector) noexcept
 		{
@@ -121,6 +131,13 @@ namespace math
 			return *this;
 		}
 
+		FORCE_INLINE type& operator=(const Vector<3, float>& vector) noexcept
+		{
+			std::memcpy(this, &vector, sizeof(float) * 3);
+			this->w = 0;
+			return *this;
+		}
+
 		template <typename X>
 		FORCE_INLINE constexpr type& operator=(const Vector<3, X>& vector) noexcept
 		{
@@ -131,6 +148,27 @@ namespace math
 			return *this;
 		}
 
+		/// <summary>
+		/// when type T is same with parameter's value type
+		/// </summary>
+		/// <param name="vector"></param>
+		/// <returns></returns>
+		FORCE_INLINE type& operator=(const type& vector) noexcept
+		{
+			// 			x = vector.x;
+			// 			y = vector.y;
+			// 			z = vector.z;
+			// 			w = vector.w;
+			std::memcpy(this, &vector, sizeof(type));
+			return *this;
+		}
+
+		/// <summary>
+		/// when type T is different with parameter's value type
+		/// </summary>
+		/// <typeparam name="X"></typeparam>
+		/// <param name="vector"></param>
+		/// <returns></returns>
 		template <typename X>
 		FORCE_INLINE constexpr type& operator=(const Vector<4, X>& vector) noexcept
 		{
@@ -153,7 +191,7 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] inline static constexpr size_t componentCount() noexcept { return 4; }
+		[[nodiscard]] FORCE_INLINE static constexpr size_t componentCount() noexcept { return 4; }
 
 		[[nodiscard]] FORCE_INLINE constexpr value_type& operator[](size_t i)
 		{
@@ -315,8 +353,7 @@ namespace math
 
 		//
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator+=(const X& scalar) noexcept
+		FORCE_INLINE constexpr type& operator+=(float scalar) noexcept
 		{
 			x += scalar;
 			y += scalar;
@@ -325,8 +362,7 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator-=(const X& scalar) noexcept
+		FORCE_INLINE constexpr type& operator-=(float scalar) noexcept
 		{
 			x -= scalar;
 			y -= scalar;
@@ -335,8 +371,7 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator*=(const X& scalar) noexcept
+		FORCE_INLINE constexpr type& operator*=(float scalar) noexcept
 		{
 			x *= scalar;
 			y *= scalar;
@@ -345,8 +380,7 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator/=(const X& scalar)
+		FORCE_INLINE constexpr type& operator/=(float scalar)
 		{
 			x /= scalar;
 			y /= scalar;
@@ -355,8 +389,7 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator%=(const X& scalar)
+		FORCE_INLINE type& operator%=(float scalar)
 		{
 			MODULO(float, x, scalar);
 			MODULO(float, y, scalar);
@@ -377,14 +410,12 @@ namespace math
 			return this->x != rhs.x || this->y != rhs.y || this->z != rhs.z || this->w != rhs.w;
 		}
 
-		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const X& number) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator==(float number) const noexcept
 		{
 			return this->x == number && this->y == number && this->z == number && this->w == number;
 		}
 
-		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const X& number) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(float number) const noexcept
 		{
 			return this->x != number || this->y != number || this->z != number || this->w != number;
 		}
@@ -407,7 +438,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type operator++(int) noexcept
+		FORCE_INLINE type operator++(int) noexcept
 		{
 			type Vector{ *this };
 			++* this;
@@ -432,7 +463,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type operator--(int) noexcept
+		FORCE_INLINE type operator--(int) noexcept
 		{
 			type Vector{ *this };
 			--* this;

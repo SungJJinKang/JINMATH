@@ -59,11 +59,6 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE constexpr explicit Vector(const type& vector) noexcept
-			: x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
-		{
-		}
-
 		template <typename X>
 		FORCE_INLINE constexpr Vector(const Vector<1, X>& vector) noexcept
 			: x{ static_cast<T>(vector.x) }, y{ 0 }, z{ 0 }, w{ 0 }
@@ -76,10 +71,21 @@ namespace math
 		{
 		}
 
+		FORCE_INLINE Vector(const Vector<3, T>& vector) noexcept
+		{
+			std::memcpy(this, &vector, sizeof(T) * 3);
+			this->w = 0;
+		}
+
 		template <typename X>
 		FORCE_INLINE constexpr Vector(const Vector<3, X>& vector) noexcept
 			: x{ static_cast<T>(vector.x) }, y{ static_cast<T>(vector.y) }, z{ static_cast<T>(vector.z) }, w{ 0 }
 		{
+		}
+
+		FORCE_INLINE explicit Vector(const type& vector) noexcept
+		{
+			std::memcpy(this, &vector, sizeof(type));
 		}
 
 		template <typename X>
@@ -94,15 +100,6 @@ namespace math
 			y = xValue;
 			z = xValue;
 			w = xValue;
-			return *this;
-		}
-
-		FORCE_INLINE constexpr type& operator=(const type& vector) noexcept
-		{
-			x = vector.x;
-			y = vector.y;
-			z = vector.z;
-			w = vector.w;
 			return *this;
 		}
 
@@ -126,6 +123,13 @@ namespace math
 			return *this;
 		}
 
+		FORCE_INLINE type& operator=(const Vector<3, T>& vector) noexcept
+		{
+			std::memcpy(this, &vector, sizeof(T) * 3);
+			this->w = 0;
+			return *this;
+		}
+
 		template <typename X>
 		FORCE_INLINE constexpr type& operator=(const Vector<3, X>& vector) noexcept
 		{
@@ -133,6 +137,12 @@ namespace math
 			y = vector.y;
 			z = vector.z;
 			w = 0;
+			return *this;
+		}
+
+		FORCE_INLINE type& operator=(const type& vector) noexcept
+		{
+			std::memcpy(this, &vector, sizeof(type));
 			return *this;
 		}
 
@@ -307,7 +317,7 @@ namespace math
 		}
 
 		template <size_t RightComponentSize, typename X>
-		FORCE_INLINE constexpr type& operator%=(const Vector<RightComponentSize, X>& rhs)
+		FORCE_INLINE type& operator%=(const Vector<RightComponentSize, X>& rhs)
 		{
 			MODULO(T, x, rhs.x);
 			MODULO(T, y, rhs.y);
@@ -318,8 +328,7 @@ namespace math
 
 		//
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator+=(const X& scalar) noexcept
+		FORCE_INLINE constexpr type& operator+=(T scalar) noexcept
 		{
 			x += scalar;
 			y += scalar;
@@ -328,8 +337,7 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator-=(const X& scalar) noexcept
+		FORCE_INLINE constexpr type& operator-=(T scalar) noexcept
 		{
 			x -= scalar;
 			y -= scalar;
@@ -338,8 +346,7 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator*=(const X& scalar) noexcept
+		FORCE_INLINE constexpr type& operator*=(T scalar) noexcept
 		{
 			x *= scalar;
 			y *= scalar;
@@ -348,8 +355,7 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator/=(const X& scalar)
+		FORCE_INLINE constexpr type& operator/=(T scalar)
 		{
 			x /= scalar;
 			y /= scalar;
@@ -358,8 +364,7 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator%=(const X& scalar)
+		FORCE_INLINE type& operator%=(T scalar)
 		{
 			MODULO(T, x, scalar);
 			MODULO(T, y, scalar);
@@ -380,14 +385,12 @@ namespace math
 			return this->x != rhs.x || this->y != rhs.y || this->z != rhs.z || this->w != rhs.w;
 		}
 
-		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const X& number) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator==(T number) const noexcept
 		{
 			return this->x == number && this->y == number && this->z == number && this->w == number;
 		}
 
-		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const X& number) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(T number) const noexcept
 		{
 			return this->x != number || this->y != number || this->z != number || this->w != number;
 		}

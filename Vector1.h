@@ -117,7 +117,7 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] inline static constexpr size_t componentCount() noexcept { return 1; }
+		[[nodiscard]] FORCE_INLINE static constexpr size_t componentCount() noexcept { return 1; }
 
 		[[nodiscard]] FORCE_INLINE constexpr value_type& operator[](size_t i)
 		{
@@ -225,42 +225,42 @@ namespace math
 		}
 
 		template <size_t RightComponentSize, typename X>
-		FORCE_INLINE constexpr type& operator%=(const Vector<RightComponentSize, X>& rhs)
+		FORCE_INLINE type& operator%=(const Vector<RightComponentSize, X>& rhs)
 		{
 			MODULO(T, x, rhs.x);
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator+=(const X& scalar) noexcept
+		
+		FORCE_INLINE constexpr type& operator+=(T scalar) noexcept
 		{
 			x += scalar;
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator-=(const X& scalar) noexcept
+		
+		FORCE_INLINE constexpr type& operator-=(T scalar) noexcept
 		{
 			x -= scalar;
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator*=(const X& scalar) noexcept
+		
+		FORCE_INLINE constexpr type& operator*=(T scalar) noexcept
 		{
 			x *= scalar;
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator/=(const X& scalar)
+		
+		FORCE_INLINE constexpr type& operator/=(T scalar)
 		{
 			x /= scalar;
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr type& operator%=(const X& scalar)
+		
+		FORCE_INLINE type& operator%=(T scalar)
 		{
 			MODULO(T, x, scalar);
 			return *this;
@@ -278,14 +278,14 @@ namespace math
 			return this->x != rhs.x;
 		}
 
-		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const X& number) const noexcept
+		
+		[[nodiscard]] FORCE_INLINE constexpr bool operator==(T number) const noexcept
 		{
 			return this->x == number;
 		}
 
-		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const X& number) const noexcept
+		
+		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(T number) const noexcept
 		{
 			return this->x != number;
 		}

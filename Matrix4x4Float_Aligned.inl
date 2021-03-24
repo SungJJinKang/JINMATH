@@ -14,7 +14,7 @@ namespace math
 
 		using col_type = Vector<4, float>;
 
-		[[nodiscard]] inline static constexpr size_t columnCount()  noexcept { return 4; }
+		[[nodiscard]] FORCE_INLINE static constexpr size_t columnCount()  noexcept { return 4; }
 
 		/// <summary>
 		/// All columns always is aligned to 16 byte, because Matrix<4, 4, float> class is aligned to 16byte
@@ -34,6 +34,25 @@ namespace math
 		}
 
 		static const type identify;
+
+		FORCE_INLINE void InitializeSIMD(const type& matrix) noexcept
+		{
+			//std::memcpy(this->data(), matrix.data(), sizeof(type)); // this is slower than SIMD
+
+			M256F* A = reinterpret_cast<M256F*>(this);
+			const float* B = reinterpret_cast<const float*>(&matrix);
+			A[0] = _mm256_load_ps(B); // copy 0 ~ 256 OF B to 0 ~ 256 this
+			A[1] = _mm256_load_ps(B + 8); // B + 8 -> B + sizeof(float) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
+
+		}
+
+		FORCE_INLINE void InitializeSIMD(const col_type& column) noexcept
+		{
+			M256F* A = reinterpret_cast<M256F*>(this);
+			const M128F* B = reinterpret_cast<const M128F*>(&column);
+			A[0] = _mm256_broadcast_ps(B); // copy 0 ~ 256 OF B to 0 ~ 256 this
+			A[1] = _mm256_broadcast_ps(B); // B + 8 -> B + sizeof(float) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
+		}
 
 		FORCE_INLINE constexpr Matrix() noexcept : columns{}
 		{
@@ -78,47 +97,27 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE constexpr Matrix(col_type column0Value, col_type column1Value, col_type column2Value, col_type column3Value) noexcept
+		FORCE_INLINE Matrix(const col_type& columnValue)
+		{
+			this->InitializeSIMD(columnValue);
+		}
+
+		FORCE_INLINE constexpr Matrix(const col_type& column0Value, const col_type& column1Value, const col_type& column2Value, const col_type& column3Value) noexcept
 			: columns{ column0Value, column1Value, column2Value, column3Value }
 		{
 		}
 
 		template <typename X, typename Y, typename Z, typename W>
-		FORCE_INLINE constexpr Matrix(col_type_template<X> column0, col_type_template<Y> column1, col_type_template<Z> column2, col_type_template<W> column3) noexcept
+		FORCE_INLINE constexpr Matrix(const col_type_template<X>& column0, const col_type_template<Y>& column1, const col_type_template<Z>& column2, const col_type_template<W>& column3) noexcept
 			: columns{ column0, column1, column2, column3 }
 		{
 		}
 
-		
-
-		FORCE_INLINE void InitializeSIMD(const type& matrix) noexcept
-		{
-			M256F* A = reinterpret_cast<M256F*>(this);
-			const float* B = reinterpret_cast<const float*>(&matrix);
-			A[0] = _mm256_load_ps(B); // copy 0 ~ 256 OF B to 0 ~ 256 this
-			A[1] = _mm256_load_ps(B + 8); // B + 8 -> B + sizeof(float) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
-		}
-
-		FORCE_INLINE void InitializeSIMD(const col_type& column) noexcept
-		{
-			M256F* A = reinterpret_cast<M256F*>(this);
-			const M128F* B = reinterpret_cast<const M128F*>(&column);
-			A[0] = _mm256_broadcast_ps(B); // copy 0 ~ 256 OF B to 0 ~ 256 this
-			A[1] = _mm256_broadcast_ps(B); // B + 8 -> B + sizeof(float) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
-		}
-		
 		FORCE_INLINE explicit Matrix(const type& matrix) noexcept
 		{
 			this->InitializeSIMD(matrix);
 		}
-		
-		/*
-		FORCE_INLINE constexpr explicit Matrix(const type& matrix) noexcept
-			: columns{ matrix.columns[0], matrix.columns[1], matrix.columns[2], matrix.columns[3] }
-		{
-		}
-		*/
-
+	
 		template <typename X>
 		FORCE_INLINE constexpr Matrix(const Matrix<1, 1, X>& matrix) noexcept
 			: columns{ matrix.columns[0], {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1} }
@@ -322,16 +321,21 @@ namespace math
 			};
 		}	
 
-		template <>
-		[[nodiscard]] FORCE_INLINE constexpr Vector<3, float> operator*(const Vector<3, float>& vector) const noexcept
-		{
-			return Vector<3, float>
-			{
-				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2],
-					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2],
-					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2]
-			};
-		}
+		/// <summary>
+		/// SIMD version is a little faster than scalar version
+		/// </summary>
+		/// <param name="vector"></param>
+		/// <returns></returns>
+// 		template <>
+// 		[[nodiscard]] FORCE_INLINE constexpr Vector<3, float> operator*(const Vector<3, float>& vector) const noexcept
+// 		{
+// 			return Vector<3, float>
+// 			{
+// 				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2],
+// 					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2],
+// 					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2]
+// 			};
+// 		}
 
 		FORCE_INLINE constexpr type operator+(float rhs) const noexcept
 		{
@@ -403,7 +407,7 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr type& operator%=(const Matrix<4, X>& rhs)
+		FORCE_INLINE type& operator%=(const Matrix<4, X>& rhs)
 		{
 			x %= rhs.x;
 			y %= rhs.y;
@@ -454,7 +458,7 @@ namespace math
 
 
 		template <typename X, std::enable_if_t<std::is_integral_v<X>, bool> = true>
-		FORCE_INLINE constexpr type& operator%=(const X& scalar)
+		FORCE_INLINE type& operator%=(const X& scalar)
 		{
 			x %= scalar;
 			y %= scalar;
@@ -464,7 +468,7 @@ namespace math
 		}
 
 		template <typename X, std::enable_if_t<std::is_floating_point_v<X>, bool> = true>
-		FORCE_INLINE constexpr type& operator%=(const X& scalar)
+		FORCE_INLINE type& operator%=(const X& scalar)
 		{
 
 			x %= std::fmod(x, scalar);
@@ -487,14 +491,12 @@ namespace math
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1] || this->columns[2] != rhs.columns[2] || this->columns[3] != rhs.columns[3];
 		}
 
-		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const X& number) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator==(float number) const noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number && this->columns[2] == number && this->columns[3] == number;
 		}
 
-		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const X& number) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(float number) const noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number || this->columns[2] != number || this->columns[3] != number;
 		}
