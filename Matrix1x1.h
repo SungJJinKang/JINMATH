@@ -154,35 +154,35 @@ namespace math
 
 
 		template <typename X>
-		constexpr type operator+(const Matrix<1, 1, X>& rhs) noexcept
+		constexpr type operator+(const Matrix<1, 1, X>& rhs) const noexcept
 		{
 			return type(columns[0] + rhs.columns[0]);
 		}
 
 		template <typename X>
-		constexpr type operator-(const Matrix<1, 1, X>& rhs) noexcept
+		constexpr type operator-(const Matrix<1, 1, X>& rhs) const noexcept
 		{
 			return type(columns[0] - rhs.columns[0]);
 		}
 
 		template <typename X>
-		constexpr type operator*(const Matrix<1, 1, X>& rhs) noexcept
+		constexpr type operator*(const Matrix<1, 1, X>& rhs) const noexcept
 		{
 			return Matrix<1, 1, T>(columns[0] * rhs.columns[0]);
 		}
 
 
-		constexpr type operator+(T rhs) noexcept
+		constexpr type operator+(T rhs) const noexcept
 		{
 			return type(columns[0] + rhs);
 		}
 
-		constexpr type operator-(T rhs) noexcept
+		constexpr type operator-(T rhs) const noexcept
 		{
 			return type(columns[0] - rhs);
 		}
 
-		constexpr type operator*(T rhs) noexcept
+		constexpr type operator*(T rhs) const noexcept
 		{
 			return type(columns[0] * rhs);
 
@@ -301,24 +301,24 @@ namespace math
 
 		//
 
-		[[nodiscard]] inline constexpr bool operator==(const type& rhs) noexcept
+		[[nodiscard]] inline constexpr bool operator==(const type& rhs) const noexcept
 		{
 			return this->columns[0] == rhs.columns[0];
 		}
 
-		[[nodiscard]] constexpr bool operator!=(const type& rhs) noexcept
+		[[nodiscard]] constexpr bool operator!=(const type& rhs) const noexcept
 		{
 			return this->columns[0] != rhs.columns[0];
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
+		[[nodiscard]] inline constexpr bool operator==(const X& number) const noexcept
 		{
 			return this->columns[0] == number;
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
+		[[nodiscard]] inline constexpr bool operator!=(const X& number) const noexcept
 		{
 			return this->columns[0] != number;
 		}
@@ -367,7 +367,7 @@ namespace math
 			return Matrix;
 		}
 
-		operator std::basic_string<char>() noexcept
+		operator std::basic_string<char>() const noexcept
 		{
 			return this->toString();
 		}

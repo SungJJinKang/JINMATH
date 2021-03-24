@@ -43,6 +43,8 @@ typedef __m256i M256I;
 
 #define M128F_REPLICATE(M128F, ElementIndex) _mm_permute_ps(M128F, SHUFFLEMASK(ElementIndex, ElementIndex, ElementIndex, ElementIndex)) 
 
+#define M128F_SWIZZLE(M128F, X, Y, Z, W) _mm_permute_ps(M128F, SHUFFLEMASK(X, Y, Z, W)) 
+
 FORCE_INLINE M128F M128F_ADD(const M128F& Vec1, const M128F& Vec2)
 {
 	return _mm_add_ps(Vec1, Vec2);

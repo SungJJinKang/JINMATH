@@ -190,19 +190,19 @@ namespace math
 
 
 		template <typename X>
-		constexpr type operator+(const Matrix<3, 3, X>& rhs) noexcept
+		constexpr type operator+(const Matrix<3, 3, X>& rhs) const noexcept
 		{
 			return type(columns[0] + rhs.columns[0], columns[1] + rhs.columns[1], columns[2] + rhs.columns[2]);
 		}
 
 		template <typename X>
-		constexpr type operator-(const Matrix<3, 3, X>& rhs) noexcept
+		constexpr type operator-(const Matrix<3, 3, X>& rhs) const noexcept
 		{
 			return type(columns[0] - rhs.columns[0], columns[1] - rhs.columns[1], columns[2] - rhs.columns[2]);
 		}
 
 		template <typename X>
-		[[nodiscard]] constexpr type operator*(const Matrix<3, 3, X>& rhs) noexcept
+		[[nodiscard]] constexpr type operator*(const Matrix<3, 3, X>& rhs) const noexcept
 		{
 			const col_type SrcA0 = columns[0];
 			const col_type SrcA1 = columns[1];
@@ -220,7 +220,7 @@ namespace math
 		}
 
 		template <typename X>
-		[[nodiscard]] constexpr Vector<3, X> operator*(const Vector<3, X>& vector) noexcept
+		[[nodiscard]] constexpr Vector<3, X> operator*(const Vector<3, X>& vector) const noexcept
 		{
 			return  Vector<3, X>
 			{
@@ -230,17 +230,17 @@ namespace math
 			};
 		}
 
-		constexpr type operator+(float rhs) noexcept
+		constexpr type operator+(float rhs) const noexcept
 		{
 			return type(columns[0] + rhs, columns[1] + rhs, columns[2] + rhs);
 		}
 
-		constexpr type operator-(float rhs) noexcept
+		constexpr type operator-(float rhs) const noexcept
 		{
 			return type(columns[0] - rhs, columns[1] - rhs, columns[2] - rhs);
 		}
 
-		constexpr type operator*(float rhs) noexcept
+		constexpr type operator*(float rhs) const noexcept
 		{
 			return type(columns[0] * rhs, columns[1] * rhs, columns[2] * rhs);
 		}
@@ -368,24 +368,24 @@ namespace math
 
 		//
 
-		[[nodiscard]] inline constexpr bool operator==(const type& rhs) noexcept
+		[[nodiscard]] inline constexpr bool operator==(const type& rhs) const noexcept
 		{
 			return this->columns[0] == rhs.columns[0] && this->columns[1] == rhs.columns[1] && this->columns[2] == rhs.columns[2];
 		}
 
-		[[nodiscard]] constexpr bool operator!=(const type& rhs) noexcept
+		[[nodiscard]] constexpr bool operator!=(const type& rhs) const noexcept
 		{
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1] || this->columns[2] != rhs.columns[2];
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
+		[[nodiscard]] inline constexpr bool operator==(const X& number) const noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number && this->columns[2] == number;
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
+		[[nodiscard]] inline constexpr bool operator!=(const X& number) const noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number || this->columns[2] != number;
 		}
@@ -438,13 +438,13 @@ namespace math
 			return Matrix;
 		}
 
-		operator std::basic_string<char>() noexcept
+		operator std::basic_string<char>() const noexcept
 		{
 			return this->toString();
 		}
 
 		template <typename U = T, std::enable_if_t<std::is_signed_v<U>, bool> = true>
-		constexpr type inverse()
+		constexpr type inverse() const noexcept
 		{
 			value_type OneOverDetercolumnsinant = static_cast<value_type>(1) / (
 				+columns[0][0] * (columns[1][1] * columns[2][2] - columns[2][1] * columns[1][2])
@@ -465,7 +465,7 @@ namespace math
 			return Inverse;
 		}
 
-		constexpr type transpose()
+		constexpr type transpose() const noexcept
 		{
 			type Result;
 			Result[0][0] = columns[0][0];
@@ -482,7 +482,7 @@ namespace math
 			return Result;
 		}
 
-		constexpr value_type determinant()
+		constexpr value_type determinant() const noexcept
 		{
 			return
 				+columns[0][0] * (columns[1][1] * columns[2][2] - columns[2][1] * columns[1][2])
@@ -490,7 +490,7 @@ namespace math
 				+ columns[2][0] * (columns[0][1] * columns[1][2] - columns[1][1] * columns[0][2]);
 		}
 
-		constexpr auto trace()
+		constexpr auto trace() const noexcept
 		{
 			return columns[0][0] + columns[1][1] + columns[2][2];
 		}

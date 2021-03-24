@@ -191,7 +191,7 @@ namespace math
 			return static_cast<float>(math::sqrt(sqrMagnitude()));
 		}
 
-		[[nodiscard]] constexpr type normalized() const
+		[[nodiscard]] constexpr type normalized() const noexcept
 		{
 			auto mag = magnitude();
 			if (mag == 0)
@@ -212,31 +212,31 @@ namespace math
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator+(const Vector<RightComponentSize, X>& rhs) noexcept
+		constexpr type operator+(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x + rhs.x, y + rhs.y, z + rhs.z);
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator-(const Vector<RightComponentSize, X>& rhs) noexcept
+		constexpr type operator-(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x - rhs.x, y - rhs.y, z - rhs.z);
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator*(const Vector<RightComponentSize, X>& rhs) noexcept
+		constexpr type operator*(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x * rhs.x, y * rhs.y, z * rhs.z);
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator/(const Vector<RightComponentSize, X>& rhs)
+		constexpr type operator/(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x / rhs.x, y / rhs.y, z / rhs.z);
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator%(const Vector<RightComponentSize, X>& rhs)
+		constexpr type operator%(const Vector<RightComponentSize, X>& rhs) const
 		{
 			return type(MODULO(T, x, rhs.x), MODULO(T, y, rhs.y), MODULO(T, z, rhs.z));
 		}
@@ -335,24 +335,24 @@ namespace math
 
 		//
 
-		[[nodiscard]] inline constexpr bool operator==(const type& rhs) noexcept
+		[[nodiscard]] inline constexpr bool operator==(const type& rhs) const noexcept
 		{
 			return this->x == rhs.x && this->y == rhs.y && this->z == rhs.z;
 		}
 
-		[[nodiscard]] constexpr bool operator!=(const type& rhs) noexcept
+		[[nodiscard]] constexpr bool operator!=(const type& rhs) const noexcept
 		{
 			return this->x != rhs.x || this->y != rhs.y || this->z != rhs.z;
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
+		[[nodiscard]] inline constexpr bool operator==(const X& number) const noexcept
 		{
 			return this->x == number && this->y == number && this->z == number;
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
+		[[nodiscard]] inline constexpr bool operator!=(const X& number) const noexcept
 		{
 			return this->x != number || this->y != number || this->z != number;
 		}
@@ -405,7 +405,7 @@ namespace math
 			return Vector;
 		}
 
-		operator std::basic_string<char>() noexcept
+		operator std::basic_string<char>() const noexcept
 		{
 			return this->toString();
 		}

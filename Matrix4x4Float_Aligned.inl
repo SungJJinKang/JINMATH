@@ -202,41 +202,19 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type operator+(const Matrix<4, 4, X>& rhs) noexcept
+		constexpr type operator+(const Matrix<4, 4, X>& rhs) const noexcept
 		{
 			return type(columns[0] + rhs.columns[0], columns[1] + rhs.columns[1], columns[2] + rhs.columns[2], columns[3] + rhs.columns[3]);
 		}
 
 		template <typename X>
-		constexpr type operator-(const Matrix<4, 4, X>& rhs) noexcept
+		constexpr type operator-(const Matrix<4, 4, X>& rhs) const noexcept
 		{
 			return type(columns[0] - rhs.columns[0], columns[1] - rhs.columns[1], columns[2] - rhs.columns[2], columns[3] - rhs.columns[3]);
 		}
 
-		template <typename X>
-		[[nodiscard]] constexpr type operator*(const Matrix<4, 4, X>& rhs) noexcept
-		{
-			const col_type SrcA0 = columns[0];
-			const col_type SrcA1 = columns[1];
-			const col_type SrcA2 = columns[2];
-			const col_type SrcA3 = columns[3];
-
-			const col_type SrcB0 = rhs[0];
-			const col_type SrcB1 = rhs[1];
-			const col_type SrcB2 = rhs[2];
-			const col_type SrcB3 = rhs[3];
-
-			Matrix<4, 4, float> Result;
-			Result[0] = SrcA0 * SrcB0[0] + SrcA1 * SrcB0[1] + SrcA2 * SrcB0[2] + SrcA3 * SrcB0[3];
-			Result[1] = SrcA0 * SrcB1[0] + SrcA1 * SrcB1[1] + SrcA2 * SrcB1[2] + SrcA3 * SrcB1[3];
-			Result[2] = SrcA0 * SrcB2[0] + SrcA1 * SrcB2[1] + SrcA2 * SrcB2[2] + SrcA3 * SrcB2[3];
-			Result[3] = SrcA0 * SrcB3[0] + SrcA1 * SrcB3[1] + SrcA2 * SrcB3[2] + SrcA3 * SrcB3[3];
-			
-			return Result;
-		}
-
 		template <>
-		[[nodiscard]] type operator*(const Matrix<4, 4, float>& rhs) noexcept
+		[[nodiscard]] type operator*(const Matrix<4, 4, float>& rhs) const noexcept
 		{
 			Matrix<4, 4, float> Result{};
 
@@ -274,7 +252,7 @@ namespace math
 
 
 		template <typename X>
-		[[nodiscard]] constexpr Vector<4, X> operator*(const Vector<4, X>& vector) noexcept
+		[[nodiscard]] constexpr Vector<4, X> operator*(const Vector<4, X>& vector) const noexcept
 		{
 			return Vector<4, X>
 			{
@@ -285,36 +263,28 @@ namespace math
 			};
 		}
 
-		
-		/// <summary>
-		/// SIMD VERSION
-		/// </summary>
-		/// <param name="vector"></param>
-		/// <returns></returns>
-		template <>
-		[[nodiscard]] Vector<4, float> operator*(const Vector<4, float>& vector) noexcept
+		template <typename X>
+		[[nodiscard]] constexpr Vector<3, X> operator*(const Vector<3, X>& vector) const noexcept
 		{
-			return Vector<4, float>
+			return Vector<3, X>
 			{
-				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2] + this->columns[3][0] * vector[3],
-					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2] + this->columns[3][1] * vector[3],
-					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2] + this->columns[3][2] * vector[3],
-					this->columns[0][3] * vector[0] + this->columns[1][3] * vector[1] + this->columns[2][3] * vector[2] + this->columns[3][3] * vector[3]
+				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2],
+					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2],
+					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2]
 			};
-		}
-		
+		}	
 
-		constexpr type operator+(float rhs) noexcept
+		constexpr type operator+(float rhs) const noexcept
 		{
 			return type(columns[0] + rhs, columns[1] + rhs, columns[2] + rhs, columns[3] + rhs);
 		}
 
-		constexpr type operator-(float rhs) noexcept
+		constexpr type operator-(float rhs) const noexcept
 		{
 			return type(columns[0] - rhs, columns[1] - rhs, columns[2] - rhs, columns[3] - rhs);
 		}
 
-		constexpr type operator*(float rhs) noexcept
+		constexpr type operator*(float rhs) const noexcept
 		{
 			return type(columns[0] * rhs, columns[1] * rhs, columns[2] * rhs, columns[3] * rhs);
 		}
@@ -448,24 +418,24 @@ namespace math
 
 		//
 
-		[[nodiscard]] inline constexpr bool operator==(const type& rhs) noexcept
+		[[nodiscard]] inline constexpr bool operator==(const type& rhs) const noexcept
 		{
 			return this->columns[0] == rhs.columns[0] && this->columns[1] == rhs.columns[1] && this->columns[2] == rhs.columns[2] && this->columns[3] == rhs.columns[3];
 		}
 
-		[[nodiscard]] constexpr bool operator!=(const type& rhs) noexcept
+		[[nodiscard]] constexpr bool operator!=(const type& rhs) const noexcept
 		{
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1] || this->columns[2] != rhs.columns[2] || this->columns[3] != rhs.columns[3];
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
+		[[nodiscard]] inline constexpr bool operator==(const X& number) const noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number && this->columns[2] == number && this->columns[3] == number;
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
+		[[nodiscard]] inline constexpr bool operator!=(const X& number) const noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number || this->columns[2] != number || this->columns[3] != number;
 		}
@@ -520,12 +490,12 @@ namespace math
 			return Matrix;
 		}
 
-		operator std::basic_string<char>() noexcept
+		operator std::basic_string<char>() const noexcept
 		{
 			return this->toString();
 		}
 
-		constexpr type inverse()
+		constexpr type inverse() const noexcept
 		{
 			value_type Coef00 = columns[2][2] * columns[3][3] - columns[3][2] * columns[2][3];
 			value_type Coef02 = columns[1][2] * columns[3][3] - columns[3][2] * columns[1][3];
@@ -582,7 +552,7 @@ namespace math
 			return type{ Inverse * OneOverDeterminant };
 		}
 
-		constexpr type transpose()
+		constexpr type transpose() const noexcept
 		{
 			type Result;
 			Result[0][0] = columns[0][0];
@@ -608,7 +578,7 @@ namespace math
 		}
 
 		template <typename U = float, std::enable_if_t<std::is_signed_v<U>, bool> = true>
-		constexpr value_type determinant()
+		constexpr value_type determinant() const noexcept
 		{
 			value_type SubFactor00 = columns[2][2] * columns[3][3] - columns[3][2] * columns[2][3];
 			value_type SubFactor01 = columns[2][1] * columns[3][3] - columns[3][1] * columns[2][3];
@@ -629,7 +599,7 @@ namespace math
 		}
 
 
-		constexpr auto trace()
+		constexpr auto trace() const noexcept
 		{
 			return columns[0][0] + columns[1][1] + columns[2][2] + columns[3][3];
 		}

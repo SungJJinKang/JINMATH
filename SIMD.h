@@ -3,7 +3,7 @@
 #include "LMath_Core.h"
 
 #ifndef ACTIVATE_SIMD
-//#define ACTIVATE_SIMD
+#define ACTIVATE_SIMD
 #endif
 
 #ifdef ACTIVATE_SIMD

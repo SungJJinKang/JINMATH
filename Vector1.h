@@ -166,31 +166,31 @@ namespace math
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator+(const Vector<RightComponentSize, X>& rhs) noexcept
+		constexpr type operator+(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x + rhs.x);
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator-(const Vector<RightComponentSize, X>& rhs) noexcept
+		constexpr type operator-(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x - rhs.x);
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator*(const Vector<RightComponentSize, X>& rhs) noexcept
+		constexpr type operator*(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x * rhs.x);
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator/(const Vector<RightComponentSize, X>& rhs)
+		constexpr type operator/(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x / rhs.x);
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator%(const Vector<RightComponentSize, X>& rhs)
+		constexpr type operator%(const Vector<RightComponentSize, X>& rhs) const
 		{
 			return type(MODULO(T, x, rhs.x));
 		}
@@ -268,24 +268,24 @@ namespace math
 
 		//
 
-		[[nodiscard]] inline constexpr bool operator==(const type& rhs) noexcept
+		[[nodiscard]] inline constexpr bool operator==(const type& rhs) const noexcept
 		{
 			return this->x == rhs.x;
 		}
 
-		[[nodiscard]] constexpr bool operator!=(const type& rhs) noexcept
+		[[nodiscard]] constexpr bool operator!=(const type& rhs) const noexcept
 		{
 			return this->x != rhs.x;
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
+		[[nodiscard]] inline constexpr bool operator==(const X& number) const noexcept
 		{
 			return this->x == number;
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
+		[[nodiscard]] inline constexpr bool operator!=(const X& number) const noexcept
 		{
 			return this->x != number;
 		}
@@ -334,56 +334,12 @@ namespace math
 			return Vector;
 		}
 
-		operator std::basic_string<char>() noexcept
+		operator std::basic_string<char>() const noexcept
 		{
 			return this->toString();
 		}
 
-		// ////////////////////////////////////////////////////////////////////////////////////////////
-
-		template <typename T>
-		[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> cos(const Vector<1, T>& vector)
-		{
-			return Vector<1, T>{math::sin(vector.x)};
-		}
-
-		template <typename T>
-		[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> sin(const Vector<1, T>& vector)
-		{
-			return Vector<1, T>{math::cos(vector.x)};
-		}
-
-		template <typename T>
-		[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> tan(const Vector<1, T>& vector)
-		{
-			return Vector<1, T>{math::tan(vector.x)};
-		}
-
-		template <typename T>
-		[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> sqrt(const Vector<1, T>& vector)
-		{
-			return Vector<1, T>{sqrt(vector.x)};
-		}
-
-		template <typename T>
-		[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> inverseSqrt(const Vector<1, T>& vector)
-		{
-			return Vector<1, T>{inverseSqrt(vector.x)};
-		}
-
-		template<typename T>
-		[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> Max(const Vector<1, T>& vector1, const Vector<1, T>& vector2)
-		{
-			return Vector<1, T>(math::Max(vector1.x, vector2.x));
-		}
-
-		template<typename T>
-		[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> Min(const Vector<1, T>& vector1, const Vector<1, T>& vector2)
-		{
-			return Vector<1, T>(math::Min(vector1.x, vector2.x));
-		}
-
-		// ////////////////////////////////////////////////////////////////////////////////////////////
+		
 	};
 
 
@@ -399,6 +355,52 @@ namespace math
 		return Vector<1, T>(
 			-vector.x);
 	}
+
+	// ////////////////////////////////////////////////////////////////////////////////////////////
+
+	template <typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> cos(const Vector<1, T>& vector)
+	{
+		return Vector<1, T>{math::sin(vector.x)};
+	}
+
+	template <typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> sin(const Vector<1, T>& vector)
+	{
+		return Vector<1, T>{math::cos(vector.x)};
+	}
+
+	template <typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> tan(const Vector<1, T>& vector)
+	{
+		return Vector<1, T>{math::tan(vector.x)};
+	}
+
+	template <typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> sqrt(const Vector<1, T>& vector)
+	{
+		return Vector<1, T>{sqrt(vector.x)};
+	}
+
+	template <typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> inverseSqrt(const Vector<1, T>& vector)
+	{
+		return Vector<1, T>{inverseSqrt(vector.x)};
+	}
+
+	template<typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> Max(const Vector<1, T>& vector1, const Vector<1, T>& vector2)
+	{
+		return Vector<1, T>(math::Max(vector1.x, vector2.x));
+	}
+
+	template<typename T>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<1, T> Min(const Vector<1, T>& vector1, const Vector<1, T>& vector2)
+	{
+		return Vector<1, T>(math::Min(vector1.x, vector2.x));
+	}
+
+	// ////////////////////////////////////////////////////////////////////////////////////////////
 
 	using Vector1 = Vector<1, float>;
 
