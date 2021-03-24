@@ -315,9 +315,9 @@ namespace math
 		{
 			return Vector<3, X>
 			{
-				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2],
-					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2],
-					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2]
+				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2] + this->columns[3][0],
+					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2] + this->columns[3][1],
+					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2] + this->columns[3][2],
 			};
 		}	
 
@@ -612,7 +612,7 @@ namespace math
 
 			return type{ Inverse * OneOverDeterminant };
 		}
-		// TODO : Try make this using SIMD
+
 		inline constexpr type transpose() const noexcept
 		{
 			type Result;
@@ -638,7 +638,6 @@ namespace math
 			return Result;
 		}
 
-		// TODO : Try make this using SIMD
 		template <typename U = float, std::enable_if_t<std::is_signed_v<U>, bool> = true>
 		inline constexpr value_type determinant() const noexcept
 		{
