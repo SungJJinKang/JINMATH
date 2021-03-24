@@ -40,6 +40,15 @@ namespace math
 		}
 
 		/// <summary>
+		/// for not init
+		/// </summary>
+		/// <param name=""></param>
+		/// <returns></returns>
+		FORCE_INLINE Matrix(int *) noexcept
+		{
+		}
+
+		/// <summary>
 		/// diagonal matrix
 		/// </summary>
 		/// <param name="value"></param>
@@ -53,6 +62,8 @@ namespace math
 		{
 		}
 
+		// we can't use SIMD at here
+		// Parameters may is stored at register, not memory
 		FORCE_INLINE constexpr Matrix
 		(
 			value_type x0, value_type y0, value_type z0, value_type w0,
@@ -234,7 +245,7 @@ namespace math
 
 		[[nodiscard]] FORCE_INLINE type operator*(const Matrix<4, 4, float>& rhs) const noexcept
 		{
-			Matrix<4, 4, float> Result{};
+			Matrix<4, 4, float> Result{ nullptr };
 
 			const M128F* A = reinterpret_cast<const M128F*>(this);
 			//const M128F* A = (const M128F*)this->data(); // this is slower
@@ -273,13 +284,31 @@ namespace math
 		template <typename X>
 		[[nodiscard]] FORCE_INLINE constexpr Vector<4, X> operator*(const Vector<4, X>& vector) const noexcept
 		{
-			return Vector<4, X>
+			return Vector<4, float>
 			{
 				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2] + this->columns[3][0] * vector[3],
 					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2] + this->columns[3][1] * vector[3],
 					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2] + this->columns[3][2] * vector[3],
 					this->columns[0][3] * vector[0] + this->columns[1][3] * vector[1] + this->columns[2][3] * vector[2] + this->columns[3][3] * vector[3]
 			};
+		}
+
+		template <>
+		[[nodiscard]] FORCE_INLINE Vector<4, float> operator*(const Vector<4, float>& vector) const noexcept
+		{
+			Vector<4, float> Result{nullptr};
+
+			const M128F* A = (const M128F*)this;
+			const M128F* B = (const M128F*)vector.data();
+			M128F* R = reinterpret_cast<M128F*>(&Result);
+
+			// First row of result (Matrix1[0] * Matrix2).
+			*R = M128F_MUL(M128F_REPLICATE(*B, 0), A[0]);
+			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 1), A[1], *R);
+			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 2), A[2], *R);
+			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 3), A[3], *R);
+
+			return Result;
 		}
 
 		template <typename X>
@@ -292,6 +321,17 @@ namespace math
 					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2]
 			};
 		}	
+
+		template <>
+		[[nodiscard]] FORCE_INLINE constexpr Vector<3, float> operator*(const Vector<3, float>& vector) const noexcept
+		{
+			return Vector<3, float>
+			{
+				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2],
+					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2],
+					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2]
+			};
+		}
 
 		FORCE_INLINE constexpr type operator+(float rhs) const noexcept
 		{
@@ -513,7 +553,7 @@ namespace math
 		{
 			return this->toString();
 		}
-
+		// TODO : Try make this using SIMD
 		inline constexpr type inverse() const noexcept
 		{
 			value_type Coef00 = columns[2][2] * columns[3][3] - columns[3][2] * columns[2][3];
@@ -570,7 +610,7 @@ namespace math
 
 			return type{ Inverse * OneOverDeterminant };
 		}
-
+		// TODO : Try make this using SIMD
 		inline constexpr type transpose() const noexcept
 		{
 			type Result;
@@ -596,6 +636,7 @@ namespace math
 			return Result;
 		}
 
+		// TODO : Try make this using SIMD
 		template <typename U = float, std::enable_if_t<std::is_signed_v<U>, bool> = true>
 		inline constexpr value_type determinant() const noexcept
 		{

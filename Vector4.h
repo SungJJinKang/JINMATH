@@ -39,6 +39,16 @@ namespace math
 
 		}
 
+		/// <summary>
+		/// for not init
+		/// </summary>
+		/// <param name=""></param>
+		/// <returns></returns>
+		FORCE_INLINE Vector(int*) noexcept 
+		{
+
+		}
+
 		FORCE_INLINE constexpr explicit Vector(T xValue)  noexcept
 			: x{ xValue }, y{ xValue }, z{ xValue }, w{ xValue }
 		{
@@ -485,13 +495,13 @@ namespace math
 	template <typename T>
 	[[nodiscard]] FORCE_INLINE constexpr Vector<4, T> sqrt(const Vector<4, T>& vector)
 	{
-		return Vector<2, T>{sqrt(vector.x), sqrt(vector.y), sqrt(vector.z), sqrt(vector.w)};
+		return Vector<4, T>{sqrt(vector.x), sqrt(vector.y), sqrt(vector.z), sqrt(vector.w)};
 	}
 
 	template <typename T>
 	[[nodiscard]] FORCE_INLINE constexpr Vector<4, T> inverseSqrt(const Vector<4, T>& vector)
 	{
-		return Vector<2, T>{inverseSqrt(vector.x), inverseSqrt(vector.y), inverseSqrt(vector.z), inverseSqrt(vector.w)};
+		return Vector<4, T>{inverseSqrt(vector.x), inverseSqrt(vector.y), inverseSqrt(vector.z), inverseSqrt(vector.w)};
 	}
 
 	template <typename T>
@@ -516,15 +526,12 @@ namespace math
 }
 
 
-// For the time being, Don't Add SIMD To Vector4Float.
-// It looks slower than scalar verison
-
-/*
+//This is required for 4X4Matrix * Vector4
 #include "SIMD_Core.h"
 #ifdef SIMD_ENABLED
 #include "Vector4Float_Aligned.inl"
 #endif
-*/
+
 
 namespace math
 {

@@ -34,6 +34,16 @@ namespace math
 
 		}
 
+		/// <summary>
+		/// for Not Init
+		/// </summary>
+		/// <param name=""></param>
+		/// <returns></returns>
+		FORCE_INLINE Vector(int*) noexcept 
+		{
+
+		}
+
 		FORCE_INLINE constexpr explicit Vector(float xValue)  noexcept
 			: x{ xValue }, y{ xValue }, z{ xValue }, w{ xValue }
 		{
@@ -190,12 +200,13 @@ namespace math
 		}
 
 
-
+		// scalar version is more fast than SIMD
 		[[nodiscard]] FORCE_INLINE constexpr auto sqrMagnitude() const noexcept
 		{
 			return x * x + y * y + z * z + w * w;
 		}
 
+		// scalar version is more fast than SIMD
 		[[nodiscard]] FORCE_INLINE constexpr auto magnitude() const noexcept
 		{
 			return math::sqrt(sqrMagnitude());
@@ -445,11 +456,75 @@ namespace math
 	template<>
 	FORCE_INLINE constexpr Vector<4, float> operator-(const Vector<4, float>& vector) noexcept
 	{
-		return Vector<4, float>(
+		return Vector<4, float>
+			(
 			-vector.x,
 			-vector.y,
 			-vector.z,
-			-vector.w);
+			-vector.w
+			);
+	}
+
+	// //////////////////////
+
+	/// <summary>
+	/// maybe scalar version more fast than SIMDD
+	/// </summary>
+	template <>
+	[[nodiscard]] FORCE_INLINE constexpr auto dot(const Vector<4, float>& lhs, const Vector<4, float>& rhs)
+	{
+		return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
+	}
+
+	// AX1 don't have cos instriction
+	template <>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> cos(const Vector<4, float>& vector)
+	{
+		return Vector<4, float>{math::sin(vector.x), math::sin(vector.y), math::sin(vector.z), math::sin(vector.w)};
+	}
+
+	// AX1 don't have sin instriction
+	template <>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> sin(const Vector<4, float>& vector)
+	{
+		return Vector<4, float>{math::cos(vector.x), math::cos(vector.y), math::cos(vector.z), math::cos(vector.w)};
+	}
+
+	// AX1 don't have tan instriction
+	template <>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> tan(const Vector<4, float>& vector)
+	{
+		return Vector<4, float>{math::tan(vector.x), math::tan(vector.y), math::tan(vector.z), math::tan(vector.w)};
+	}
+
+	template <>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> sqrt(const Vector<4, float>& vector)
+	{
+		return Vector<4, float>{sqrt(vector.x), sqrt(vector.y), sqrt(vector.z), sqrt(vector.w)};
+	}
+
+	template <>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> inverseSqrt(const Vector<4, float>& vector)
+	{
+		return Vector<4, float>{inverseSqrt(vector.x), inverseSqrt(vector.y), inverseSqrt(vector.z), inverseSqrt(vector.w)};
+	}
+
+	template <>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> normalize(const Vector<4, float>& vector)
+	{
+		return vector * inverseSqrt(dot(vector, vector));
+	}
+
+	template<>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> Max(const Vector<4, float>& vector1, const Vector<4, float>& vector2)
+	{
+		return Vector<4, float>(math::Max(vector1.x, vector2.x), math::Max(vector1.y, vector2.y), math::Max(vector1.z, vector2.z), math::Max(vector1.w, vector2.w));
+	}
+
+	template<>
+	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> Min(const Vector<4, float>& vector1, const Vector<4, float>& vector2)
+	{
+		return Vector<4, float>(math::Min(vector1.x, vector2.x), math::Min(vector1.y, vector2.y), math::Min(vector1.z, vector2.z), math::Min(vector1.w, vector2.w));
 	}
 }
 

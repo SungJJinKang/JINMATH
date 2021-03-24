@@ -36,6 +36,15 @@ namespace math
 
 		}
 
+		/// <summary>
+		/// for not init
+		/// </summary>
+		/// <param name=""></param>
+		/// <returns></returns>
+		FORCE_INLINE explicit Vector(int*)  noexcept
+		{
+		}
+
 		FORCE_INLINE constexpr explicit Vector(T xValue)  noexcept
 			: x{ xValue }, y{ xValue }, z{ xValue }
 		{
