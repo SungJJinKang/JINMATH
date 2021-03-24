@@ -11,7 +11,7 @@
 #endif
 
 #if defined(COMPILER_GCC)
-#  define FORCE_INLINE inline __attribute__ ((always_inline))
+#  define FORCE_INLINE __attribute__ ((always_inline))
 #  define NEVER_INLINE __attribute__ ((noinline))
 #  define RESTRICT __restrict
 #  define VLA_ARRAY_ON_STACK(type__, varname__, size__) type__ varname__[size__];

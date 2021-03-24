@@ -22,6 +22,7 @@
 #endif
 
 
+/*
 
 //simd function is not markd as constexpr
 //so enclosing function decide whether to use constexpr according to whether to support simd
@@ -34,3 +35,5 @@
 #endif
 
 #endif
+
+*/

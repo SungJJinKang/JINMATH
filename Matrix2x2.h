@@ -19,19 +19,19 @@ namespace math
 		[[nodiscard]] inline static constexpr size_t columnCount() noexcept { return 2; }
 		col_type columns[2];
 
-		T* data() noexcept
+		FORCE_INLINE T* data() noexcept
 		{
 			return columns[0].data();
 		}
 
-		const T* data() const noexcept
+		const FORCE_INLINE T* data() const noexcept
 		{
 			return columns[0].data();
 		}
 
 		static const type identify;
 
-		constexpr Matrix() noexcept : columns{}
+		FORCE_INLINE constexpr Matrix() noexcept : columns{}
 		{
 
 		}
@@ -41,14 +41,14 @@ namespace math
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		constexpr explicit Matrix(value_type value) noexcept
+		FORCE_INLINE constexpr explicit Matrix(value_type value) noexcept
 			: columns{
 			col_type(value, 0),
 			col_type(0, value) }
 		{
 		}
 
-		constexpr Matrix
+		FORCE_INLINE constexpr Matrix
 		(
 			value_type x0, value_type y0,
 			value_type x1, value_type y1
@@ -59,61 +59,61 @@ namespace math
 		}
 
 
-		constexpr Matrix(col_type column0Value, col_type column1Value) noexcept
+		FORCE_INLINE constexpr Matrix(col_type column0Value, col_type column1Value) noexcept
 			: columns{ column0Value, column1Value }
 		{
 		}
 
 		template <typename X, typename Y>
-		constexpr Matrix(col_type_template<X> column0, col_type_template<Y> column1) noexcept
+		FORCE_INLINE constexpr Matrix(col_type_template<X> column0, col_type_template<Y> column1) noexcept
 			: columns{ column0, column1 }
 		{
 		}
 
-		constexpr explicit Matrix(const type& matrix) noexcept
+		FORCE_INLINE constexpr explicit Matrix(const type& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1] }
 		{
 		}
 
 		template <typename X>
-		constexpr Matrix(const Matrix<1, 1, X>& matrix) noexcept
+		FORCE_INLINE constexpr Matrix(const Matrix<1, 1, X>& matrix) noexcept
 			: columns{ matrix.columns[0], {0, 1} }
 		{
 		}
 
 		template <typename X>
-		constexpr Matrix(const Matrix<2, 2, X>& matrix) noexcept
+		FORCE_INLINE constexpr Matrix(const Matrix<2, 2, X>& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1] }
 		{
 		}
 
 		template <typename X>
-		constexpr Matrix(const Matrix<3, 3, X>& matrix) noexcept
+		FORCE_INLINE constexpr Matrix(const Matrix<3, 3, X>& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1] }
 		{
 		}
 
 		template <typename X>
-		constexpr Matrix(const Matrix<4, 4, X>& matrix) noexcept
+		FORCE_INLINE constexpr Matrix(const Matrix<4, 4, X>& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1] }
 		{
 		}
 
-		constexpr type& operator=(value_type value) noexcept
+		FORCE_INLINE constexpr type& operator=(value_type value) noexcept
 		{
 			columns[0] = value;
 			columns[1] = value;
 			return *this;
 		}
 
-		constexpr type& operator=(col_type column) noexcept
+		FORCE_INLINE constexpr type& operator=(const col_type& column) noexcept
 		{
 			columns[0] = column;
 			columns[1] = column;
 			return *this;
 		}
 
-		constexpr type& operator=(const type& matrix) noexcept
+		FORCE_INLINE constexpr type& operator=(const type& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -121,7 +121,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Matrix<1, 1, X>& matrix) noexcept
+		FORCE_INLINE constexpr type& operator=(const Matrix<1, 1, X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = 0;
@@ -129,7 +129,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Matrix<2, 2, X>& matrix) noexcept
+		FORCE_INLINE constexpr type& operator=(const Matrix<2, 2, X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -137,7 +137,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Matrix<3, 3, X>& matrix) noexcept
+		FORCE_INLINE constexpr type& operator=(const Matrix<3, 3, X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -145,7 +145,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Matrix<4, 4, X>& matrix) noexcept
+		FORCE_INLINE constexpr type& operator=(const Matrix<4, 4, X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -165,13 +165,13 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] constexpr col_type& operator[](size_t i)
+		[[nodiscard]] FORCE_INLINE constexpr col_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
 		}
 
-		[[nodiscard]] constexpr const col_type& operator[](size_t i) const
+		[[nodiscard]] FORCE_INLINE constexpr const col_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
@@ -180,19 +180,19 @@ namespace math
 
 
 		template <typename X>
-		constexpr type operator+(const Matrix<2, 2, X>& rhs) const noexcept
+		FORCE_INLINE constexpr type operator+(const Matrix<2, 2, X>& rhs) const noexcept
 		{
 			return type(columns[0] + rhs.columns[0], columns[1] + rhs.columns[1]);
 		}
 
 		template <typename X>
-		constexpr type operator-(const Matrix<2, 2, X>& rhs) const noexcept
+		FORCE_INLINE constexpr type operator-(const Matrix<2, 2, X>& rhs) const noexcept
 		{
 			return type(columns[0] - rhs.columns[0], columns[1] - rhs.columns[1]);
 		}
 
 		template <typename X>
-		[[nodiscard]] constexpr type operator*(const Matrix<2, 2, X>& rhs) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr type operator*(const Matrix<2, 2, X>& rhs) const noexcept
 		{
 			const col_type SrcA0 = columns[0];
 			const col_type SrcA1 = columns[1];
@@ -207,7 +207,7 @@ namespace math
 		}
 
 		template <typename X>
-		[[nodiscard]] constexpr Vector<2, X> operator*(const Vector<2, X>& vector) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr Vector<2, X> operator*(const Vector<2, X>& vector) const noexcept
 		{
 			return  Vector<2, X>
 			{
@@ -216,37 +216,37 @@ namespace math
 			};
 		}
 
-		constexpr type operator+(T rhs) const noexcept
+		FORCE_INLINE constexpr type operator+(T rhs) const noexcept
 		{
 			return type(columns[0] + rhs, columns[1] + rhs);
 		}
 
-		constexpr type operator-(T rhs) const noexcept
+		FORCE_INLINE constexpr type operator-(T rhs) const noexcept
 		{
 			return type(columns[0] - rhs, columns[1] - rhs);
 		}
 
-		constexpr type operator*(T rhs) const noexcept
+		FORCE_INLINE constexpr type operator*(T rhs) const noexcept
 		{
 			return type(columns[0] * rhs, columns[1] * rhs);
 		}
 
 		/*
 		template <typename X>
-		constexpr type operator/(const Matrix<4, X>& rhs)
+		FORCE_INLINE constexpr type operator/(const Matrix<4, X>& rhs)
 		{
 			return type(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
 		}
 
 		template <typename X>
-		constexpr type operator%(const Matrix<4, X>& rhs)
+		FORCE_INLINE constexpr type operator%(const Matrix<4, X>& rhs)
 		{
 			return type(x % rhs.x, y % rhs.y, z % rhs.z, w % rhs.w);
 		}
 		*/
 
 		template <typename X>
-		constexpr type& operator+=(const Matrix<2, 2, X>& rhs) noexcept
+		FORCE_INLINE constexpr type& operator+=(const Matrix<2, 2, X>& rhs) noexcept
 		{
 			columns[0] += rhs.columns[0];
 			columns[1] += rhs.columns[1];
@@ -254,7 +254,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator-=(const Matrix<2, 2, X>& rhs) noexcept
+		FORCE_INLINE constexpr type& operator-=(const Matrix<2, 2, X>& rhs) noexcept
 		{
 			columns[0] -= rhs.columns[0];
 			columns[1] -= rhs.columns[1];
@@ -263,7 +263,7 @@ namespace math
 
 
 		template <typename X>
-		constexpr type& operator*=(const Matrix<2, 2, X>& rhs) noexcept
+		FORCE_INLINE constexpr type& operator*=(const Matrix<2, 2, X>& rhs) noexcept
 		{
 			return (*this = *this * rhs);
 		}
@@ -272,7 +272,7 @@ namespace math
 
 		/*
 		template <typename X>
-		constexpr type& operator/=(const Matrix<4, X>& rhs)
+		FORCE_INLINE constexpr type& operator/=(const Matrix<4, X>& rhs)
 		{
 			x /= rhs.x;
 			y /= rhs.y;
@@ -282,7 +282,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator%=(const Matrix<4, X>& rhs)
+		FORCE_INLINE constexpr type& operator%=(const Matrix<4, X>& rhs)
 		{
 			x %= rhs.x;
 			y %= rhs.y;
@@ -293,21 +293,21 @@ namespace math
 		*/
 		//
 
-		constexpr type& operator+=(T scalar) noexcept
+		FORCE_INLINE constexpr type& operator+=(T scalar) noexcept
 		{
 			columns[0] += scalar;
 			columns[1] += scalar;
 			return *this;
 		}
 
-		constexpr type& operator-=(T scalar) noexcept
+		FORCE_INLINE constexpr type& operator-=(T scalar) noexcept
 		{
 			columns[0] -= scalar;
 			columns[1] -= scalar;
 			return *this;
 		}
 
-		constexpr type& operator*=(T scalar) noexcept
+		FORCE_INLINE constexpr type& operator*=(T scalar) noexcept
 		{
 			columns[0] *= scalar;
 			columns[1] *= scalar;
@@ -316,7 +316,7 @@ namespace math
 
 		/*
 		template <typename X>
-		constexpr type& operator/=(const X& scalar)
+		FORCE_INLINE constexpr type& operator/=(const X& scalar)
 		{
 			x /= scalar;
 			y /= scalar;
@@ -327,7 +327,7 @@ namespace math
 
 
 		template <typename X, std::enable_if_t<std::is_integral_v<X>, bool> = true>
-		constexpr type& operator%=(const X& scalar)
+		FORCE_INLINE constexpr type& operator%=(const X& scalar)
 		{
 			x %= scalar;
 			y %= scalar;
@@ -337,7 +337,7 @@ namespace math
 		}
 
 		template <typename X, std::enable_if_t<std::is_floating_point_v<X>, bool> = true>
-		constexpr type& operator%=(const X& scalar)
+		FORCE_INLINE constexpr type& operator%=(const X& scalar)
 		{
 
 			x %= std::fmod(x, scalar);
@@ -350,24 +350,24 @@ namespace math
 
 		//
 
-		[[nodiscard]] inline constexpr bool operator==(const type& rhs) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const type& rhs) const noexcept
 		{
 			return this->columns[0] == rhs.columns[0] && this->columns[1] == rhs.columns[1];
 		}
 
-		[[nodiscard]] constexpr bool operator!=(const type& rhs) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const type& rhs) const noexcept
 		{
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1];
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator==(const X& number) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const X& number) const noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number;
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator!=(const X& number) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const X& number) const noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number;
 		}
@@ -376,7 +376,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		constexpr type& operator++() noexcept
+		FORCE_INLINE constexpr type& operator++() noexcept
 		{
 			++columns[0];
 			++columns[1];
@@ -388,7 +388,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		constexpr type operator++(int) noexcept
+		FORCE_INLINE constexpr type operator++(int) noexcept
 		{
 			type Matrix{ *this };
 			++* this;
@@ -399,7 +399,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		constexpr type& operator--() noexcept
+		FORCE_INLINE constexpr type& operator--() noexcept
 		{
 			--columns[0];
 			--columns[1];
@@ -411,7 +411,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		constexpr type operator--(int) noexcept
+		FORCE_INLINE constexpr type operator--(int) noexcept
 		{
 			type Matrix{ *this };
 			--* this;
@@ -424,7 +424,7 @@ namespace math
 		}
 
 		template <typename U = T, std::enable_if_t<std::is_signed_v<U>, bool> = true>
-		constexpr type inverse() const noexcept
+		inline constexpr type inverse() const noexcept
 		{
 			value_type OneOverDetercolumnsinant = static_cast<value_type>(1) / (
 				+columns[0][0] * columns[1][1]
@@ -439,7 +439,7 @@ namespace math
 			return Inverse;
 		}
 
-		constexpr type transpose() const noexcept
+		inline constexpr type transpose() const noexcept
 		{
 			type Result;
 			Result[0][0] = columns[0][0];
@@ -449,25 +449,25 @@ namespace math
 			return Result;
 		}
 
-		constexpr value_type determinant() const noexcept
+		inline constexpr value_type determinant() const noexcept
 		{
 			return columns[0][0] * columns[1][1] - columns[1][0] * columns[0][1];
 		}
 
-		constexpr auto trace() const noexcept
+		inline constexpr auto trace() const noexcept
 		{
 			return columns[0][0] + columns[1][1];
 		}
 	};
 
 	template<typename T>
-	constexpr Matrix<2, 2, T> operator+(const Matrix<2, 2, T>& matrix) noexcept
+	FORCE_INLINE constexpr Matrix<2, 2, T> operator+(const Matrix<2, 2, T>& matrix) noexcept
 	{
 		return matrix;
 	}
 
 	template<typename T>
-	constexpr Matrix<2, 2, T> operator-(const Matrix<2, 2, T>& matrix) noexcept
+	FORCE_INLINE constexpr Matrix<2, 2, T> operator-(const Matrix<2, 2, T>& matrix) noexcept
 	{
 		return Matrix<2, 2, T>(
 			-matrix.columns[0],

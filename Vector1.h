@@ -14,90 +14,90 @@ namespace math
 
 		union { T x, r; };
 
-		T* data() noexcept
+		FORCE_INLINE T* data() noexcept
 		{
 			return &x;
 		}
 
-		const T* data() const noexcept
+		const FORCE_INLINE T* data() const noexcept
 		{
 			return &x;
 		}
 
-		constexpr Vector()  noexcept : x{}
+		FORCE_INLINE constexpr Vector()  noexcept : x{}
 		{
 
 		}
 
-		constexpr explicit Vector(T xValue)  noexcept
+		FORCE_INLINE constexpr explicit Vector(T xValue)  noexcept
 			: x{ xValue }
 		{
 		}
 
-		constexpr explicit Vector(const type& vector) noexcept
+		FORCE_INLINE constexpr explicit Vector(const type& vector) noexcept
 			: x{ vector.x }
 		{
 		}
 
 		template <typename X>
-		constexpr Vector(const Vector<1, X>& vector) noexcept
+		FORCE_INLINE constexpr Vector(const Vector<1, X>& vector) noexcept
 			: x{ static_cast<T>(vector.x) }
 		{
 		}
 
 		template <typename X>
-		constexpr Vector(const Vector<2, X>& vector) noexcept
+		FORCE_INLINE constexpr Vector(const Vector<2, X>& vector) noexcept
 			: x{ static_cast<T>(vector.x) }
 		{
 		}
 
 		template <typename X>
-		constexpr Vector(const Vector<3, X>& vector) noexcept
+		FORCE_INLINE constexpr Vector(const Vector<3, X>& vector) noexcept
 			: x { static_cast<T>(vector.x) }
 		{
 		}
 
 		template <typename X>
-		constexpr Vector(const Vector<4, X>& vector) noexcept
+		FORCE_INLINE constexpr Vector(const Vector<4, X>& vector) noexcept
 			: x{ static_cast<T>(vector.x) }
 		{
 		}
 
-		constexpr type& operator=(value_type xValue)  noexcept
+		FORCE_INLINE constexpr type& operator=(value_type xValue)  noexcept
 		{
 			x = xValue;
 			return *this;
 		}
 
-		constexpr type& operator=(const type& vector) noexcept
+		FORCE_INLINE constexpr type& operator=(const type& vector) noexcept
 		{
 			x = vector.x;
 			return *this;
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Vector<1, X>& vector) noexcept
+		FORCE_INLINE constexpr type& operator=(const Vector<1, X>& vector) noexcept
 		{
 			x = vector.x;
 			return *this;
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Vector<2, X>& vector) noexcept
+		FORCE_INLINE constexpr type& operator=(const Vector<2, X>& vector) noexcept
 		{
 			x = vector.x;
 			return *this;
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Vector<3, X>& vector) noexcept
+		FORCE_INLINE constexpr type& operator=(const Vector<3, X>& vector) noexcept
 		{
 			x = vector.x;
 			return *this;
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Vector<4, X>& vector) noexcept
+		FORCE_INLINE constexpr type& operator=(const Vector<4, X>& vector) noexcept
 		{
 			x = vector.x;
 			return *this;
@@ -119,7 +119,7 @@ namespace math
 
 		[[nodiscard]] inline static constexpr size_t componentCount() noexcept { return 1; }
 
-		[[nodiscard]] constexpr value_type& operator[](size_t i)
+		[[nodiscard]] FORCE_INLINE constexpr value_type& operator[](size_t i)
 		{
 			assert(i == 0);
 			switch (i)
@@ -132,7 +132,7 @@ namespace math
 			}
 		}
 
-		[[nodiscard]] constexpr const value_type& operator[](size_t i) const
+		[[nodiscard]] FORCE_INLINE constexpr const value_type& operator[](size_t i) const
 		{
 			assert(i == 0);
 			switch (i)
@@ -145,122 +145,122 @@ namespace math
 			}
 		}
 
-		[[nodiscard]] inline constexpr auto sqrMagnitude() const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr auto sqrMagnitude() const noexcept
 		{
 			return x * x;
 		}
 
-		[[nodiscard]] inline constexpr auto magnitude() const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr auto magnitude() const noexcept
 		{
 			return x;
 		}
 
-		[[nodiscard]] constexpr type normalized() const
+		[[nodiscard]] FORCE_INLINE constexpr type normalized() const
 		{
 			return type{ 1 };
 		}
 
-		constexpr void Normalize()
+		FORCE_INLINE constexpr void Normalize()
 		{
 			x = 1;
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator+(const Vector<RightComponentSize, X>& rhs) const noexcept
+		FORCE_INLINE constexpr type operator+(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x + rhs.x);
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator-(const Vector<RightComponentSize, X>& rhs) const noexcept
+		FORCE_INLINE constexpr type operator-(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x - rhs.x);
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator*(const Vector<RightComponentSize, X>& rhs) const noexcept
+		FORCE_INLINE constexpr type operator*(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x * rhs.x);
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator/(const Vector<RightComponentSize, X>& rhs) const noexcept
+		FORCE_INLINE constexpr type operator/(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x / rhs.x);
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type operator%(const Vector<RightComponentSize, X>& rhs) const
+		FORCE_INLINE constexpr type operator%(const Vector<RightComponentSize, X>& rhs) const
 		{
 			return type(MODULO(T, x, rhs.x));
 		}
 
 		
 		template <size_t RightComponentSize, typename X>
-		constexpr type& operator+=(const Vector<RightComponentSize, X>& rhs) noexcept
+		FORCE_INLINE constexpr type& operator+=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x += rhs.x;
 			return *this;
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type& operator-=(const Vector<RightComponentSize, X>& rhs) noexcept
+		FORCE_INLINE constexpr type& operator-=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x -= rhs.x;
 			return *this;
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type& operator*=(const Vector<RightComponentSize, X>& rhs) noexcept
+		FORCE_INLINE constexpr type& operator*=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x *= rhs.x;
 			return *this;
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type& operator/=(const Vector<RightComponentSize, X>& rhs)
+		FORCE_INLINE constexpr type& operator/=(const Vector<RightComponentSize, X>& rhs)
 		{
 			x /= rhs.x;
 			return *this;
 		}
 
 		template <size_t RightComponentSize, typename X>
-		constexpr type& operator%=(const Vector<RightComponentSize, X>& rhs)
+		FORCE_INLINE constexpr type& operator%=(const Vector<RightComponentSize, X>& rhs)
 		{
 			MODULO(T, x, rhs.x);
 			return *this;
 		}
 
 		template <typename X>
-		constexpr type& operator+=(const X& scalar) noexcept
+		FORCE_INLINE constexpr type& operator+=(const X& scalar) noexcept
 		{
 			x += scalar;
 			return *this;
 		}
 
 		template <typename X>
-		constexpr type& operator-=(const X& scalar) noexcept
+		FORCE_INLINE constexpr type& operator-=(const X& scalar) noexcept
 		{
 			x -= scalar;
 			return *this;
 		}
 
 		template <typename X>
-		constexpr type& operator*=(const X& scalar) noexcept
+		FORCE_INLINE constexpr type& operator*=(const X& scalar) noexcept
 		{
 			x *= scalar;
 			return *this;
 		}
 
 		template <typename X>
-		constexpr type& operator/=(const X& scalar)
+		FORCE_INLINE constexpr type& operator/=(const X& scalar)
 		{
 			x /= scalar;
 			return *this;
 		}
 
 		template <typename X>
-		constexpr type& operator%=(const X& scalar)
+		FORCE_INLINE constexpr type& operator%=(const X& scalar)
 		{
 			MODULO(T, x, scalar);
 			return *this;
@@ -268,24 +268,24 @@ namespace math
 
 		//
 
-		[[nodiscard]] inline constexpr bool operator==(const type& rhs) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const type& rhs) const noexcept
 		{
 			return this->x == rhs.x;
 		}
 
-		[[nodiscard]] constexpr bool operator!=(const type& rhs) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const type& rhs) const noexcept
 		{
 			return this->x != rhs.x;
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator==(const X& number) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const X& number) const noexcept
 		{
 			return this->x == number;
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator!=(const X& number) const noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const X& number) const noexcept
 		{
 			return this->x != number;
 		}
@@ -294,7 +294,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		constexpr type& operator++() noexcept
+		FORCE_INLINE constexpr type& operator++() noexcept
 		{
 			++x;
 			return *this;
@@ -305,7 +305,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		constexpr type operator++(int) noexcept
+		FORCE_INLINE constexpr type operator++(int) noexcept
 		{
 			type Vector{ *this };
 			++*this;
@@ -316,7 +316,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		constexpr type& operator--() noexcept
+		FORCE_INLINE constexpr type& operator--() noexcept
 		{
 			--x;
 			return *this;
@@ -327,7 +327,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		constexpr type operator--(int) noexcept
+		FORCE_INLINE constexpr type operator--(int) noexcept
 		{
 			type Vector{ *this };
 			--*this;
@@ -344,13 +344,13 @@ namespace math
 
 
 	template<typename T>
-	constexpr Vector<1, T> operator+(const Vector<1, T>& vector) noexcept
+	FORCE_INLINE constexpr Vector<1, T> operator+(const Vector<1, T>& vector) noexcept
 	{
 		return vector;
 	}
 
 	template<typename T>
-	constexpr Vector<1, T> operator-(const Vector<1, T>& vector) noexcept
+	FORCE_INLINE constexpr Vector<1, T> operator-(const Vector<1, T>& vector) noexcept
 	{
 		return Vector<1, T>(
 			-vector.x);

@@ -144,32 +144,32 @@ namespace math
 			mat2Quaternion(m);
 		}
 
-		constexpr type& operator=(const type& vector) noexcept
+		FORCE_INLINE constexpr type& operator=(const type& vector) noexcept
 		{
 			value = vector.value;
 			return *this;
 		}
 
 		template <typename X>
-		constexpr type& operator=(const Quaternion_common<X>& vector) noexcept
+		FORCE_INLINE constexpr type& operator=(const Quaternion_common<X>& vector) noexcept
 		{
 			value = vector.value;
 			return *this;
 		}
 
-		constexpr type& operator=(const Matrix<4, 4, T>& m) noexcept
+		FORCE_INLINE constexpr type& operator=(const Matrix<4, 4, T>& m) noexcept
 		{
 			mat2Quaternion(m);
 			return *this;
 		}
 
-		constexpr type& operator=(const Matrix<3, 3, T>& m) noexcept
+		FORCE_INLINE constexpr type& operator=(const Matrix<3, 3, T>& m) noexcept
 		{
 			mat2Quaternion(m);
 			return *this;
 		}
 
-		constexpr type& operator=(const Vector<3, T>& eulerAngle) noexcept
+		FORCE_INLINE constexpr type& operator=(const Vector<3, T>& eulerAngle) noexcept
 		{
 			*this = type::eulerAngle(eulerAngle);
 			return *this;
@@ -196,7 +196,7 @@ namespace math
 			return value[i];
 		}
 
-		[[nodiscard]] constexpr const value_type& operator[](size_t i) const
+		[[nodiscard]] FORCE_INLINE constexpr const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
 			return value[i];
@@ -204,7 +204,7 @@ namespace math
 
 
 		template <typename X>
-		constexpr type& operator+=(const Quaternion_common<X>& rhs) noexcept
+		FORCE_INLINE constexpr type& operator+=(const Quaternion_common<X>& rhs) noexcept
 		{
 			x += rhs.x;
 			y += rhs.y;
@@ -214,7 +214,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator-=(const Quaternion_common<X>& rhs) noexcept
+		FORCE_INLINE constexpr type& operator-=(const Quaternion_common<X>& rhs) noexcept
 		{
 			x -= rhs.x;
 			y -= rhs.y;
@@ -224,7 +224,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator*=(const Quaternion_common<X>& rhs) noexcept
+		FORCE_INLINE constexpr type& operator*=(const Quaternion_common<X>& rhs) noexcept
 		{
 			const Quaternion_common<T> p(*this);
 			const Quaternion_common<T> q(rhs);
@@ -237,7 +237,7 @@ namespace math
 		}
 
 		template <typename X>
-		constexpr type& operator*=(X s) noexcept
+		FORCE_INLINE constexpr type& operator*=(X s) noexcept
 		{
 			x *= s;
 			y *= s;
@@ -248,7 +248,7 @@ namespace math
 
 
 		template <typename X>
-		constexpr type& operator/=(X s)
+		FORCE_INLINE constexpr type& operator/=(X s)
 		{
 			x /= s;
 			y /= s;
@@ -260,25 +260,25 @@ namespace math
 	
 
 		template <typename X>
-		constexpr type operator+(const Quaternion_common<X>& rhs) noexcept
+		FORCE_INLINE constexpr type operator+(const Quaternion_common<X>& rhs) noexcept
 		{
 			return *this += rhs;
 		}
 
 		template <typename X>
-		constexpr type operator-(const Quaternion_common<X>& rhs) noexcept
+		FORCE_INLINE constexpr type operator-(const Quaternion_common<X>& rhs) noexcept
 		{
 			return *this -= rhs;
 		}
 
 		template <typename X>
-		constexpr type operator*(const Quaternion_common<X>& rhs) noexcept
+		FORCE_INLINE constexpr type operator*(const Quaternion_common<X>& rhs) noexcept
 		{
 			return *this *= rhs;
 		}
 
 		template <typename X>
-		constexpr type operator/(const Quaternion_common<X>& rhs)
+		FORCE_INLINE constexpr type operator/(const Quaternion_common<X>& rhs)
 		{
 			return *this /= rhs;
 		}
@@ -322,24 +322,24 @@ namespace math
 			return Matrix<4, 4, T>(this->operator math::Matrix<3, 3, T>());
 		}
 
-		[[nodiscard]] inline constexpr bool operator==(const type& rhs) noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const type& rhs) noexcept
 		{
 			return this->x == rhs.x && this->y == rhs.y && this->z == rhs.z && this->w == rhs.w;
 		}
 
-		[[nodiscard]] constexpr bool operator!=(const type& rhs) noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const type& rhs) noexcept
 		{
 			return this->x != rhs.x || this->y != rhs.y || this->z != rhs.z || this->w != rhs.w;
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator==(const X& number) noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const X& number) noexcept
 		{
 			return this->x == number && this->y == number && this->z == number && this->w == number;
 		}
 
 		template <typename X>
-		[[nodiscard]] inline constexpr bool operator!=(const X& number) noexcept
+		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const X& number) noexcept
 		{
 			return this->x != number || this->y != number || this->z != number || this->w != number;
 		}
@@ -348,7 +348,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		constexpr type& operator++() noexcept
+		FORCE_INLINE constexpr type& operator++() noexcept
 		{
 			++x;
 			++y;
@@ -362,7 +362,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		constexpr type operator++(int) noexcept
+		FORCE_INLINE constexpr type operator++(int) noexcept
 		{
 			type Quaternion{ *this };
 			++* this;
@@ -373,7 +373,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		constexpr type& operator--() noexcept
+		FORCE_INLINE constexpr type& operator--() noexcept
 		{
 			--x;
 			--y;
@@ -387,7 +387,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		constexpr type operator--(int) noexcept
+		FORCE_INLINE constexpr type operator--(int) noexcept
 		{
 			type Quaternion{ *this };
 			--* this;
@@ -566,7 +566,7 @@ namespace math
 	//
 
 	template<typename T>
-	constexpr Vector<3, T>operator*(const Quaternion_common<T>& q, const Vector<3, T>& v)
+	FORCE_INLINE constexpr Vector<3, T>operator*(const Quaternion_common<T>& q, const Vector<3, T>& v)
 	{
 		const Vector<3, T> QuatVector(q.x, q.y, q.z);
 		const Vector<3, T> uv(cross(QuatVector, v));
@@ -576,19 +576,19 @@ namespace math
 	}
 
 	template<typename T>
-	constexpr Vector<3, T>operator*(const Vector<3, T>& v, const Quaternion_common<T>& q)
+	FORCE_INLINE constexpr Vector<3, T>operator*(const Vector<3, T>& v, const Quaternion_common<T>& q)
 	{
 		return inverse(q) * v;
 	}
 
 	template<typename T>
-	constexpr Vector<4, T>operator*(const Quaternion_common<T>& q, const Vector<4, T>& v)
+	FORCE_INLINE constexpr Vector<4, T>operator*(const Quaternion_common<T>& q, const Vector<4, T>& v)
 	{
 		return Vector<4, T>(q * Vector<3, T>(v), v.w);
 	}
 
 	template<typename T>
-	constexpr Vector<4, T>operator*(const Vector<4, T>& v, const Quaternion_common<T>& q)
+	FORCE_INLINE constexpr Vector<4, T>operator*(const Vector<4, T>& v, const Quaternion_common<T>& q)
 	{
 		return inverse(q) * v;
 	}
