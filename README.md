@@ -8,8 +8,7 @@ Light math Library For Game Development.
    * C++17
    * Header Only
    * Support Constexpr
-   * Support SIMD
+   * Support SIMD ( AVX1 )
+   * Inlining for performance
 
 ## Roadmap
-  
-   * Optimization
