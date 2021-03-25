@@ -1,7 +1,6 @@
 #pragma once
 #include "Vector.h"
 
-#include "Vector4.h"
 
 namespace math
 {
@@ -81,7 +80,7 @@ namespace math
 
 		FORCE_INLINE explicit Vector(const Vector<4, T>& vector) noexcept
 		{
-			std::memcpy(this->data(), vector.data(), sizeof(type));
+			std::memcpy(this->data(), &vector, sizeof(type));
 		}
 
 		template <typename X>
@@ -133,7 +132,7 @@ namespace math
 
 		FORCE_INLINE type& operator=(const Vector<4, T>& vector) noexcept
 		{
-			std::memcpy(this->data(), vector.data(), sizeof(type));
+			std::memcpy(this->data(), &vector, sizeof(type));
 			return *this;
 		}
 

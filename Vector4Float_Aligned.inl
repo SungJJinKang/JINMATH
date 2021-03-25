@@ -80,7 +80,7 @@ namespace math
 		FORCE_INLINE explicit Vector(const Vector<3, float>& vector) noexcept
 		{
 			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
-			std::memcpy(this->data(), vector.data(), sizeof(float) * 3);
+			std::memcpy(this->data(), &vector, sizeof(float) * 3);
 			this->w = 0;
 		}
 
@@ -133,7 +133,7 @@ namespace math
 
 		FORCE_INLINE type& operator=(const Vector<3, float>& vector) noexcept
 		{
-			std::memcpy(this->data(), vector.data(), sizeof(float) * 3);
+			std::memcpy(this->data(), &vector, sizeof(float) * 3);
 			this->w = 0;
 			return *this;
 		}

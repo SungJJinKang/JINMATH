@@ -9,29 +9,20 @@ int main()
 {
 	math::Matrix4x4 a{ 2.0f };
 	math::Vector3 b{ 2.0f };
-	math::Vector4 c{ 2.0f };
+
 
 	{
 		auto now = std::chrono::high_resolution_clock::now();
 
-		for (int i = 0; i < 10000; i++)
+		for (int i = 0; i < 10000000; i++)
 		{
-			auto c = a * b;
+			math::Vector3 c = a * b;
 		}
 
 		auto end = std::chrono::high_resolution_clock::now();
 		std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - now).count() << std::endl;
 	}
+
 	
-	{
-		auto now = std::chrono::high_resolution_clock::now();
-
-		for (int i = 0; i < 10000; i++)
-		{
-			auto c = a * math::Vector4(b);
-		}
-
-		auto end = std::chrono::high_resolution_clock::now();
-		std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - now).count() << std::endl;
-	}
+	
 }
