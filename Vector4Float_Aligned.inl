@@ -80,7 +80,7 @@ namespace math
 		FORCE_INLINE explicit Vector(const Vector<3, float>& vector) noexcept
 		{
 			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
-			std::memcpy(this, &vector, sizeof(float) * 3);
+			std::memcpy(this->data(), vector.data(), sizeof(float) * 3);
 			this->w = 0;
 		}
 
@@ -93,7 +93,7 @@ namespace math
 		FORCE_INLINE explicit Vector(const type& vector) noexcept
 		{
 			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
-			std::memcpy(this, &vector, sizeof(type));
+			std::memcpy(this->data(), vector.data(), sizeof(type));
 		}
 
 		template <typename X>
@@ -133,7 +133,7 @@ namespace math
 
 		FORCE_INLINE type& operator=(const Vector<3, float>& vector) noexcept
 		{
-			std::memcpy(this, &vector, sizeof(float) * 3);
+			std::memcpy(this->data(), vector.data(), sizeof(float) * 3);
 			this->w = 0;
 			return *this;
 		}
@@ -159,7 +159,7 @@ namespace math
 			// 			y = vector.y;
 			// 			z = vector.z;
 			// 			w = vector.w;
-			std::memcpy(this, &vector, sizeof(type));
+			std::memcpy(this->data(), vector.data(), sizeof(type));
 			return *this;
 		}
 
