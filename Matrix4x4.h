@@ -609,7 +609,102 @@ namespace math
 			-matrix.columns[3]);
 	}
 
-	
+	/// <summary>
+	/// Extract 6 Planes From MVPMatrix
+	/// Scalar Version
+	/// </summary>
+	template <typename T>
+	inline constexpr void ExtractPlanesFromMVPMatrix(const Matrix<4, 4, T>& mvpMatrix, bool normalize, math::Vector<4, T>* sixPlanes) noexcept
+	{
+		sixPlanes[0].x = mvpMatrix[3][0] + mvpMatrix[0][0];
+		sixPlanes[0].y = mvpMatrix[3][1] + mvpMatrix[0][1];
+		sixPlanes[0].z = mvpMatrix[3][2] + mvpMatrix[0][2];
+		sixPlanes[0].w = mvpMatrix[3][3] + mvpMatrix[0][3];
+		// Right clipping plane
+		sixPlanes[1].x = mvpMatrix[3][0] - mvpMatrix[0][0];
+		sixPlanes[1].y = mvpMatrix[3][1] - mvpMatrix[0][1];
+		sixPlanes[1].z = mvpMatrix[3][2] - mvpMatrix[0][2];
+		sixPlanes[1].w = mvpMatrix[3][3] - mvpMatrix[0][3];
+		// Top clipping plane
+		sixPlanes[2].x = mvpMatrix[3][0] - mvpMatrix[1][0];
+		sixPlanes[2].y = mvpMatrix[3][1] - mvpMatrix[1][1];
+		sixPlanes[2].z = mvpMatrix[3][2] - mvpMatrix[1][2];
+		sixPlanes[2].w = mvpMatrix[3][3] - mvpMatrix[1][3];
+		// Bottom clipping plane
+		sixPlanes[3].x = mvpMatrix[3][0] + mvpMatrix[1][0];
+		sixPlanes[3].y = mvpMatrix[3][1] + mvpMatrix[1][1];
+		sixPlanes[3].z = mvpMatrix[3][2] + mvpMatrix[1][2];
+		sixPlanes[3].w = mvpMatrix[3][3] + mvpMatrix[1][3];
+		// Near clipping plane
+		sixPlanes[4].x = mvpMatrix[3][0] + mvpMatrix[2][0];
+		sixPlanes[4].y = mvpMatrix[3][1] + mvpMatrix[2][1];
+		sixPlanes[4].z = mvpMatrix[3][2] + mvpMatrix[2][2];
+		sixPlanes[4].w = mvpMatrix[3][3] + mvpMatrix[2][3];
+		// Far clipping plane
+		sixPlanes[5].x = mvpMatrix[3][0] - mvpMatrix[2][0];
+		sixPlanes[5].y = mvpMatrix[3][1] - mvpMatrix[2][1];
+		sixPlanes[5].z = mvpMatrix[3][2] - mvpMatrix[2][2];
+		sixPlanes[5].w = mvpMatrix[3][3] - mvpMatrix[2][3];
+		// Normalize the plane equations, if requested
+		if (normalize == true)
+		{
+			sixPlanes[0].Normalize();
+			sixPlanes[1].Normalize();
+			sixPlanes[2].Normalize();
+			sixPlanes[3].Normalize();
+			sixPlanes[4].Normalize();
+			sixPlanes[5].Normalize();
+		}
+	}
+
+	template <typename T>
+	inline constexpr void ExtractPlanesFromMVPMatrixForSIMD(const Matrix<4, 4, T>& mvpMatrix, bool normalize, math::Vector<4, T>* eightPlanes) noexcept
+	{
+		eightPlanes[0].x = mvpMatrix[3][0] + mvpMatrix[0][0]; // x of Plane0
+		eightPlanes[0].y = mvpMatrix[3][0] - mvpMatrix[0][0]; // x of Plane1
+		eightPlanes[0].z = mvpMatrix[3][0] - mvpMatrix[1][0]; // x of Plane2
+		eightPlanes[0].w = mvpMatrix[3][0] + mvpMatrix[1][0]; // x of Plane3
+
+		eightPlanes[1].x = mvpMatrix[3][1] + mvpMatrix[0][1]; // y of Plane0
+		eightPlanes[1].y = mvpMatrix[3][1] - mvpMatrix[0][1]; // y of Plane1
+		eightPlanes[1].z = mvpMatrix[3][1] - mvpMatrix[1][1]; // y of Plane2
+		eightPlanes[1].w = mvpMatrix[3][1] + mvpMatrix[1][1]; // y of Plane3
+
+		eightPlanes[2].x = mvpMatrix[3][2] + mvpMatrix[0][2]; // z of Plane0
+		eightPlanes[2].y = mvpMatrix[3][2] - mvpMatrix[0][2]; // z of Plane1
+		eightPlanes[2].z = mvpMatrix[3][2] - mvpMatrix[1][2]; // z of Plane2
+		eightPlanes[2].w = mvpMatrix[3][2] + mvpMatrix[1][2]; // z of Plane3
+
+		eightPlanes[3].x = mvpMatrix[3][3] + mvpMatrix[0][3]; // w of Plane0
+		eightPlanes[3].y = mvpMatrix[3][3] - mvpMatrix[0][3]; // w of Plane1
+		eightPlanes[3].z = mvpMatrix[3][3] - mvpMatrix[1][3]; // w of Plane2
+		eightPlanes[3].w = mvpMatrix[3][3] + mvpMatrix[1][3]; // w of Plane3
+
+
+		// Near clipping plane
+		eightPlanes[4].x = mvpMatrix[3][0] + mvpMatrix[2][0]; // x of Plane4
+		eightPlanes[4].y = mvpMatrix[3][0] - mvpMatrix[2][0]; // x of Plane5
+		eightPlanes[4].z = mvpMatrix[3][0] + mvpMatrix[2][0]; // x of Plane4
+		eightPlanes[4].w = mvpMatrix[3][0] - mvpMatrix[2][0]; // x of Plane5
+
+		eightPlanes[5].x = mvpMatrix[3][1] + mvpMatrix[2][1]; // y of Plane4
+		eightPlanes[5].y = mvpMatrix[3][1] - mvpMatrix[2][1]; // y of Plane5
+		eightPlanes[5].z = mvpMatrix[3][1] + mvpMatrix[2][1]; // y of Plane4
+		eightPlanes[5].w = mvpMatrix[3][1] - mvpMatrix[2][1]; // y of Plane5
+
+		//I know Frustum is composed of 6 plane, but I need M256F SIMD Computation
+		eightPlanes[6].x = mvpMatrix[3][2] + mvpMatrix[2][2]; // z of Plane4
+		eightPlanes[6].y = mvpMatrix[3][2] - mvpMatrix[2][2]; // z of Plane5
+		eightPlanes[6].z = mvpMatrix[3][2] + mvpMatrix[2][2]; // z of Plane4
+		eightPlanes[6].w = mvpMatrix[3][2] - mvpMatrix[2][2]; // z of Plane5
+
+		eightPlanes[7].x = mvpMatrix[3][3] + mvpMatrix[2][3]; // w of Plane4
+		eightPlanes[7].y = mvpMatrix[3][3] - mvpMatrix[2][3]; // w of Plane5
+		eightPlanes[7].z = mvpMatrix[3][3] + mvpMatrix[2][3]; // w of Plane4
+		eightPlanes[7].w = mvpMatrix[3][3] - mvpMatrix[2][3]; // w of Plane5
+
+	}
+
 }
 
 #include "SIMD_Core.h"

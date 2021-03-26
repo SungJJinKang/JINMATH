@@ -25,16 +25,6 @@ namespace math
 
 		Vector<4, T> value;
 
-		value_type& x = value.x;
-		value_type& y = value.y;
-		value_type& z = value.z;
-		value_type& w = value.w;
-
-		value_type& r = value.x;
-		value_type& g = value.y;
-		value_type& b = value.z;
-		value_type& a = value.w;
-
 		constexpr Quaternion_common() noexcept : value{ 0,0,0,1.0f }
 		{
 
@@ -184,7 +174,7 @@ namespace math
 		std::basic_string<char> toString() noexcept
 		{
 			std::stringstream ss;
-			ss << x << "  " << y << "  " << z << "  " << w;
+			ss << value.x << "  " << value.y << "  " << value.z << "  " << value.w;
 			return ss.str();
 		}
 
@@ -206,20 +196,20 @@ namespace math
 		template <typename X>
 		FORCE_INLINE constexpr type& operator+=(const Quaternion_common<X>& rhs) noexcept
 		{
-			x += rhs.x;
-			y += rhs.y;
-			z += rhs.z;
-			w += rhs.w;
+			value.x += rhs.x;
+			value.y += rhs.y;
+			value.z += rhs.z;
+			value.w += rhs.w;
 			return *this;
 		}
 
 		template <typename X>
 		FORCE_INLINE constexpr type& operator-=(const Quaternion_common<X>& rhs) noexcept
 		{
-			x -= rhs.x;
-			y -= rhs.y;
-			z -= rhs.z;
-			w -= rhs.w;
+			value.x -= rhs.x;
+			value.y -= rhs.y;
+			value.z -= rhs.z;
+			value.w -= rhs.w;
 			return *this;
 		}
 
@@ -229,20 +219,20 @@ namespace math
 			const Quaternion_common<T> p(*this);
 			const Quaternion_common<T> q(rhs);
 
-			this->w = p.w * q.w - p.x * q.x - p.y * q.y - p.z * q.z;
-			this->x = p.w * q.x + p.x * q.w + p.y * q.z - p.z * q.y;
-			this->y = p.w * q.y + p.y * q.w + p.z * q.x - p.x * q.z;
-			this->z = p.w * q.z + p.z * q.w + p.x * q.y - p.y * q.x;
+			this->value.w = p.w * q.w - p.x * q.x - p.y * q.y - p.z * q.z;
+			this->value.x = p.w * q.x + p.x * q.w + p.y * q.z - p.z * q.y;
+			this->value.y = p.w * q.y + p.y * q.w + p.z * q.x - p.x * q.z;
+			this->value.z = p.w * q.z + p.z * q.w + p.x * q.y - p.y * q.x;
 			return *this;
 		}
 
 		template <typename X>
 		FORCE_INLINE constexpr type& operator*=(X s) noexcept
 		{
-			x *= s;
-			y *= s;
-			z *= s;
-			w *= s;
+			value.x *= s;
+			value.y *= s;
+			value.z *= s;
+			value.w *= s;
 			return *this;
 		}
 
@@ -250,10 +240,10 @@ namespace math
 		template <typename X>
 		FORCE_INLINE constexpr type& operator/=(X s)
 		{
-			x /= s;
-			y /= s;
-			z /= s;
-			w /= s;
+			value.x /= s;
+			value.y /= s;
+			value.z /= s;
+			value.w /= s;
 			return *this;
 		}
 
@@ -293,15 +283,15 @@ namespace math
 		operator Matrix<3, 3, T>() const noexcept
 		{
 			Matrix<3, 3, T> Result(T(1));
-			T qxx(this->x * this->x);
-			T qyy(this->y * this->y);
-			T qzz(this->z * this->z);
-			T qxz(this->x * this->z);
-			T qxy(this->x * this->y);
-			T qyz(this->y * this->z);
-			T qwx(this->w * this->x);
-			T qwy(this->w * this->y);
-			T qwz(this->w * this->z);
+			T qxx(this->value.x * this->value.x);
+			T qyy(this->value.y * this->value.y);
+			T qzz(this->value.z * this->value.z);
+			T qxz(this->value.x * this->value.z);
+			T qxy(this->value.x * this->value.y);
+			T qyz(this->value.y * this->value.z);
+			T qwx(this->value.w * this->value.x);
+			T qwy(this->value.w * this->value.y);
+			T qwz(this->value.w * this->value.z);
 
 			Result[0][0] = T(1) - T(2) * (qyy + qzz);
 			Result[0][1] = T(2) * (qxy + qwz);
@@ -324,24 +314,24 @@ namespace math
 
 		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const type& rhs) noexcept
 		{
-			return this->x == rhs.x && this->y == rhs.y && this->z == rhs.z && this->w == rhs.w;
+			return this->value.x == rhs.value.x && this->value.y == rhs.value.y && this->value.z == rhs.value.z && this->value.w == rhs.value.w;
 		}
 
 		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const type& rhs) noexcept
 		{
-			return this->x != rhs.x || this->y != rhs.y || this->z != rhs.z || this->w != rhs.w;
+			return this->value.x != rhs.value.x || this->value.y != rhs.value.y || this->value.z != rhs.value.z || this->value.w != rhs.value.w;
 		}
 
 		template <typename X>
 		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const X& number) noexcept
 		{
-			return this->x == number && this->y == number && this->z == number && this->w == number;
+			return this->value.x == number && this->value.y == number && this->value.z == number && this->value.w == number;
 		}
 
 		template <typename X>
 		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const X& number) noexcept
 		{
-			return this->x != number || this->y != number || this->z != number || this->w != number;
+			return this->value.x != number || this->value.y != number || this->value.z != number || this->value.w != number;
 		}
 
 		/// <summary>
@@ -350,10 +340,10 @@ namespace math
 		/// <returns></returns>
 		FORCE_INLINE constexpr type& operator++() noexcept
 		{
-			++x;
-			++y;
-			++z;
-			++w;
+			++value.x;
+			++value.y;
+			++value.z;
+			++value.w;
 			return *this;
 		}
 
@@ -375,10 +365,10 @@ namespace math
 		/// <returns></returns>
 		FORCE_INLINE constexpr type& operator--() noexcept
 		{
-			--x;
-			--y;
-			--z;
-			--w;
+			--value.x;
+			--value.y;
+			--value.z;
+			--value.w;
 			return *this;
 		}
 

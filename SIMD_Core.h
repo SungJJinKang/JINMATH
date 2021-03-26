@@ -45,38 +45,79 @@ typedef __m256i M256I;
 
 #define M128F_SWIZZLE(M128F, X, Y, Z, W) _mm_permute_ps(M128F, SHUFFLEMASK(X, Y, Z, W)) 
 
-FORCE_INLINE M128F M128F_ADD(const M128F& Vec1, const M128F& Vec2)
+#define M256F_REPLICATE(M256F, ElementIndex) _mm256_permute_ps(M256F, SHUFFLEMASK(ElementIndex, ElementIndex, ElementIndex, ElementIndex)) 
+
+#define M256F_SWIZZLE(M256F, X, Y, Z, W) _mm256_permute_ps(M256F, SHUFFLEMASK(X, Y, Z, W)) 
+
+inline M128F M128F_Zero{ _mm_castsi128_ps(_mm_set1_epi16(0)) };
+inline M128F M128F_EVERY_BITS_ONE{ _mm_castsi128_ps(_mm_set1_epi16(-1)) };
+
+FORCE_INLINE M128F M128F_ADD(const M128F& M128_A, const M128F& M128_B)
 {
-	return _mm_add_ps(Vec1, Vec2);
+	return _mm_add_ps(M128_A, M128_B);
 }
 
-FORCE_INLINE M128F M128F_SUB(const M128F& Vec1, const M128F& Vec2)
+FORCE_INLINE M256F M256F_ADD(const M256F& M256_A, const M256F& M256_B)
 {
-	return _mm_sub_ps(Vec1, Vec2);
+	return _mm256_add_ps(M256_A, M256_B);
 }
 
-FORCE_INLINE M128F M128F_MUL(const M128F& Vec1, const M128F& Vec2)
+FORCE_INLINE M128F M128F_SUB(const M128F& M128_A, const M128F& M128_B)
 {
-	return _mm_mul_ps(Vec1, Vec2);
+	return _mm_sub_ps(M128_A, M128_B);
 }
 
-FORCE_INLINE M128F M128F_DIV(const M128F& Vec1, const M128F& Vec2)
+FORCE_INLINE M256F M256F_SUB(const M256F& M256_A, const M256F& M256_B)
 {
-	return _mm_div_ps(Vec1, Vec2);
+	return _mm256_sub_ps(M256_A, M256_B);
 }
 
-FORCE_INLINE M128F M128F_MUL_AND_ADD(const M128F& Vec1, const M128F& Vec2, const M128F& Vec3)
+FORCE_INLINE M128F M128F_MUL(const M128F& M128_A, const M128F& M128_B)
 {
-	return M128F_ADD(M128F_MUL(Vec1, Vec2), Vec3);
+	return _mm_mul_ps(M128_A, M128_B);
 }
 
-FORCE_INLINE M128F M128F_CROSS(const M128F& Vec1, const M128F& Vec2)
+FORCE_INLINE M256F M256F_MUL(const M256F& M256_A, const M256F& M256_B)
 {
-	M128F A_YZXW = _mm_shuffle_ps(Vec1, Vec1, SHUFFLEMASK(1, 2, 0, 3));
-	M128F B_ZXYW = _mm_shuffle_ps(Vec2, Vec2, SHUFFLEMASK(2, 0, 1, 3));
-	M128F A_ZXYW = _mm_shuffle_ps(Vec1, Vec1, SHUFFLEMASK(2, 0, 1, 3));
-	M128F B_YZXW = _mm_shuffle_ps(Vec2, Vec2, SHUFFLEMASK(1, 2, 0, 3));
+	return _mm256_mul_ps(M256_A, M256_B);
+}
+
+FORCE_INLINE M128F M128F_DIV(const M128F& M128_A, const M128F& M128_B)
+{
+	return _mm_div_ps(M128_A, M128_B);
+}
+
+FORCE_INLINE M256F M256F_DIV(const M256F& M256_A, const M256F& M256_B)
+{
+	return _mm256_div_ps(M256_A, M256_B);
+}
+
+FORCE_INLINE M128F M128F_MUL_AND_ADD(const M128F& M128_A, const M128F& M128_B, const M128F& M128_C)
+{
+	return M128F_ADD(M128F_MUL(M128_A, M128_B), M128_C);
+}
+
+FORCE_INLINE M256F M256F_MUL_AND_ADD(const M256F& M256_A, const M256F& M256_B, const M256F& M256_C)
+{
+	return M256F_ADD(M256F_MUL(M256_A, M256_B), M256_C);
+}
+
+FORCE_INLINE M128F M128F_CROSS(const M128F& M128_A, const M128F& M128_B)
+{
+	M128F A_YZXW = _mm_shuffle_ps(M128_A, M128_A, SHUFFLEMASK(1, 2, 0, 3));
+	M128F B_ZXYW = _mm_shuffle_ps(M128_B, M128_B, SHUFFLEMASK(2, 0, 1, 3));
+	M128F A_ZXYW = _mm_shuffle_ps(M128_A, M128_A, SHUFFLEMASK(2, 0, 1, 3));
+	M128F B_YZXW = _mm_shuffle_ps(M128_B, M128_B, SHUFFLEMASK(1, 2, 0, 3));
 	return M128F_SUB(M128F_MUL(A_YZXW, B_ZXYW), M128F_MUL(A_ZXYW, B_YZXW));
+}
+
+FORCE_INLINE M256F M256F_CROSS(const M256F& M256_A, const M256F& M256_B)
+{
+	M256F A_YZXW = _mm256_shuffle_ps(M256_A, M256_A, SHUFFLEMASK(1, 2, 0, 3));
+	M256F B_ZXYW = _mm256_shuffle_ps(M256_B, M256_B, SHUFFLEMASK(2, 0, 1, 3));
+	M256F A_ZXYW = _mm256_shuffle_ps(M256_A, M256_A, SHUFFLEMASK(2, 0, 1, 3));
+	M256F B_YZXW = _mm256_shuffle_ps(M256_B, M256_B, SHUFFLEMASK(1, 2, 0, 3));
+	return M256F_SUB(M256F_MUL(A_YZXW, B_ZXYW), M256F_MUL(A_ZXYW, B_YZXW));
 }
 
 
