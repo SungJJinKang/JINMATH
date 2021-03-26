@@ -47,7 +47,7 @@ namespace math
 
 		FORCE_INLINE explicit Vector(const type& vector) noexcept
 		{
-			std::memcpy(this, &vector, sizeof(type));
+			std::memcpy(this->data(), vector.data(), sizeof(type));
 		}
 
 		template <typename X>

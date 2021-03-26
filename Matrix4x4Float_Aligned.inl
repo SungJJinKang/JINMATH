@@ -297,8 +297,8 @@ namespace math
 		{
 			Vector<4, float> Result{nullptr};
 
-			const M128F* A = (const M128F*)this;
-			const M128F* B = (const M128F*)vector.data();
+			const M128F* A = reinterpret_cast<const M128F*>(this);
+			const M128F* B = reinterpret_cast<const M128F*>(vector.data());
 			M128F* R = reinterpret_cast<M128F*>(&Result);
 
 			// First row of result (Matrix1[0] * Matrix2).
@@ -310,6 +310,12 @@ namespace math
 			return Result;
 		}
 
+		/// <summary>
+		/// Scalar version is faster than SIMD version
+		/// </summary>
+		/// <typeparam name="X"></typeparam>
+		/// <param name="vector"></param>
+		/// <returns></returns>
 		template <typename X>
 		[[nodiscard]] FORCE_INLINE constexpr Vector<3, X> operator*(const Vector<3, X>& vector) const noexcept
 		{
@@ -321,21 +327,33 @@ namespace math
 			};
 		}	
 
-		/// <summary>
-		/// SIMD version is a little faster than scalar version
-		/// </summary>
-		/// <param name="vector"></param>
-		/// <returns></returns>
+
+// 		/ <summary>
+// 		/// 
+// 		/// </summary>
+// 		/// <param name="vector"></param>
+// 		/// <returns></returns>
 // 		template <>
-// 		[[nodiscard]] FORCE_INLINE constexpr Vector<3, float> operator*(const Vector<3, float>& vector) const noexcept
+// 		[[nodiscard]] FORCE_INLINE Vector<3, float> operator*(const Vector<3, float>& vector) const noexcept
 // 		{
+// 			Vector<4, float> Result{ nullptr };
+// 			type Vec4{ vector };
+// 
+// 			const M128F* A = (const M128F*)this;
+// 			const M128F* B = (const M128F*)Vec4.data();
+// 			M128F* R = reinterpret_cast<M128F*>(&Result);
+// 
+// 			// First row of result (Matrix1[0] * Matrix2).
+// 			*R = M128F_MUL(M128F_REPLICATE(*B, 0), A[0]);
+// 			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 1), A[1], *R);
+// 			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 2), A[2], *R);
+// 			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 3), A[3], *R);
+// 
 // 			return Vector<3, float>
 // 			{
-// 				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2],
-// 					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2],
-// 					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2]
+// 				Result
 // 			};
-// 		}
+//   		}
 
 		FORCE_INLINE constexpr type operator+(float rhs) const noexcept
 		{
