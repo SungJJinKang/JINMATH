@@ -1,46 +1,55 @@
 #include <chrono>
 #include <iostream>
 
+#include "../Matrix_utility.h"
 #include "../Matrix4x4.h"
 #include "../Vector4.h"
 #include "../Vector3.h"
 
-#include "../../../Graphics/Acceleration/LinearViewFrustumCulling/DataStructure/TransformData.h"
+#include "../../../Graphics/Acceleration/LinearData_ViewFrustumCulling/DataStructure/EntityBlock.h"
+
+struct AA
+{
+	alignas(16) int a[10]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+};
 
 
 int main()
 {
-	unsigned int FF{ 0xFFFFFFFF };
-	M128F ZERO = M128F_Zero;
-	M128F ONE = M128F_EVERY_BITS_ONE;
-	math::Vector4 a[8]{};
-	for (int i = 0; i < 8; i++)
-	{
-		a[i].x = i * 4 + 0;
-		a[i].y = i * 4 + 1;
-		a[i].z = i * 4 + 2;
-		a[i].w = i * 4 + 3;
-	}
+	int a{ ~0 };
+	AA k ;
+	std::cout << sizeof(doom::graphics::EntityBlock) << std::endl;
+	constexpr math::Matrix4x4 mvpMatrix{ };
+	//mvpMatrix = math::translate(math::Vector3(1.0f)) * math::rotate(45.0f, math::Vector3(2.0f)) * math::scale(math::Vector3(4.0f));
 
-	math::Vector4 b[2]{};
-	for (int i = 8; i < 10; i++)
-	{
-		b[i - 8].x = i * 4 + 0;
-		b[i - 8].y = i * 4 + 1;
-		b[i - 8].z = i * 4 + 2;
-		b[i - 8].w = i * 4 + 3;
-	}
+	math::Vector4 plane[8]{};
 
-	InFrustumSIMDWithTwoPoint(a, b, a[0]);
-
-
+	alignas(32) bool da[100];
+	
 	{
 		auto now = std::chrono::high_resolution_clock::now();
 
+		for (int i = 0; i < 100000; i++)
+		{
+			//math::ExtractPlanesFromMVPMatrixForSIMD(mvpMatrix, false, plane);
+		}
+
+
+		auto end = std::chrono::high_resolution_clock::now();
+		std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - now).count() << std::endl;
+	}
+	/*
+	{
+		auto now = std::chrono::high_resolution_clock::now();
+
+		for (int i = 0; i < 100000; i++)
+		{
+			math::ExtractPlanesFromMVPMatrixForSIMDVer2(mvpMatrix, false, plane);
+		}
 	
 
 		auto end = std::chrono::high_resolution_clock::now();
 		std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - now).count() << std::endl;
 	}
-	
+	*/
 }

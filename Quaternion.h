@@ -219,10 +219,10 @@ namespace math
 			const Quaternion_common<T> p(*this);
 			const Quaternion_common<T> q(rhs);
 
-			this->value.w = p.w * q.w - p.x * q.x - p.y * q.y - p.z * q.z;
-			this->value.x = p.w * q.x + p.x * q.w + p.y * q.z - p.z * q.y;
-			this->value.y = p.w * q.y + p.y * q.w + p.z * q.x - p.x * q.z;
-			this->value.z = p.w * q.z + p.z * q.w + p.x * q.y - p.y * q.x;
+			this->value.w = p.value.w * q.value.w - p.value.x * q.value.x - p.value.y * q.value.y - p.value.z * q.value.z;
+			this->value.x = p.value.w * q.value.x + p.value.x * q.value.w + p.value.y * q.value.z - p.value.z * q.value.y;
+			this->value.y = p.value.w * q.value.y + p.value.y * q.value.w + p.value.z * q.value.x - p.value.x * q.value.z;
+			this->value.z = p.value.w * q.value.z + p.value.z * q.value.w + p.value.x * q.value.y - p.value.y * q.value.x;
 			return *this;
 		}
 
@@ -465,8 +465,8 @@ namespace math
 		template<typename T>
 		static T roll(const Quaternion_common<T>& q)
 		{
-			const T y = static_cast<T>(2) * (q.x * q.y + q.w * q.z);
-			const T x = q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z;
+			const T y = static_cast<T>(2) * (q.value.x * q.value.y + q.value.w * q.value.z);
+			const T x = q.value.w * q.value.w + q.value.x * q.value.x - q.value.y * q.value.y - q.value.z * q.value.z;
 
 			T epsilon = math::epsilon<T>();
 			if (Vector<2, T>(x, y) == epsilon && Vector<2, T>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
@@ -479,14 +479,14 @@ namespace math
 		template<typename T>
 		static T pitch(const Quaternion_common<T>& q)
 		{
-			//return T(atan(T(2) * (q.y * q.z + q.w * q.x).w * q.w - q.x * q.x - q.y * q.y + q.z * q.z));
-			const T y = static_cast<T>(2) * (q.y * q.z + q.w * q.x);
-			const T x = q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z;
+			//return T(atan(T(2) * (q.value.y * q.value.z + q.value.w * q.value.x).w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z));
+			const T y = static_cast<T>(2) * (q.value.y * q.value.z + q.value.w * q.value.x);
+			const T x = q.value.w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z;
 
 			T epsilon = math::epsilon<T>();
 			if (Vector<2, T>(x, y) == epsilon && Vector<2, T>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
 			{
-				return static_cast<T>(static_cast<T>(2) * math::atan2(q.x, q.w));
+				return static_cast<T>(static_cast<T>(2) * math::atan2(q.value.x, q.value.w));
 			}
 
 			return static_cast<T>(math::atan2(y, x));
@@ -495,7 +495,7 @@ namespace math
 		template<typename T>
 		static T yaw(const Quaternion_common<T>& q)
 		{
-			return math::asin(math::clamp(static_cast<T>(-2) * (q.x * q.z - q.w * q.y), static_cast<T>(-1), static_cast<T>(1)));
+			return math::asin(math::clamp(static_cast<T>(-2) * (q.value.x * q.value.z - q.value.w * q.value.y), static_cast<T>(-1), static_cast<T>(1)));
 		}
 
 		template<typename T>
@@ -525,7 +525,7 @@ namespace math
 	template<typename T>
 	constexpr Quaternion_common<T> conjugate(const Quaternion_common<T>& q)
 	{
-		return Quaternion_common<T>(q.w, -q.x, -q.y, -q.z);
+		return Quaternion_common<T>(q.value.w, -q.value.x, -q.value.y, -q.value.z);
 	}
 
 	template<typename T>
@@ -558,11 +558,11 @@ namespace math
 	template<typename T>
 	FORCE_INLINE constexpr Vector<3, T>operator*(const Quaternion_common<T>& q, const Vector<3, T>& v)
 	{
-		const Vector<3, T> QuatVector(q.x, q.y, q.z);
+		const Vector<3, T> QuatVector(q.value.x, q.value.y, q.value.z);
 		const Vector<3, T> uv(cross(QuatVector, v));
 		const Vector<3, T> uuv(cross(QuatVector, uv));
 
-		return v + ((uv * q.w) + uuv) * static_cast<T>(2);
+		return v + ((uv * q.value.w) + uuv) * static_cast<T>(2);
 	}
 
 	template<typename T>
@@ -587,7 +587,7 @@ namespace math
 	constexpr Quaternion_common<T> operator*(const Quaternion_common<T>& q, const T& s)
 	{
 		return Quaternion_common<T>(
-			q.w * s, q.x * s, q.y * s, q.z * s);
+			q.value.w * s, q.value.x * s, q.value.y * s, q.value.z * s);
 	}
 
 	template<typename T, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
@@ -606,15 +606,15 @@ namespace math
 	constexpr Quaternion_common<T> operator/(const Quaternion_common<T>& q, const T& s)
 	{
 		return Quaternion_common<T>(
-			q.w / s, q.x / s, q.y / s, q.z / s);
+			q.value.w / s, q.value.x / s, q.value.y / s, q.value.z / s);
 	}
 
 
 	template<typename T>
 	T roll(const Quaternion_common<T>& q)
 	{
-		const T y = static_cast<T>(2) * (q.x * q.y + q.w * q.z);
-		const T x = q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z;
+		const T y = static_cast<T>(2) * (q.value.x * q.value.y + q.value.w * q.value.z);
+		const T x = q.value.w * q.value.w + q.value.x * q.value.x - q.value.y * q.value.y - q.value.z * q.value.z;
 
 		if (all(eqaul(Vector<2, T>(x, y), Vector<2, T>(0), epsilon<T>()))) //avoid atan2(0,0) - handle singularity - Matiis
 			return static_cast<T>(0);
@@ -625,12 +625,12 @@ namespace math
 	template<typename T>
 	T pitch(const Quaternion_common<T>& q)
 	{
-		//return T(atan(T(2) * (q.y * q.z + q.w * q.x).w * q.w - q.x * q.x - q.y * q.y + q.z * q.z));
-		const T y = static_cast<T>(2) * (q.y * q.z + q.w * q.x);
-		const T x = q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z;
+		//return T(atan(T(2) * (q.value.y * q.value.z + q.value.w * q.value.x).w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z));
+		const T y = static_cast<T>(2) * (q.value.y * q.value.z + q.value.w * q.value.x);
+		const T x = q.value.w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z;
 
 		if (all(eqaul(Vector<2, T>(x, y), Vector<2, T>(0), math::epsilon<T>()))) //avoid atan2(0,0) - handle singularity - Matiis
-			return static_cast<T>(static_cast<T>(2) * math::atan(q.x.w));
+			return static_cast<T>(static_cast<T>(2) * math::atan(q.value.x.w));
 
 		return static_cast<T>(math::atan(y, x));
 	}
@@ -638,7 +638,7 @@ namespace math
 	template<typename T>
 	T yaw(const Quaternion_common<T>& q)
 	{
-		return math::asin(math::clamp(static_cast<T>(-2) * (q.x * q.z - q.w * q.y), static_cast<T>(-1), static_cast<T>(1)));
+		return math::asin(math::clamp(static_cast<T>(-2) * (q.value.x * q.value.z - q.value.w * q.value.y), static_cast<T>(-1), static_cast<T>(1)));
 	}
 
 	

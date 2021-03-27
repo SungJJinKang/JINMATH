@@ -734,8 +734,8 @@ namespace math
 	/// </summary>
 	/// <param name="sixPlanes"></param>
 	/// <param name="twoPoint">aligned to 16 byte</param>
-	/// <returns></returns>
-	inline void InFrustumSIMDWithTwoPoint(math::Vector<4, float>* eightPlanes, const math::Vector<4, float>* twoPoint, const math::Vector<4, float>& frustumMask)
+	/// <returns>when first low bit is 1, Pos 1 is In Frustum, when second low bit is 1, Pos 2 is In Frustum,</returns>
+	inline unsigned int InFrustumSIMDWithTwoPoint(math::Vector<4, float>* eightPlanes, const math::Vector<4, float>* twoPoint)
 	{
 		//We can't use M256F. because two twoPoint isn't aligned to 32 byte
 
@@ -785,7 +785,8 @@ namespace math
 
 		int IsPointAInFrustum = _mm_test_all_ones(*reinterpret_cast<__m128i*>(&RMaskA)); // value is 1, Point in in frustum
 		int IsPointBInFrustum = _mm_test_all_ones(*reinterpret_cast<__m128i*>(&RMaskB));
-		//M128F InFrustumMask = 
+		IsPointAInFrustum |= IsPointBInFrustum << 1;
+		return *reinterpret_cast<unsigned int*>(IsPointAInFrustum);
 	}
 
 	/// <summary>
@@ -831,57 +832,21 @@ namespace math
 	/// https://macton.smugmug.com/Other/2008-07-15-by-Eye-Fi/n-xmKDH/i-bJq8JqZ/A
 	/// </summary>
 	template <>
-	inline void ExtractPlanesFromMVPMatrix(const Matrix<4, 4, float>& mvpMatrix, bool normalize, math::Vector<4, float>* sixPlanes) noexcept
+	inline void ExtractPlanesFromMVPMatrix(const Matrix<4, 4, float>& mvpMatrix, math::Vector<4, float>* sixPlanes, bool normalize) noexcept
 	{
-		Matrix<4, 4, float> Result{ nullptr };
+		const M128F* M = reinterpret_cast<const M128F*>(mvpMatrix[0].data());
+		const M128F* M3 = reinterpret_cast<const M128F*>(mvpMatrix[3].data());
+		M128F* Result = reinterpret_cast<M128F*>(sixPlanes);
 
-	
-	
-		//M128F Temp;// , R0, R1, R2, R3;
+		Result[0] = M128F_ADD(*M3, M[0]);
+		Result[1] = M128F_SUB(*M3, M[0]);
 
-// 		// First row of result (Matrix1[0] * Matrix2).
-// 		Temp = M128F_MUL(M128F_REPLICATE(B[0], 0), A[0]);
-// 		Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 1), A[1], Temp);
-// 		Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 2), A[2], Temp);
-// 		R[0] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 3), A[3], Temp);
+		Result[2] = M128F_ADD(*M3, M[1]);
+		Result[3] = M128F_SUB(*M3, M[1]);
 
-		M256F* R = reinterpret_cast<M256F*>(&sixPlanes[0]); //eightPlanes[0], eightPlanes[1]
-		const M128F* A = reinterpret_cast<const M128F*>(&(mvpMatrix[3])); // mvpMatrix[3]
-		const M128F* B = reinterpret_cast<const M128F*>(&(mvpMatrix[0])); // mvpMatrix[0]
+		Result[4] = M128F_ADD(*M3, M[2]);
+		Result[5] = M128F_SUB(*M3, M[2]);
 
-
-		sixPlanes[0].x = mvpMatrix[3][0] + mvpMatrix[0][0];
-		sixPlanes[0].y = mvpMatrix[3][1] + mvpMatrix[0][1];
-		sixPlanes[0].z = mvpMatrix[3][2] + mvpMatrix[0][2];
-		sixPlanes[0].w = mvpMatrix[3][3] + mvpMatrix[0][3];
-		// Right clipping plane
-		sixPlanes[1].x = mvpMatrix[3][0] - mvpMatrix[0][0];
-		sixPlanes[1].y = mvpMatrix[3][1] - mvpMatrix[0][1];
-		sixPlanes[1].z = mvpMatrix[3][2] - mvpMatrix[0][2];
-		sixPlanes[1].w = mvpMatrix[3][3] - mvpMatrix[0][3];
-
-		// Top clipping plane
-		sixPlanes[2].x = mvpMatrix[3][0] - mvpMatrix[1][0];
-		sixPlanes[2].y = mvpMatrix[3][1] - mvpMatrix[1][1];
-		sixPlanes[2].z = mvpMatrix[3][2] - mvpMatrix[1][2];
-		sixPlanes[2].w = mvpMatrix[3][3] - mvpMatrix[1][3];
-		// Bottom clipping plane
-		sixPlanes[3].x = mvpMatrix[3][0] + mvpMatrix[1][0];
-		sixPlanes[3].y = mvpMatrix[3][1] + mvpMatrix[1][1];
-		sixPlanes[3].z = mvpMatrix[3][2] + mvpMatrix[1][2];
-		sixPlanes[3].w = mvpMatrix[3][3] + mvpMatrix[1][3];
-
-		// Near clipping plane
-		sixPlanes[4].x = mvpMatrix[3][0] + mvpMatrix[2][0];
-		sixPlanes[4].y = mvpMatrix[3][1] + mvpMatrix[2][1];
-		sixPlanes[4].z = mvpMatrix[3][2] + mvpMatrix[2][2];
-		sixPlanes[4].w = mvpMatrix[3][3] + mvpMatrix[2][3];
-
-		// Far clipping plane
-		sixPlanes[5].x = mvpMatrix[3][0] - mvpMatrix[2][0];
-		sixPlanes[5].y = mvpMatrix[3][1] - mvpMatrix[2][1];
-		sixPlanes[5].z = mvpMatrix[3][2] - mvpMatrix[2][2];
-		sixPlanes[5].w = mvpMatrix[3][3] - mvpMatrix[2][3];
 		// Normalize the plane equations, if requested
 		if (normalize == true)
 		{
@@ -892,72 +857,77 @@ namespace math
 			sixPlanes[4].Normalize();
 			sixPlanes[5].Normalize();
 		}
-		
 	}
+
+
+
 
 	/// <summary>
-	/// For SIMD Computation
-	///
-	///  eightPlanes[0] : x of Plane0, x of Plane1, x of Plane2, x of Plane3
-	///  eightPlanes[1] : y of Plane0, y of Plane1, y of Plane2, y of Plane3
-	///  eightPlanes[2] : z of Plane0, z of Plane1, z of Plane2, z of Plane3
-	///  eightPlanes[3] : w of Plane0, w of Plane1, w of Plane2, w of Plane3
-	///  eightPlanes[4] : x of Plane4, x of Plane5, x of Plane4, x of Plane5
-	///  eightPlanes[5] : y of Plane4, y of Plane5, y of Plane4, y of Plane5
-	///  eightPlanes[6] : z of Plane4, z of Plane5, z of Plane4, z of Plane5
-	///  eightPlanes[7] : w of Plane4, w of Plane5, w of Plane4, w of Plane5
 	/// 
+	///	Extract Planes for SIMD computation from MVP Matrix
+	/// reference : https://www.gamedevs.org/uploads/fast-extraction-viewing-frustum-planes-from-world-view-projection-matrix.pdf
+	/// 
+	/// eightPlanes[0] : x of Plane0, x of Plane1, x of Plane2, x of Plane3
+	/// eightPlanes[1] : y of Plane0, y of Plane1, y of Plane2, y of Plane3
+	/// eightPlanes[2] : z of Plane0, z of Plane1, z of Plane2, z of Plane3
+	/// eightPlanes[3] : w of Plane0, w of Plane1, w of Plane2, w of Plane3
+	/// 
+	/// eightPlanes[4] : x of Plane4, x of Plane5, x of Plane4, x of Plane5
+	/// eightPlanes[5] : y of Plane4, y of Plane5, y of Plane4, y of Plane5
+	/// eightPlanes[6] : z of Plane4, z of Plane5, z of Plane4, z of Plane5
+	/// eightPlanes[7] : w of Plane4, w of Plane5, w of Plane4, w of Plane5
 	/// </summary>
 	/// <param name="mvpMatrix"></param>
-	/// <param name="normalize"></param>
 	/// <param name="eightPlanes"></param>
+	/// <param name="normalize"></param>
 	/// <returns></returns>
 	template <>
-	inline constexpr void ExtractPlanesFromMVPMatrixForSIMD(const Matrix<4, 4, float>& mvpMatrix, bool normalize, math::Vector<4, float>* eightPlanes) noexcept
+	inline void ExtractSIMDPlanesFromMVPMatrix(const Matrix<4, 4, float>& mvpMatrix, math::Vector<4, float>* eightPlanes, bool normalize) noexcept
 	{
-		eightPlanes[0].x = mvpMatrix[3][0] + mvpMatrix[0][0]; // x of Plane0
-		eightPlanes[0].y = mvpMatrix[3][0] - mvpMatrix[0][0]; // x of Plane1
-		eightPlanes[0].z = mvpMatrix[3][0] - mvpMatrix[1][0]; // x of Plane2
-		eightPlanes[0].w = mvpMatrix[3][0] + mvpMatrix[1][0]; // x of Plane3
+		math::Vector4 sixPlane[6]{ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 
-		eightPlanes[1].x = mvpMatrix[3][1] + mvpMatrix[0][1]; // y of Plane0
-		eightPlanes[1].y = mvpMatrix[3][1] - mvpMatrix[0][1]; // y of Plane1
-		eightPlanes[1].z = mvpMatrix[3][1] - mvpMatrix[1][1]; // y of Plane2
-		eightPlanes[1].w = mvpMatrix[3][1] + mvpMatrix[1][1]; // y of Plane3
+		ExtractPlanesFromMVPMatrix(mvpMatrix, sixPlane, normalize);
 
-		eightPlanes[2].x = mvpMatrix[3][2] + mvpMatrix[0][2]; // z of Plane0
-		eightPlanes[2].y = mvpMatrix[3][2] - mvpMatrix[0][2]; // z of Plane1
-		eightPlanes[2].z = mvpMatrix[3][2] - mvpMatrix[1][2]; // z of Plane2
-		eightPlanes[2].w = mvpMatrix[3][2] + mvpMatrix[1][2]; // z of Plane3
+		eightPlanes[0].x = sixPlane[0].x;
+		eightPlanes[0].y = sixPlane[1].x;
+		eightPlanes[0].z = sixPlane[2].x;
+		eightPlanes[0].w = sixPlane[3].x;
 
-		eightPlanes[3].x = mvpMatrix[3][3] + mvpMatrix[0][3]; // w of Plane0
-		eightPlanes[3].y = mvpMatrix[3][3] - mvpMatrix[0][3]; // w of Plane1
-		eightPlanes[3].z = mvpMatrix[3][3] - mvpMatrix[1][3]; // w of Plane2
-		eightPlanes[3].w = mvpMatrix[3][3] + mvpMatrix[1][3]; // w of Plane3
+		eightPlanes[1].x = sixPlane[0].y;
+		eightPlanes[1].y = sixPlane[1].y;
+		eightPlanes[1].z = sixPlane[2].y;
+		eightPlanes[1].w = sixPlane[3].y;
 
+		eightPlanes[2].x = sixPlane[0].z;
+		eightPlanes[2].y = sixPlane[1].z;
+		eightPlanes[2].z = sixPlane[2].z;
+		eightPlanes[2].w = sixPlane[3].z;
 
-		// Near clipping plane
-		eightPlanes[4].x = mvpMatrix[3][0] + mvpMatrix[2][0]; // x of Plane4
-		eightPlanes[4].y = mvpMatrix[3][0] - mvpMatrix[2][0]; // x of Plane5
-		eightPlanes[4].z = mvpMatrix[3][0] + mvpMatrix[2][0]; // x of Plane4
-		eightPlanes[4].w = mvpMatrix[3][0] - mvpMatrix[2][0]; // x of Plane5
+		eightPlanes[3].x = sixPlane[0].w;
+		eightPlanes[3].y = sixPlane[1].w;
+		eightPlanes[3].z = sixPlane[2].w;
+		eightPlanes[3].w = sixPlane[3].w;
 
-		eightPlanes[5].x = mvpMatrix[3][1] + mvpMatrix[2][1]; // y of Plane4
-		eightPlanes[5].y = mvpMatrix[3][1] - mvpMatrix[2][1]; // y of Plane5
-		eightPlanes[5].z = mvpMatrix[3][1] + mvpMatrix[2][1]; // y of Plane4
-		eightPlanes[5].w = mvpMatrix[3][1] - mvpMatrix[2][1]; // y of Plane5
+		eightPlanes[4].x = sixPlane[4].x;
+		eightPlanes[4].y = sixPlane[5].x;
+		eightPlanes[4].z = sixPlane[4].x;
+		eightPlanes[4].w = sixPlane[5].x;
 
-		//I know Frustum is composed of 6 plane, but I need M256F SIMD Computation
-		eightPlanes[6].x = mvpMatrix[3][2] + mvpMatrix[2][2]; // z of Plane4
-		eightPlanes[6].y = mvpMatrix[3][2] - mvpMatrix[2][2]; // z of Plane5
-		eightPlanes[6].z = mvpMatrix[3][2] + mvpMatrix[2][2]; // z of Plane4
-		eightPlanes[6].w = mvpMatrix[3][2] - mvpMatrix[2][2]; // z of Plane5
+		eightPlanes[5].x = sixPlane[4].y;
+		eightPlanes[5].y = sixPlane[5].y;
+		eightPlanes[5].z = sixPlane[4].y;
+		eightPlanes[5].w = sixPlane[5].y;
 
-		eightPlanes[7].x = mvpMatrix[3][3] + mvpMatrix[2][3]; // w of Plane4
-		eightPlanes[7].y = mvpMatrix[3][3] - mvpMatrix[2][3]; // w of Plane5
-		eightPlanes[7].z = mvpMatrix[3][3] + mvpMatrix[2][3]; // w of Plane4
-		eightPlanes[7].w = mvpMatrix[3][3] - mvpMatrix[2][3]; // w of Plane5
+		eightPlanes[6].x = sixPlane[4].z;
+		eightPlanes[6].y = sixPlane[5].z;
+		eightPlanes[6].z = sixPlane[4].z;
+		eightPlanes[6].w = sixPlane[5].z;
 
+		eightPlanes[7].x = sixPlane[4].w;
+		eightPlanes[7].y = sixPlane[5].w;
+		eightPlanes[7].z = sixPlane[4].w;
+		eightPlanes[7].w = sixPlane[5].w;
 	}
+
 }
 
