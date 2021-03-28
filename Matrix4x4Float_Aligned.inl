@@ -735,7 +735,7 @@ namespace math
 	/// <param name="sixPlanes"></param>
 	/// <param name="twoPoint">aligned to 16 byte</param>
 	/// <returns>when first low bit is 1, Pos 1 is In Frustum, when second low bit is 1, Pos 2 is In Frustum,</returns>
-	inline unsigned int InFrustumSIMDWithTwoPoint(math::Vector<4, float>* eightPlanes, const math::Vector<4, float>* twoPoint)
+	inline char InFrustumSIMDWithTwoPoint(math::Vector<4, float>* eightPlanes, const math::Vector<4, float>* twoPoint)
 	{
 		//We can't use M256F. because two twoPoint isn't aligned to 32 byte
 
@@ -769,13 +769,22 @@ namespace math
 		
 		M128F posAB_rrrr = _mm_shuffle_ps(m128f_2Point[0], m128f_2Point[1], SHUFFLEMASK(3, 3, 3, 3)); // r of twoPoint[0] , r of twoPoint[1], w of twoPoint[1] , w of twoPoint[1]
 
-		M128F dotPosAB45 = M128F_MUL_AND_ADD(posAB_xxxx, m128f_eightPlanes[6], m128f_eightPlanes[7]);
+		M128F dotPosAB45 = M128F_MUL_AND_ADD(posAB_zzzz, m128f_eightPlanes[6], m128f_eightPlanes[7]);
 		dotPosAB45 = M128F_MUL_AND_ADD(posAB_yyyy, m128f_eightPlanes[5], dotPosAB45);
 		dotPosAB45 = M128F_MUL_AND_ADD(posAB_xxxx, m128f_eightPlanes[4], dotPosAB45);
 
 		dotPosA = _mm_cmpgt_ps(dotPosA, posA_rrrr); // if elemenet[i] have value 1, Pos A is in frustum Plane[i] ( 0 <= i < 4 )
 		dotPosB = _mm_cmpgt_ps(dotPosB, posB_rrrr); // if elemenet[i] have value 1, Pos B is in frustum Plane[i] ( 0 <= i < 4 )
 		dotPosAB45 = _mm_cmpgt_ps(dotPosAB45, posAB_rrrr);
+
+		// this is wrong
+		//dotPosA = _mm_cmpgt_ps(posA_rrrr, dotPosA); // if elemenet[i] have value 1, Pos A is in frustum Plane[i] ( 0 <= i < 4 )
+		//dotPosB = _mm_cmpgt_ps(posB_rrrr, dotPosB); // if elemenet[i] have value 1, Pos B is in frustum Plane[i] ( 0 <= i < 4 )
+		//dotPosAB45 = _mm_cmpgt_ps(posAB_rrrr, dotPosAB45);
+
+
+		
+		
 
 		M128F dotPosA45 = _mm_blend_ps(dotPosAB45, dotPosA, SHUFFLEMASK(0, 3, 0, 0)); // Is In Plane with Plane[4], Plane[5], Plane[2], Plane[3]
 		M128F dotPosB45 = _mm_blend_ps(dotPosB, dotPosAB45, SHUFFLEMASK(0, 3, 0, 0)); // Is In Plane with Plane[0], Plane[1], Plane[4], Plane[5]
@@ -785,8 +794,9 @@ namespace math
 
 		int IsPointAInFrustum = _mm_test_all_ones(*reinterpret_cast<__m128i*>(&RMaskA)); // value is 1, Point in in frustum
 		int IsPointBInFrustum = _mm_test_all_ones(*reinterpret_cast<__m128i*>(&RMaskB));
-		IsPointAInFrustum |= IsPointBInFrustum << 1;
-		return *reinterpret_cast<unsigned int*>(IsPointAInFrustum);
+		
+		char IsPointABInFrustum = IsPointAInFrustum | (IsPointBInFrustum << 1);
+		return IsPointABInFrustum;
 	}
 
 	/// <summary>
@@ -832,10 +842,10 @@ namespace math
 	/// https://macton.smugmug.com/Other/2008-07-15-by-Eye-Fi/n-xmKDH/i-bJq8JqZ/A
 	/// </summary>
 	template <>
-	inline void ExtractPlanesFromMVPMatrix(const Matrix<4, 4, float>& mvpMatrix, math::Vector<4, float>* sixPlanes, bool normalize) noexcept
+	inline void ExtractPlanesFromViewProjectionMatrix(const Matrix<4, 4, float>& viewProjectionMatrix, math::Vector<4, float>* sixPlanes, bool normalize) noexcept
 	{
-		const M128F* M = reinterpret_cast<const M128F*>(mvpMatrix[0].data());
-		const M128F* M3 = reinterpret_cast<const M128F*>(mvpMatrix[3].data());
+		const M128F* M = reinterpret_cast<const M128F*>(viewProjectionMatrix[0].data());
+		const M128F* M3 = reinterpret_cast<const M128F*>(viewProjectionMatrix[3].data());
 		M128F* Result = reinterpret_cast<M128F*>(sixPlanes);
 
 		Result[0] = M128F_ADD(*M3, M[0]);
@@ -864,7 +874,7 @@ namespace math
 
 	/// <summary>
 	/// 
-	///	Extract Planes for SIMD computation from MVP Matrix
+	///	Extract Planes for SIMD computation from VP Matrix
 	/// reference : https://www.gamedevs.org/uploads/fast-extraction-viewing-frustum-planes-from-world-view-projection-matrix.pdf
 	/// 
 	/// eightPlanes[0] : x of Plane0, x of Plane1, x of Plane2, x of Plane3
@@ -877,16 +887,16 @@ namespace math
 	/// eightPlanes[6] : z of Plane4, z of Plane5, z of Plane4, z of Plane5
 	/// eightPlanes[7] : w of Plane4, w of Plane5, w of Plane4, w of Plane5
 	/// </summary>
-	/// <param name="mvpMatrix"></param>
+	/// <param name="ViewProjectionMatrix"></param>
 	/// <param name="eightPlanes"></param>
 	/// <param name="normalize"></param>
 	/// <returns></returns>
 	template <>
-	inline void ExtractSIMDPlanesFromMVPMatrix(const Matrix<4, 4, float>& mvpMatrix, math::Vector<4, float>* eightPlanes, bool normalize) noexcept
+	inline void ExtractSIMDPlanesFromMVPMatrix(const Matrix<4, 4, float>& ViewProjectionMatrix, math::Vector<4, float>* eightPlanes, bool normalize) noexcept
 	{
 		math::Vector4 sixPlane[6]{ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 
-		ExtractPlanesFromMVPMatrix(mvpMatrix, sixPlane, normalize);
+		ExtractPlanesFromViewProjectionMatrix(ViewProjectionMatrix, sixPlane, normalize);
 
 		eightPlanes[0].x = sixPlane[0].x;
 		eightPlanes[0].y = sixPlane[1].x;

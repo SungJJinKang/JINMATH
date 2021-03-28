@@ -614,7 +614,7 @@ namespace math
 	/// Scalar Version
 	/// </summary>
 	template <typename T>
-	inline constexpr void ExtractPlanesFromMVPMatrix(const Matrix<4, 4, T>& mvpMatrix, math::Vector<4, T>* sixPlanes, bool normalize) noexcept
+	inline constexpr void ExtractPlanesFromViewProjectionMatrix(const Matrix<4, 4, T>& mvpMatrix, math::Vector<4, T>* sixPlanes, bool normalize) noexcept
 	{
 		sixPlanes[0].x = mvpMatrix[3][0] + mvpMatrix[0][0];
 		sixPlanes[0].y = mvpMatrix[3][1] + mvpMatrix[0][1];
