@@ -842,30 +842,47 @@ namespace math
 	/// https://macton.smugmug.com/Other/2008-07-15-by-Eye-Fi/n-xmKDH/i-bJq8JqZ/A
 	/// </summary>
 	template <>
-	inline void ExtractPlanesFromViewProjectionMatrix(const Matrix<4, 4, float>& viewProjectionMatrix, math::Vector<4, float>* sixPlanes, bool normalize) noexcept
+	inline void ExtractPlanesFromMVPMatrix(const Matrix<4, 4, float>& mvpMatrix, math::Vector<4, float>* sixPlanes, bool normalize) noexcept
 	{
-		const M128F* M = reinterpret_cast<const M128F*>(viewProjectionMatrix[0].data());
-		const M128F* M3 = reinterpret_cast<const M128F*>(viewProjectionMatrix[3].data());
-		M128F* Result = reinterpret_cast<M128F*>(sixPlanes);
-
-		Result[0] = M128F_ADD(*M3, M[0]);
-		Result[1] = M128F_SUB(*M3, M[0]);
-
-		Result[2] = M128F_ADD(*M3, M[1]);
-		Result[3] = M128F_SUB(*M3, M[1]);
-
-		Result[4] = M128F_ADD(*M3, M[2]);
-		Result[5] = M128F_SUB(*M3, M[2]);
+		sixPlanes[0].x = mvpMatrix[0][3] + mvpMatrix[0][0];
+		sixPlanes[0].y = mvpMatrix[1][3] + mvpMatrix[1][0];
+		sixPlanes[0].z = mvpMatrix[2][3] + mvpMatrix[2][0];
+		sixPlanes[0].w = mvpMatrix[3][3] + mvpMatrix[3][0];
+		// Right clipping plane
+		sixPlanes[1].x = mvpMatrix[0][3] - mvpMatrix[0][0];
+		sixPlanes[1].y = mvpMatrix[1][3] - mvpMatrix[1][0];
+		sixPlanes[1].z = mvpMatrix[2][3] - mvpMatrix[2][0];
+		sixPlanes[1].w = mvpMatrix[3][3] - mvpMatrix[3][0];
+		// Top clipping plane
+		sixPlanes[2].x = mvpMatrix[0][3] - mvpMatrix[0][1];
+		sixPlanes[2].y = mvpMatrix[1][3] - mvpMatrix[1][1];
+		sixPlanes[2].z = mvpMatrix[2][3] - mvpMatrix[2][1];
+		sixPlanes[2].w = mvpMatrix[3][3] - mvpMatrix[3][1];
+		// Bottom clipping plane
+		sixPlanes[3].x = mvpMatrix[0][3] + mvpMatrix[0][1];
+		sixPlanes[3].y = mvpMatrix[1][3] + mvpMatrix[1][1];
+		sixPlanes[3].z = mvpMatrix[2][3] + mvpMatrix[2][1];
+		sixPlanes[3].w = mvpMatrix[3][3] + mvpMatrix[3][1];
+		// Near clipping plane
+		sixPlanes[4].x = mvpMatrix[0][3] + mvpMatrix[0][2];
+		sixPlanes[4].y = mvpMatrix[1][3] + mvpMatrix[1][2];
+		sixPlanes[4].z = mvpMatrix[2][3] + mvpMatrix[2][2];
+		sixPlanes[4].w = mvpMatrix[3][3] + mvpMatrix[3][2];
+		// Far clipping plane
+		sixPlanes[5].x = mvpMatrix[0][3] - mvpMatrix[0][2];
+		sixPlanes[5].y = mvpMatrix[1][3] - mvpMatrix[1][2];
+		sixPlanes[5].z = mvpMatrix[2][3] - mvpMatrix[2][2];
+		sixPlanes[5].w = mvpMatrix[3][3] - mvpMatrix[3][2];
 
 		// Normalize the plane equations, if requested
 		if (normalize == true)
 		{
-			sixPlanes[0].Normalize();
-			sixPlanes[1].Normalize();
-			sixPlanes[2].Normalize();
-			sixPlanes[3].Normalize();
-			sixPlanes[4].Normalize();
-			sixPlanes[5].Normalize();
+			NormalizePlane(sixPlanes[0]);
+			NormalizePlane(sixPlanes[1]);
+			NormalizePlane(sixPlanes[2]);
+			NormalizePlane(sixPlanes[3]);
+			NormalizePlane(sixPlanes[4]);
+			NormalizePlane(sixPlanes[5]);
 		}
 	}
 
@@ -887,16 +904,17 @@ namespace math
 	/// eightPlanes[6] : z of Plane4, z of Plane5, z of Plane4, z of Plane5
 	/// eightPlanes[7] : w of Plane4, w of Plane5, w of Plane4, w of Plane5
 	/// </summary>
-	/// <param name="ViewProjectionMatrix"></param>
+	/// <param name="ModelViewProjectionMatrix"></param>
 	/// <param name="eightPlanes"></param>
 	/// <param name="normalize"></param>
 	/// <returns></returns>
 	template <>
-	inline void ExtractSIMDPlanesFromMVPMatrix(const Matrix<4, 4, float>& ViewProjectionMatrix, math::Vector<4, float>* eightPlanes, bool normalize) noexcept
+	inline void ExtractSIMDPlanesFromMVPMatrix(const Matrix<4, 4, float>& mvpMatrix, math::Vector<4, float>* eightPlanes, bool normalize) noexcept
 	{
+		
 		math::Vector4 sixPlane[6]{ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 
-		ExtractPlanesFromViewProjectionMatrix(ViewProjectionMatrix, sixPlane, normalize);
+		ExtractPlanesFromMVPMatrix(mvpMatrix, sixPlane, normalize);
 
 		eightPlanes[0].x = sixPlane[0].x;
 		eightPlanes[0].y = sixPlane[1].x;
@@ -937,6 +955,7 @@ namespace math
 		eightPlanes[7].y = sixPlane[5].w;
 		eightPlanes[7].z = sixPlane[4].w;
 		eightPlanes[7].w = sixPlane[5].w;
+		
 	}
 
 }

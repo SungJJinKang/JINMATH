@@ -280,7 +280,7 @@ namespace math
 		}
 		*/
 
-		operator Matrix<3, 3, T>() const noexcept
+		inline operator Matrix<3, 3, T>() const noexcept
 		{
 			Matrix<3, 3, T> Result(T(1));
 			T qxx(this->value.x * this->value.x);
@@ -307,7 +307,7 @@ namespace math
 			return Result;
 		}
 
-		operator Matrix<4, 4, T>() const noexcept
+		inline operator Matrix<4, 4, T>() const noexcept
 		{
 			return Matrix<4, 4, T>(this->operator math::Matrix<3, 3, T>());
 		}
