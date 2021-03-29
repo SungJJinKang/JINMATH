@@ -71,10 +71,16 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE Vector(const Vector<3, T>& vector) noexcept
+		FORCE_INLINE Vector(const Vector<3, T>& vector, T w = 0) noexcept
 		{
 			std::memcpy(this, &vector, sizeof(T) * 3);
-			this->w = 0;
+			this->w = w;
+		}
+
+		template <typename X>
+		FORCE_INLINE constexpr Vector(const Vector<3, X>& vector, T w = 0) noexcept
+			: x{ static_cast<T>(vector.x) }, y{ static_cast<T>(vector.y) }, z{ static_cast<T>(vector.z) }, w{ static_cast<T>(w) }
+		{
 		}
 
 		template <typename X>

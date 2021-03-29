@@ -77,16 +77,16 @@ namespace math
 		/// </summary>
 		/// <param name="vector"></param>
 		/// <returns></returns>
-		FORCE_INLINE explicit Vector(const Vector<3, float>& vector) noexcept
+		FORCE_INLINE explicit Vector(const Vector<3, float>& vector, float w = 0.0f) noexcept
 		{
 			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
 			std::memcpy(this->data(), &vector, sizeof(float) * 3);
-			this->w = 0;
+			this->w = w;
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr Vector(const Vector<3, X>& vector) noexcept
-			: x{ static_cast<float>(vector.x) }, y{ static_cast<float>(vector.y) }, z{ static_cast<float>(vector.z) }, w{ 0 }
+		FORCE_INLINE constexpr Vector(const Vector<3, X>& vector, X w = 0) noexcept
+			: x{ static_cast<float>(vector.x) }, y{ static_cast<float>(vector.y) }, z{ static_cast<float>(vector.z) }, w{ static_cast<float>(w) }
 		{
 		}
 
