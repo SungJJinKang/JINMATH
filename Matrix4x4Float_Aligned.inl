@@ -795,6 +795,7 @@ namespace math
 		return IsPointABInFrustum;
 	}
 
+	/*
 	inline char CheckInFrustumSIMDChunk(math::Vector<4, float>** arrayOfEightFrustumPlanes, unsigned int frustumCount, const math::Vector<4, float>* points, unsigned int pointCount, char* resultFlags)
 	{
 		for (unsigned int frustumIndex = 0; frustumIndex < frustumCount; ++frustumIndex)
@@ -879,6 +880,7 @@ namespace math
 		char IsPointABInFrustum = IsPointAInFrustum | (IsPointBInFrustum << 1);
 		return IsPointABInFrustum;
 	}
+	*/
 
 	/// <summary>
 	/// TODO : 이거 하려면 twoPoint 두개씩 묶어서 32byte에 align되게 해야함, 
