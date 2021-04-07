@@ -242,41 +242,42 @@ namespace math
 			return type(columns[0] - rhs.columns[0], columns[1] - rhs.columns[1], columns[2] - rhs.columns[2], columns[3] - rhs.columns[3]);
 		}
 
+		inline thread_local static M256F _REULST_MAT4[2]{};
+		inline thread_local static M128F TEMP_M128F{};
+		inline thread_local static Vector<4, float> TEMP_VEC4{};
+
 		[[nodiscard]] FORCE_INLINE type operator*(const Matrix<4, 4, float>& rhs) const noexcept
 		{
-			Matrix<4, 4, float> Result{ nullptr };
-
 			const M128F* A = reinterpret_cast<const M128F*>(this);
 			//const M128F* A = (const M128F*)this->data(); // this is slower
 			const M128F* B = reinterpret_cast<const M128F*>(&rhs);
-			M128F* R = reinterpret_cast<M128F*>(&Result);
-			M128F Temp;// , R0, R1, R2, R3;
+			M128F* R = reinterpret_cast<M128F*>(&_REULST_MAT4);
 
 			// First row of result (Matrix1[0] * Matrix2).
-			Temp = M128F_MUL(M128F_REPLICATE(B[0], 0), A[0]);
-			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 1), A[1], Temp);
-			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 2), A[2], Temp);
-			R[0] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 3), A[3], Temp);
+			TEMP_M128F = M128F_MUL(M128F_REPLICATE(B[0], 0), A[0]);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 1), A[1], TEMP_M128F);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 2), A[2], TEMP_M128F);
+			R[0] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 3), A[3], TEMP_M128F);
 
 			// Second row of result (Matrix1[1] * Matrix2).
-			Temp = M128F_MUL(M128F_REPLICATE(B[1], 0), A[0]);
-			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[1], 1), A[1], Temp);
-			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[1], 2), A[2], Temp);
-			R[1] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[1], 3), A[3], Temp);
+			TEMP_M128F = M128F_MUL(M128F_REPLICATE(B[1], 0), A[0]);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[1], 1), A[1], TEMP_M128F);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[1], 2), A[2], TEMP_M128F);
+			R[1] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[1], 3), A[3], TEMP_M128F);
 
 			// Third row of result (Matrix1[2] * Matrix2).
-			Temp = M128F_MUL(M128F_REPLICATE(B[2], 0), A[0]);
-			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[2], 1), A[1], Temp);
-			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[2], 2), A[2], Temp);
-			R[2] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[2], 3), A[3], Temp);
+			TEMP_M128F = M128F_MUL(M128F_REPLICATE(B[2], 0), A[0]);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[2], 1), A[1], TEMP_M128F);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[2], 2), A[2], TEMP_M128F);
+			R[2] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[2], 3), A[3], TEMP_M128F);
 
 			// Fourth row of result (Matrix1[3] * Matrix2).
-			Temp = M128F_MUL(M128F_REPLICATE(B[3], 0), A[0]);
-			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[3], 1), A[1], Temp);
-			Temp = M128F_MUL_AND_ADD(M128F_REPLICATE(B[3], 2), A[2], Temp);
-			R[3] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[3], 3), A[3], Temp);
+			TEMP_M128F = M128F_MUL(M128F_REPLICATE(B[3], 0), A[0]);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[3], 1), A[1], TEMP_M128F);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[3], 2), A[2], TEMP_M128F);
+			R[3] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[3], 3), A[3], TEMP_M128F);
 
-			return Result;
+			return *reinterpret_cast<type*>(&_REULST_MAT4);
 		}
 
 
@@ -295,11 +296,9 @@ namespace math
 		template <>
 		[[nodiscard]] FORCE_INLINE Vector<4, float> operator*(const Vector<4, float>& vector) const noexcept
 		{
-			Vector<4, float> Result{nullptr};
-
 			const M128F* A = reinterpret_cast<const M128F*>(this);
-			const M128F* B = reinterpret_cast<const M128F*>(vector.data());
-			M128F* R = reinterpret_cast<M128F*>(&Result);
+			const M128F* B = reinterpret_cast<const M128F*>(&vector);
+			M128F* R = reinterpret_cast<M128F*>(&TEMP_VEC4);
 
 			// First row of result (Matrix1[0] * Matrix2).
 			*R = M128F_MUL(M128F_REPLICATE(*B, 0), A[0]);
@@ -307,7 +306,7 @@ namespace math
 			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 2), A[2], *R);
 			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 3), A[3], *R);
 
-			return Result;
+			return TEMP_VEC4;
 		}
 
 		/// <summary>
@@ -327,6 +326,40 @@ namespace math
 			};
 		}	
 
+		struct alignas(16) AlignedTempVec3
+		{
+			Vector<3, float> Vec3;
+			const float padding{ 1.0f };
+		};
+		inline thread_local static AlignedTempVec3 _AlignedTempVec3_Parameter{};
+		inline thread_local static AlignedTempVec3 _AlignedTempVec3_Result{};
+
+		/// <summary>
+		/// When
+		/// </summary>
+		/// <typeparam name="X"></typeparam>
+		/// <param name="vector"></param>
+		/// <returns></returns>
+		template <>
+		[[nodiscard]] FORCE_INLINE Vector<3, float> operator*(const Vector<3, float>& vector) const noexcept
+		{
+			std::memcpy(&_AlignedTempVec3_Parameter, &vector, sizeof(Vector<3, float>));
+
+			const M128F* A = reinterpret_cast<const M128F*>(this);
+			const M128F* B = reinterpret_cast<const M128F*>(&_AlignedTempVec3_Parameter);
+			M128F* R = reinterpret_cast<M128F*>(&_AlignedTempVec3_Result);
+
+			// First row of result (Matrix1[0] * Matrix2).
+			*R = M128F_MUL(M128F_REPLICATE(*B, 0), A[0]);
+			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 1), A[1], *R);
+			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 2), A[2], *R);
+			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 3), A[3], *R);
+
+			return _AlignedTempVec3_Result.Vec3;
+		}
+		
+		
+		
 
 // 		/ <summary>
 // 		/// 

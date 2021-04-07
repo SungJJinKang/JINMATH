@@ -7,10 +7,6 @@
 #include "../Vector3.h"
 
 
-struct AA
-{
-	alignas(16) int a[10]{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-};
 
 
 int main()
@@ -27,23 +23,6 @@ int main()
 	
 
 
-
-	{
-		auto now = std::chrono::high_resolution_clock::now();
-
-		for (int i = 0; i < 10000000; i++)
-		{
-			
-
-			math::Vector4 Vec4;
-
-			math::Vector3 ResultVec3{ mat4 * math::Vector4(vec3, 1.0f) };
-		}
-
-
-		auto end = std::chrono::high_resolution_clock::now();
-		std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - now).count() << std::endl;
-	}
 
 	{
 		auto now = std::chrono::high_resolution_clock::now();

@@ -83,12 +83,6 @@ namespace math
 		{
 		}
 
-		template <typename X>
-		FORCE_INLINE constexpr Vector(const Vector<3, X>& vector) noexcept
-			: x{ static_cast<T>(vector.x) }, y{ static_cast<T>(vector.y) }, z{ static_cast<T>(vector.z) }, w{ 0 }
-		{
-		}
-
 		FORCE_INLINE explicit Vector(const type& vector) noexcept
 		{
 			std::memcpy(this, &vector, sizeof(type));

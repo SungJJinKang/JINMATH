@@ -4,6 +4,7 @@
 
 namespace math
 {
+	// never put alignas
 	template <typename T>
 	struct Vector<3, T>
 	{
@@ -69,7 +70,7 @@ namespace math
 
 		FORCE_INLINE explicit Vector(const type& vector) noexcept
 		{
-			std::memcpy(this->data(), vector.data(), sizeof(type));
+			std::memcpy(this, &vector, sizeof(type));
 		}
 
 		template <typename X>
@@ -80,7 +81,7 @@ namespace math
 
 		FORCE_INLINE explicit Vector(const Vector<4, T>& vector) noexcept
 		{
-			std::memcpy(this->data(), &vector, sizeof(type));
+			std::memcpy(this, &vector, sizeof(type));
 		}
 
 		template <typename X>
@@ -117,7 +118,7 @@ namespace math
 		
 		FORCE_INLINE type& operator=(const type& vector) noexcept
 		{
-			std::memcpy(this->data(), vector.data(), sizeof(type));
+			std::memcpy(this, &vector, sizeof(type));
 			return *this;
 		}
 
@@ -132,7 +133,7 @@ namespace math
 
 		FORCE_INLINE type& operator=(const Vector<4, T>& vector) noexcept
 		{
-			std::memcpy(this->data(), &vector, sizeof(type));
+			std::memcpy(this, &vector, sizeof(type));
 			return *this;
 		}
 
