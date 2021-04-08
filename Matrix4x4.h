@@ -221,7 +221,7 @@ namespace math
 		}
 
 		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr type operator*(const Matrix<4, 4, X>& rhs) const noexcept
+		[[nodiscard]] inline constexpr type operator*(const Matrix<4, 4, X>& rhs) const noexcept
 		{
 			const col_type SrcA0 = columns[0];
 			const col_type SrcA1 = columns[1];
@@ -242,7 +242,7 @@ namespace math
 		}
 
 		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr Vector<4, X> operator*(const Vector<4, X>& vector) const noexcept
+		[[nodiscard]] inline constexpr Vector<4, X> operator*(const Vector<4, X>& vector) const noexcept
 		{
 			return Vector<4, X>
 			{
@@ -254,7 +254,7 @@ namespace math
 		}
 		
 		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr Vector<3, X> operator*(const Vector<3, X>& vector) const noexcept
+		[[nodiscard]] inline constexpr Vector<3, X> operator*(const Vector<3, X>& vector) const noexcept
 		{
 			return Vector<3, X>
 			{

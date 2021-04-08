@@ -246,7 +246,7 @@ namespace math
 		inline thread_local static M128F TEMP_M128F{};
 		inline thread_local static Vector<4, float> TEMP_VEC4{};
 
-		[[nodiscard]] FORCE_INLINE type operator*(const Matrix<4, 4, float>& rhs) const noexcept
+		[[nodiscard]] inline type operator*(const Matrix<4, 4, float>& rhs) const noexcept
 		{
 			const M128F* A = reinterpret_cast<const M128F*>(this);
 			//const M128F* A = (const M128F*)this->data(); // this is slower
@@ -282,7 +282,7 @@ namespace math
 
 
 		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr Vector<4, X> operator*(const Vector<4, X>& vector) const noexcept
+		[[nodiscard]] inline constexpr Vector<4, X> operator*(const Vector<4, X>& vector) const noexcept
 		{
 			return Vector<4, float>
 			{
@@ -294,7 +294,7 @@ namespace math
 		}
 
 		template <>
-		[[nodiscard]] FORCE_INLINE Vector<4, float> operator*(const Vector<4, float>& vector) const noexcept
+		[[nodiscard]] inline Vector<4, float> operator*(const Vector<4, float>& vector) const noexcept
 		{
 			const M128F* A = reinterpret_cast<const M128F*>(this);
 			const M128F* B = reinterpret_cast<const M128F*>(&vector);
@@ -316,7 +316,7 @@ namespace math
 		/// <param name="vector"></param>
 		/// <returns></returns>
 		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr Vector<3, X> operator*(const Vector<3, X>& vector) const noexcept
+		[[nodiscard]] inline constexpr Vector<3, X> operator*(const Vector<3, X>& vector) const noexcept
 		{
 			return Vector<3, X>
 			{
@@ -341,7 +341,7 @@ namespace math
 		/// <param name="vector"></param>
 		/// <returns></returns>
 		template <>
-		[[nodiscard]] FORCE_INLINE Vector<3, float> operator*(const Vector<3, float>& vector) const noexcept
+		[[nodiscard]] inline Vector<3, float> operator*(const Vector<3, float>& vector) const noexcept
 		{
 			std::memcpy(&_AlignedTempVec3_Parameter, &vector, sizeof(Vector<3, float>));
 
@@ -916,8 +916,8 @@ namespace math
 	*/
 
 	/// <summary>
-	/// TODO : ÀÌ°Å ÇÏ·Á¸é twoPoint µÎ°³¾¿ ¹­¾î¼­ 32byte¿¡ alignµÇ°Ô ÇØ¾ßÇÔ, 
-	/// TODO : eightPlanesµµ eightPlanes[0]ÀÌ¶û eightPlanes[1] µÑ´Ù x component¿©¾ßÇÔ
+	/// TODO : ï¿½Ì°ï¿½ ï¿½Ï·ï¿½ï¿½ï¿½ twoPoint ï¿½Î°ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½î¼­ 32byteï¿½ï¿½ alignï¿½Ç°ï¿½ ï¿½Ø¾ï¿½ï¿½ï¿½, 
+	/// TODO : eightPlanesï¿½ï¿½ eightPlanes[0]ï¿½Ì¶ï¿½ eightPlanes[1] ï¿½Ñ´ï¿½ x componentï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	/// 
 	/// </summary>
 	/// <param name="eightPlanes"></param>	
