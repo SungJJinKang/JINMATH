@@ -254,13 +254,14 @@ namespace math
 		}
 		
 		template <typename X>
-		[[nodiscard]] inline constexpr Vector<3, X> operator*(const Vector<3, X>& vector) const noexcept
+		[[nodiscard]] inline constexpr Vector<4, X> operator*(const Vector<3, X>& vector) const noexcept
 		{
-			return Vector<3, X>
+			return Vector<4, X>
 			{
-				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2],
-					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2],
-					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2]
+				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2] + this->columns[3][0],
+					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2] + this->columns[3][1],
+					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2] + this->columns[3][2],
+					this->columns[0][3] * vector[0] + this->columns[1][3] * vector[1] + this->columns[2][3] * vector[2] + this->columns[3][3],
 			};
 		}
 

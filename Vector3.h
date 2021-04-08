@@ -42,11 +42,11 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE explicit Vector(int*)  noexcept
+		FORCE_INLINE Vector(int*)  noexcept
 		{
 		}
 
-		FORCE_INLINE constexpr explicit Vector(T xValue)  noexcept
+		FORCE_INLINE explicit constexpr Vector(T xValue)  noexcept
 			: x{ xValue }, y{ xValue }, z{ xValue }
 		{
 		}
@@ -68,7 +68,7 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE explicit Vector(const type& vector) noexcept
+		FORCE_INLINE Vector(const type& vector) noexcept
 		{
 			std::memcpy(this, &vector, sizeof(type));
 		}
@@ -79,7 +79,7 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE explicit Vector(const Vector<4, T>& vector) noexcept
+		FORCE_INLINE Vector(const Vector<4, T>& vector) noexcept
 		{
 			std::memcpy(this, &vector, sizeof(type));
 		}
@@ -424,13 +424,13 @@ namespace math
 	};
 
 	template<typename T>
-	FORCE_INLINE constexpr Vector<3, T> operator+(const Vector<3, T>& vector) noexcept
+	FORCE_INLINE Vector<3, T> operator+(const Vector<3, T>& vector) noexcept
 	{
 		return vector;
 	}
 
 	template<typename T>
-	FORCE_INLINE constexpr Vector<3, T> operator-(const Vector<3, T>& vector) noexcept
+	FORCE_INLINE Vector<3, T> operator-(const Vector<3, T>& vector) noexcept
 	{
 		return Vector<3, T>(
 			-vector.x,
@@ -508,14 +508,4 @@ namespace math
 	using Vector3 = Vector<3, float>;
 
 	extern template struct math::Vector<3, float>;
-	extern template struct math::Vector<3, double>;
-	extern template struct math::Vector<3, long double>;
-	extern template struct math::Vector<3, short int>;
-	extern template struct math::Vector<3, int>;
-	extern template struct math::Vector<3, long int>;
-	extern template struct math::Vector<3, long long int>;
-	extern template struct math::Vector<3, unsigned short int>;
-	extern template struct math::Vector<3, unsigned int>;
-	extern template struct math::Vector<3, unsigned long int>;
-	extern template struct math::Vector<3, unsigned long long int>;
 }

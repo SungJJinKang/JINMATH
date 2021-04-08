@@ -44,13 +44,13 @@ namespace math
 
 		}
 
- 		FORCE_INLINE constexpr explicit Vector(float xValue)  noexcept
+ 		FORCE_INLINE explicit constexpr Vector(float xValue)  noexcept
  			: x{ xValue }, y{ xValue }, z{ xValue }, w{ xValue }
  		{
  		}
 
 		// This is more slow than scalar version
-// 		FORCE_INLINE explicit Vector(float xValue)  noexcept
+// 		FORCE_INLINE Vector(float xValue)  noexcept
 // 		{
 // 			*reinterpret_cast<M128F*>(this) = _mm_set1_ps(xValue);
 // 		}
@@ -77,7 +77,7 @@ namespace math
 		/// </summary>
 		/// <param name="vector"></param>
 		/// <returns></returns>
-		FORCE_INLINE explicit Vector(const Vector<3, float>& vector, float w = 0.0f) noexcept
+		FORCE_INLINE Vector(const Vector<3, float>& vector, float w = 0.0f) noexcept
 		{
 			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
 			std::memcpy(this, &vector, sizeof(float) * 3);
@@ -90,7 +90,7 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE explicit Vector(const type& vector) noexcept
+		FORCE_INLINE Vector(const type& vector) noexcept
 		{
 			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
 			std::memcpy(this, &vector, sizeof(type));
@@ -479,13 +479,13 @@ namespace math
 	};
 
 	template<>
-	FORCE_INLINE constexpr Vector<4, float> operator+(const Vector<4, float>& vector) noexcept
+	FORCE_INLINE Vector<4, float> operator+(const Vector<4, float>& vector) noexcept
 	{
 		return vector;
 	}
 
 	template<>
-	FORCE_INLINE constexpr Vector<4, float> operator-(const Vector<4, float>& vector) noexcept
+	FORCE_INLINE Vector<4, float> operator-(const Vector<4, float>& vector) noexcept
 	{
 		return Vector<4, float>
 			(

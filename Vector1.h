@@ -29,12 +29,12 @@ namespace math
 
 		}
 
-		FORCE_INLINE constexpr explicit Vector(T xValue)  noexcept
+		FORCE_INLINE explicit constexpr Vector(T xValue)  noexcept
 			: x{ xValue }
 		{
 		}
 
-		FORCE_INLINE constexpr explicit Vector(const type& vector) noexcept
+		FORCE_INLINE constexpr Vector(const type& vector) noexcept
 			: x{ vector.x }
 		{
 		}
@@ -344,13 +344,13 @@ namespace math
 
 
 	template<typename T>
-	FORCE_INLINE constexpr Vector<1, T> operator+(const Vector<1, T>& vector) noexcept
+	FORCE_INLINE Vector<1, T> operator+(const Vector<1, T>& vector) noexcept
 	{
 		return vector;
 	}
 
 	template<typename T>
-	FORCE_INLINE constexpr Vector<1, T> operator-(const Vector<1, T>& vector) noexcept
+	FORCE_INLINE Vector<1, T> operator-(const Vector<1, T>& vector) noexcept
 	{
 		return Vector<1, T>(
 			-vector.x);
@@ -405,14 +405,4 @@ namespace math
 	using Vector1 = Vector<1, float>;
 
 	extern template struct math::Vector<1, float>;
-	extern template struct math::Vector<1, double>;
-	extern template struct math::Vector<1, long double>;
-	extern template struct math::Vector<1, short int>;
-	extern template struct math::Vector<1, int>;
-	extern template struct math::Vector<1, long int>;
-	extern template struct math::Vector<1, long long int>;
-	extern template struct math::Vector<1, unsigned short int>;
-	extern template struct math::Vector<1, unsigned int>;
-	extern template struct math::Vector<1, unsigned long int>;
-	extern template struct math::Vector<1, unsigned long long int>;
 }
