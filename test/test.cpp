@@ -29,7 +29,7 @@ int main()
 
 		for (int i = 0; i < 10000000; i++)
 		{
-			math::Vector3 Result{ mat4 * vec3 };
+			math::Vector4 Result{ mat4 * vec3 };
 		}
 
 

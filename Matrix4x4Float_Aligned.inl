@@ -330,9 +330,11 @@ namespace math
 		
 		inline thread_local static Vector<4, float> Vec4_Parameter{1.0f};
 		inline thread_local static Vector<4, float> Vec4_Result{1.0f};
-
+		
+		inline static constexpr M128F AllOne{ 1.0f, 1.0f, 1.0f, 1.0f };
+		
 		/// <summary>
-		/// When
+		/// 
 		/// </summary>
 		/// <typeparam name="X"></typeparam>
 		/// <param name="vector"></param>
@@ -340,17 +342,18 @@ namespace math
 		template <>
 		[[nodiscard]] inline Vector<4, float> operator*(const Vector<3, float>& vector) const noexcept
 		{
+			//vec3 is not aligned to 128bit, so we need to copy temporary vec3 data to vec4
 			std::memcpy(&Vec4_Parameter, &vector, sizeof(Vector<3, float>));
 
 			const M128F* A = reinterpret_cast<const M128F*>(this);
-			const M128F* B = reinterpret_cast<const M128F*>(&Vec4_Parameter);
+			const M128F* B = reinterpret_cast<const M128F*>(&vector);
 			M128F* R = reinterpret_cast<M128F*>(&Vec4_Result);
 
 			// First row of result (Matrix1[0] * Matrix2).
 			*R = M128F_MUL(M128F_REPLICATE(*B, 0), A[0]);
 			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 1), A[1], *R);
 			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 2), A[2], *R);
-			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 3), A[3], *R);
+			*R = M128F_MUL_AND_ADD(AllOne, A[3], *R);
 
 			return Vec4_Result;
 		}
