@@ -643,6 +643,16 @@ namespace math
 
 	
 
-	using Quaternion = typename Quaternion_common<float>;
+	
 
+}
+
+#include "SIMD_Core.h"
+#ifdef SIMD_ENABLED
+#include "Quaternion_SIMD.inl"
+#endif
+
+namespace math
+{
+	using Quaternion = typename Quaternion_common<float>;
 }

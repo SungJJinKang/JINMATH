@@ -722,7 +722,7 @@ namespace math
 
 #include "SIMD_Core.h"
 #ifdef SIMD_ENABLED
-#include "Matrix4x4Float_Aligned.inl"
+#include "Matrix4x4Float_SIMD.inl"
 #endif
 
 namespace math

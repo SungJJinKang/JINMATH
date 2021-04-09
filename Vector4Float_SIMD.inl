@@ -1,5 +1,6 @@
 namespace math
 {
+
 	/// <summary>
 	/// This class is made for SIMD computation. So it's aligned to 16 byte
 	/// </summary>
@@ -531,19 +532,21 @@ namespace math
 	template <>
 	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> sqrt(const Vector<4, float>& vector)
 	{
-		return Vector<4, float>{sqrt(vector.x), sqrt(vector.y), sqrt(vector.z), sqrt(vector.w)};
+		M128F Temp = _mm_sqrt_ps(*reinterpret_cast<const M128F*>(&vector));
+		return Vector<4, float>{*reinterpret_cast<Vector<4, float>*>(&Temp)};
 	}
 
 	template <>
 	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> inverseSqrt(const Vector<4, float>& vector)
 	{
-		return Vector<4, float>{inverseSqrt(vector.x), inverseSqrt(vector.y), inverseSqrt(vector.z), inverseSqrt(vector.w)};
+		M128F Temp = _mm_rsqrt_ps(*reinterpret_cast<const M128F*>(&vector));
+		return Vector<4, float>{*reinterpret_cast<Vector<4, float>*>(&Temp)};
 	}
 
 	template <>
 	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> normalize(const Vector<4, float>& vector)
 	{
-		return vector * inverseSqrt(dot(vector, vector));
+		return vector * math::inverseSqrt(math::dot(vector, vector));
 	}
 
 	template<>

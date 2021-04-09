@@ -532,7 +532,7 @@ namespace math
 //This is required for 4X4Matrix * Vector4
 #include "SIMD_Core.h"
 #ifdef SIMD_ENABLED
-#include "Vector4Float_Aligned.inl"
+#include "Vector4Float_SIMD.inl"
 #endif
 
 
