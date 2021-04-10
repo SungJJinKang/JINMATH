@@ -1,3 +1,5 @@
+#include "Vector3.h"
+
 namespace math
 {
 	/// <summary>
@@ -14,7 +16,7 @@ namespace math
 
 		using col_type = Vector<4, float>;
 
-		[[nodiscard]] FORCE_INLINE static constexpr size_t columnCount()  noexcept { return 4; }
+		[[nodiscard]] FORCE_INLINE static size_t columnCount()  noexcept { return 4; }
 
 		/// <summary>
 		/// All columns always is aligned to 16 byte, because Matrix<4, 4, float> class is aligned to 16byte
@@ -54,7 +56,7 @@ namespace math
 			A[1] = _mm256_broadcast_ps(B); // B + 8 -> B + sizeof(float) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
 		}
 
-		FORCE_INLINE constexpr Matrix() noexcept : columns{}
+		FORCE_INLINE Matrix() noexcept : columns{}
 		{
 		}
 
@@ -72,7 +74,7 @@ namespace math
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		FORCE_INLINE constexpr explicit Matrix(value_type value) noexcept
+		FORCE_INLINE explicit Matrix(value_type value) noexcept
 			: columns{
 			col_type(value, 0, 0, 0),
 			col_type(0, value, 0, 0),
@@ -83,7 +85,7 @@ namespace math
 
 		// we can't use SIMD at here
 		// Parameters may is stored at register, not memory
-		FORCE_INLINE constexpr Matrix
+		FORCE_INLINE Matrix
 		(
 			value_type x0, value_type y0, value_type z0, value_type w0,
 			value_type x1, value_type y1, value_type z1, value_type w1,
@@ -108,7 +110,7 @@ namespace math
 		}
 
 		template <typename X, typename Y, typename Z, typename W>
-		FORCE_INLINE constexpr Matrix(const col_type_template<X>& column0, const col_type_template<Y>& column1, const col_type_template<Z>& column2, const col_type_template<W>& column3) noexcept
+		FORCE_INLINE Matrix(const col_type_template<X>& column0, const col_type_template<Y>& column1, const col_type_template<Z>& column2, const col_type_template<W>& column3) noexcept
 			: columns{ column0, column1, column2, column3 }
 		{
 		}
@@ -119,30 +121,30 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr Matrix(const Matrix<1, 1, X>& matrix) noexcept
+		FORCE_INLINE Matrix(const Matrix<1, 1, X>& matrix) noexcept
 			: columns{ matrix.columns[0], {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1} }
 		{
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr Matrix(const Matrix<2, 2, X>& matrix) noexcept
+		FORCE_INLINE Matrix(const Matrix<2, 2, X>& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1], {0, 0, 1, 0}, {0, 0, 0, 1} }
 		{
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr Matrix(const Matrix<3, 3, X>& matrix) noexcept
+		FORCE_INLINE Matrix(const Matrix<3, 3, X>& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1], matrix.columns[2], {0, 0, 0, 1} }
 		{
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr Matrix(const Matrix<4, 4, X>& matrix) noexcept
+		FORCE_INLINE Matrix(const Matrix<4, 4, X>& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1], matrix.columns[2], matrix.columns[3] }
 		{
 		}
 
-		FORCE_INLINE constexpr type& operator=(value_type value) noexcept
+		FORCE_INLINE type& operator=(value_type value) noexcept
 		{
 			columns[0] = value;
 			columns[1] = value;
@@ -164,7 +166,7 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr type& operator=(const Matrix<1, 1, X>& matrix) noexcept
+		FORCE_INLINE type& operator=(const Matrix<1, 1, X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = 0;
@@ -174,7 +176,7 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr type& operator=(const Matrix<2, 2, X>& matrix) noexcept
+		FORCE_INLINE type& operator=(const Matrix<2, 2, X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -184,7 +186,7 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr type& operator=(const Matrix<3, 3, X>& matrix) noexcept
+		FORCE_INLINE type& operator=(const Matrix<3, 3, X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -194,7 +196,7 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr type& operator=(const Matrix<4, 4, X>& matrix) noexcept
+		FORCE_INLINE type& operator=(const Matrix<4, 4, X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -331,7 +333,7 @@ namespace math
 		inline thread_local static Vector<4, float> Vec4_Parameter{1.0f};
 		inline thread_local static Vector<4, float> Vec4_Result{1.0f};
 		
-		inline static constexpr M128F AllOne{ 1.0f, 1.0f, 1.0f, 1.0f };
+		inline static M128F AllOne{ 1.0f, 1.0f, 1.0f, 1.0f };
 		
 		/// <summary>
 		/// 

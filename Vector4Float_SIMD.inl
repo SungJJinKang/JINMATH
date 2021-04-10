@@ -45,7 +45,7 @@ namespace math
 
 		}
 
- 		FORCE_INLINE explicit constexpr Vector(float xValue)  noexcept
+ 		FORCE_INLINE constexpr explicit Vector(float xValue)  noexcept
  			: x{ xValue }, y{ xValue }, z{ xValue }, w{ xValue }
  		{
  		}
@@ -62,13 +62,13 @@ namespace math
 		}
 		
 		template <typename X>
-		FORCE_INLINE constexpr Vector(const Vector<1, X>& vector) noexcept
+		FORCE_INLINE Vector(const Vector<1, X>& vector) noexcept
 			: x{ static_cast<float>(vector.x) }, y{ 0 }, z{ 0 }, w{ 0 }
 		{
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr Vector(const Vector<2, X>& vector) noexcept
+		FORCE_INLINE Vector(const Vector<2, X>& vector) noexcept
 			: x{ static_cast<float>(vector.x) }, y{ static_cast<float>(vector.y) }, z{ 0 }, w{ 0 }
 		{
 		}
@@ -86,7 +86,7 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr Vector(const Vector<3, X>& vector, X w = 0) noexcept
+		FORCE_INLINE Vector(const Vector<3, X>& vector, X w = 0) noexcept
 			: x{ static_cast<float>(vector.x) }, y{ static_cast<float>(vector.y) }, z{ static_cast<float>(vector.z) }, w{ static_cast<float>(w) }
 		{
 		}
@@ -98,12 +98,18 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr Vector(const Vector<4, X>& vector) noexcept
+		FORCE_INLINE Vector(const Vector<4, X>& vector) noexcept
 			: x{ static_cast<float>(vector.x) }, y{ static_cast<float>(vector.y) }, z{ static_cast<float>(vector.z) }, w{ static_cast<float>(vector.w) }
 		{
 		}
 
-		FORCE_INLINE constexpr type& operator=(value_type xValue) noexcept
+		FORCE_INLINE Vector(const M128F& m128f) noexcept
+		{
+			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
+			std::memcpy(this, &m128f, sizeof(type));
+		}
+
+		FORCE_INLINE type& operator=(value_type xValue) noexcept
 		{
 			x = xValue;
 			y = xValue;
@@ -113,7 +119,7 @@ namespace math
 		}
 		
 		template <typename X>
-		FORCE_INLINE constexpr type& operator=(const Vector<1, X>& vector) noexcept
+		FORCE_INLINE type& operator=(const Vector<1, X>& vector) noexcept
 		{
 			x = vector.x;
 			y = 0;
@@ -123,7 +129,7 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr type& operator=(const Vector<2, X>& vector) noexcept
+		FORCE_INLINE type& operator=(const Vector<2, X>& vector) noexcept
 		{
 			x = vector.x;
 			y = vector.y;
@@ -140,7 +146,7 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr type& operator=(const Vector<3, X>& vector) noexcept
+		FORCE_INLINE type& operator=(const Vector<3, X>& vector) noexcept
 		{
 			x = vector.x;
 			y = vector.y;
@@ -164,6 +170,13 @@ namespace math
 			return *this;
 		}
 
+		FORCE_INLINE type& operator=(const M128F& m128f) noexcept
+		{
+			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
+			std::memcpy(this, &m128f, sizeof(type));
+			return *this;
+		}
+
 		/// <summary>
 		/// when type T is different with parameter's value type
 		/// </summary>
@@ -171,7 +184,7 @@ namespace math
 		/// <param name="vector"></param>
 		/// <returns></returns>
 		template <typename X>
-		FORCE_INLINE constexpr type& operator=(const Vector<4, X>& vector) noexcept
+		FORCE_INLINE type& operator=(const Vector<4, X>& vector) noexcept
 		{
 			x = vector.x;
 			y = vector.y;
@@ -184,7 +197,6 @@ namespace math
 		// 		Vector(type&&) = default;
 		// 		type& opreator=(const type&) = default;
 		// 		type& opreator=(type&&) = default;
-
 		std::basic_string<char> toString() const noexcept
 		{
 			std::stringstream ss;
@@ -192,9 +204,9 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE static constexpr size_t componentCount() noexcept { return 4; }
+		[[nodiscard]] FORCE_INLINE static size_t componentCount() noexcept { return 4; }
 
-		[[nodiscard]] FORCE_INLINE constexpr value_type& operator[](size_t i)
+		[[nodiscard]] FORCE_INLINE value_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -216,7 +228,7 @@ namespace math
 			}
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr const value_type& operator[](size_t i) const
+		[[nodiscard]] FORCE_INLINE const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -240,18 +252,18 @@ namespace math
 
 
 		// scalar version is more fast than SIMD
-		[[nodiscard]] FORCE_INLINE constexpr auto sqrMagnitude() const noexcept
+		[[nodiscard]] FORCE_INLINE auto sqrMagnitude() const noexcept
 		{
 			return x * x + y * y + z * z + w * w;
 		}
 
 		// scalar version is more fast than SIMD
-		[[nodiscard]] FORCE_INLINE constexpr auto magnitude() const noexcept
+		[[nodiscard]] FORCE_INLINE auto magnitude() const noexcept
 		{
 			return math::sqrt(sqrMagnitude());
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr type normalized() const noexcept
+		[[nodiscard]] FORCE_INLINE type normalized() const noexcept
 		{
 			auto mag = magnitude();
 			if (mag == 0)
@@ -260,7 +272,7 @@ namespace math
 			return type{ static_cast<value_type>(x / mag), static_cast<value_type>(y / mag), static_cast<value_type>(z / mag), static_cast<value_type>(w / mag) };
 		}
 
-		FORCE_INLINE constexpr void Normalize()
+		FORCE_INLINE void Normalize()
 		{
 			auto mag = magnitude();
 			if (mag > math::epsilon<float>())
@@ -272,38 +284,53 @@ namespace math
 			}
 		}
 
+		/// <summary>
+		/// scalar version is much faster than SIMD version
+		/// </summary>
+		/// <typeparam name="X"></typeparam>
+		/// <typeparam name="enable_if_t"></typeparam>
+		/// <param name="rhs"></param>
+		/// <returns></returns>
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		FORCE_INLINE constexpr type operator+(const Vector<RightComponentSize, X>& rhs) const noexcept
+		FORCE_INLINE type operator+(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w);
 		}
 
+		/*
+		template <>
+		FORCE_INLINE type operator+(const Vector<4, float>& rhs) const noexcept
+		{
+			return type(M128F_ADD(*reinterpret_cast<const M128F*>(this), *reinterpret_cast<const M128F*>(&rhs)));
+		}
+		*/
+
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		FORCE_INLINE constexpr type operator-(const Vector<RightComponentSize, X>& rhs) const noexcept
+		FORCE_INLINE type operator-(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w);
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		FORCE_INLINE constexpr type operator*(const Vector<RightComponentSize, X>& rhs) const noexcept
+		FORCE_INLINE type operator*(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x * rhs.x, y * rhs.y, z * rhs.z, w * rhs.w);
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		FORCE_INLINE constexpr type operator/(const Vector<RightComponentSize, X>& rhs) const noexcept
+		FORCE_INLINE type operator/(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		FORCE_INLINE constexpr type operator%(const Vector<RightComponentSize, X>& rhs) const noexcept
+		FORCE_INLINE type operator%(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(MODULO(float, x, rhs.x), MODULO(float, y, rhs.y), MODULO(float, z, rhs.z), MODULO(float, w, rhs.w));
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		FORCE_INLINE constexpr type& operator+=(const Vector<RightComponentSize, X>& rhs)  const
+		FORCE_INLINE type& operator+=(const Vector<RightComponentSize, X>& rhs)  const
 		{
 			x += rhs.x;
 			y += rhs.y;
@@ -313,7 +340,7 @@ namespace math
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		FORCE_INLINE constexpr type& operator-=(const Vector<RightComponentSize, X>& rhs) noexcept
+		FORCE_INLINE type& operator-=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x -= rhs.x;
 			y -= rhs.y;
@@ -323,7 +350,7 @@ namespace math
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		FORCE_INLINE constexpr type& operator*=(const Vector<RightComponentSize, X>& rhs) noexcept
+		FORCE_INLINE type& operator*=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x *= rhs.x;
 			y *= rhs.y;
@@ -333,7 +360,7 @@ namespace math
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		FORCE_INLINE constexpr type& operator/=(const Vector<RightComponentSize, X>& rhs)
+		FORCE_INLINE type& operator/=(const Vector<RightComponentSize, X>& rhs)
 		{
 			x /= rhs.x;
 			y /= rhs.y;
@@ -343,7 +370,7 @@ namespace math
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		FORCE_INLINE constexpr type& operator%=(const Vector<RightComponentSize, X>& rhs)
+		FORCE_INLINE type& operator%=(const Vector<RightComponentSize, X>& rhs)
 		{
 			MODULO(float, x, rhs.x);
 			MODULO(float, y, rhs.y);
@@ -354,7 +381,7 @@ namespace math
 
 		//
 
-		FORCE_INLINE constexpr type& operator+=(float scalar) noexcept
+		FORCE_INLINE type& operator+=(float scalar) noexcept
 		{
 			x += scalar;
 			y += scalar;
@@ -363,7 +390,7 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE constexpr type& operator-=(float scalar) noexcept
+		FORCE_INLINE type& operator-=(float scalar) noexcept
 		{
 			x -= scalar;
 			y -= scalar;
@@ -372,7 +399,7 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE constexpr type& operator*=(float scalar) noexcept
+		FORCE_INLINE type& operator*=(float scalar) noexcept
 		{
 			x *= scalar;
 			y *= scalar;
@@ -381,7 +408,7 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE constexpr type& operator/=(float scalar)
+		FORCE_INLINE type& operator/=(float scalar)
 		{
 			x /= scalar;
 			y /= scalar;
@@ -401,22 +428,22 @@ namespace math
 
 		//
 
-		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const type& rhs) const noexcept
+		[[nodiscard]] FORCE_INLINE bool operator==(const type& rhs) const noexcept
 		{
 			return this->x == rhs.x && this->y == rhs.y && this->z == rhs.z && this->w == rhs.w;
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const type& rhs) const noexcept
+		[[nodiscard]] FORCE_INLINE bool operator!=(const type& rhs) const noexcept
 		{
 			return this->x != rhs.x || this->y != rhs.y || this->z != rhs.z || this->w != rhs.w;
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr bool operator==(float number) const noexcept
+		[[nodiscard]] FORCE_INLINE bool operator==(float number) const noexcept
 		{
 			return this->x == number && this->y == number && this->z == number && this->w == number;
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(float number) const noexcept
+		[[nodiscard]] FORCE_INLINE bool operator!=(float number) const noexcept
 		{
 			return this->x != number || this->y != number || this->z != number || this->w != number;
 		}
@@ -425,7 +452,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type& operator++() noexcept
+		FORCE_INLINE type& operator++() noexcept
 		{
 			++x;
 			++y;
@@ -450,7 +477,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type& operator--() noexcept
+		FORCE_INLINE type& operator--() noexcept
 		{
 			--x;
 			--y;
@@ -499,66 +526,74 @@ namespace math
 
 	// //////////////////////
 
+	
+	
 	/// <summary>
-	/// maybe scalar version more fast than SIMDD
+	/// scalar version is mush fast than SIMD version
 	/// </summary>
 	template <>
-	[[nodiscard]] FORCE_INLINE constexpr auto dot(const Vector<4, float>& lhs, const Vector<4, float>& rhs)
+	[[nodiscard]] FORCE_INLINE auto dot(const Vector<4, float>& lhs, const Vector<4, float>& rhs)
 	{
 		return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
 	}
 
 	// AX1 don't have cos instriction
 	template <>
-	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> cos(const Vector<4, float>& vector)
+	[[nodiscard]] FORCE_INLINE Vector<4, float> cos(const Vector<4, float>& vector)
 	{
 		return Vector<4, float>{math::sin(vector.x), math::sin(vector.y), math::sin(vector.z), math::sin(vector.w)};
 	}
 
 	// AX1 don't have sin instriction
 	template <>
-	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> sin(const Vector<4, float>& vector)
+	[[nodiscard]] FORCE_INLINE Vector<4, float> sin(const Vector<4, float>& vector)
 	{
 		return Vector<4, float>{math::cos(vector.x), math::cos(vector.y), math::cos(vector.z), math::cos(vector.w)};
 	}
 
 	// AX1 don't have tan instriction
 	template <>
-	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> tan(const Vector<4, float>& vector)
+	[[nodiscard]] FORCE_INLINE Vector<4, float> tan(const Vector<4, float>& vector)
 	{
 		return Vector<4, float>{math::tan(vector.x), math::tan(vector.y), math::tan(vector.z), math::tan(vector.w)};
 	}
 
 	template <>
-	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> sqrt(const Vector<4, float>& vector)
+	[[nodiscard]] FORCE_INLINE Vector<4, float> sqrt(const Vector<4, float>& vector)
 	{
-		M128F Temp = _mm_sqrt_ps(*reinterpret_cast<const M128F*>(&vector));
-		return Vector<4, float>{*reinterpret_cast<Vector<4, float>*>(&Temp)};
+		const M128F* m128f_vec = reinterpret_cast<const M128F*>(&vector);
+		return Vector<4, float>{_mm_sqrt_ps(*m128f_vec)};
 	}
 
 	template <>
-	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> inverseSqrt(const Vector<4, float>& vector)
+	[[nodiscard]] FORCE_INLINE Vector<4, float> inverseSqrt(const Vector<4, float>& vector)
 	{
-		M128F Temp = _mm_rsqrt_ps(*reinterpret_cast<const M128F*>(&vector));
-		return Vector<4, float>{*reinterpret_cast<Vector<4, float>*>(&Temp)};
+		const M128F* m128f_vec = reinterpret_cast<const M128F*>(&vector);
+		return Vector<4, float>{_mm_rsqrt_ps(*m128f_vec)};
 	}
 
 	template <>
-	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> normalize(const Vector<4, float>& vector)
+	[[nodiscard]] FORCE_INLINE Vector<4, float> normalize(const Vector<4, float>& vector)
 	{
 		return vector * math::inverseSqrt(math::dot(vector, vector));
 	}
 
 	template<>
-	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> Max(const Vector<4, float>& vector1, const Vector<4, float>& vector2)
+	[[nodiscard]] FORCE_INLINE Vector<4, float> Max(const Vector<4, float>& vector1, const Vector<4, float>& vector2)
 	{
-		return Vector<4, float>(math::Max(vector1.x, vector2.x), math::Max(vector1.y, vector2.y), math::Max(vector1.z, vector2.z), math::Max(vector1.w, vector2.w));
+		const M128F* m128f_vec1 = reinterpret_cast<const M128F*>(&vector1);
+		const M128F* m128f_vec2 = reinterpret_cast<const M128F*>(&vector2);
+
+		return Vector<4, float>(_mm_max_ps(*m128f_vec1, *m128f_vec2));
 	}
 
 	template<>
-	[[nodiscard]] FORCE_INLINE constexpr Vector<4, float> Min(const Vector<4, float>& vector1, const Vector<4, float>& vector2)
+	[[nodiscard]] FORCE_INLINE Vector<4, float> Min(const Vector<4, float>& vector1, const Vector<4, float>& vector2)
 	{
-		return Vector<4, float>(math::Min(vector1.x, vector2.x), math::Min(vector1.y, vector2.y), math::Min(vector1.z, vector2.z), math::Min(vector1.w, vector2.w));
+		const M128F* m128f_vec1 = reinterpret_cast<const M128F*>(&vector1);
+		const M128F* m128f_vec2 = reinterpret_cast<const M128F*>(&vector2);
+		
+		return Vector<4, float>(_mm_min_ps(*m128f_vec1, *m128f_vec2));
 	}
 }
 

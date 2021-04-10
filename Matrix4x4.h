@@ -2,7 +2,7 @@
 #include "Matrix.h"
 
 #include "Vector4.h"
-#include "Quaternion.h"
+
 namespace math
 {
 	template <typename T>
