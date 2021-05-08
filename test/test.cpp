@@ -9,12 +9,29 @@
 
 #include "../Quaternion.h"
 
+#include <thread>
+#include <mutex>
 
+std::mutex mutex;
 
+void print(int i)
+{
+	mutex.lock();
+	while (true)
+	{
+		std::cout << i << std::endl;
+	}
+	
+}
 
 
 int main()
 {
+	std::thread thread1{ print, 1 };
+	std::thread thread2{ print, 2 };
+
+	thread1.join();
+	thread2.join();
 // 	math::Vector3 vec3{ 1.0f, 2.0f, 3.0f };
 // 	math::Matrix4x4 mat4
 // 	{
@@ -25,6 +42,8 @@ int main()
 // 	};
 // 
 // 	M128F A{ 1.0f, 2.0f, 3.0f, 4.0f };
+
+	/*
 	math::Vector4 kk1{ 1.0f };
 	math::Vector4 kk2{ 3.0f };
 
@@ -42,7 +61,7 @@ int main()
 		auto end = std::chrono::high_resolution_clock::now();
 		std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - now).count() << std::endl;
 	}
-
+	*/
 	/*
 	{
 		auto now = std::chrono::high_resolution_clock::now();

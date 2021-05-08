@@ -122,13 +122,13 @@ namespace math
 	template<typename X, typename Y, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true, std::enable_if_t<CHECK_IS_NUMBER(Y), bool> = true>
 	FORCE_INLINE constexpr auto Max(X x, Y y)
 	{
-		return std::max(x, y);
+		return x > y ? x : y;
 	}
 
 	template<typename X, typename Y, std::enable_if_t<CHECK_IS_NUMBER(X), bool> = true, std::enable_if_t<CHECK_IS_NUMBER(Y), bool> = true>
 	FORCE_INLINE constexpr auto Min(X x, Y y)
 	{
-		return std::min(x, y);
+		return x < y ? x : y;
 	}
 
 	template<typename T, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>

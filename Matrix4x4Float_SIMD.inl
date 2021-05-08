@@ -770,7 +770,7 @@ namespace math
 	/// <param name="sixPlanes"></param>
 	/// <param name="twoPoint">aligned to 16 byte</param>
 	/// <returns>when first low bit is 1, Pos 1 is In Frustum, when second low bit is 1, Pos 2 is In Frustum,</returns>
-	inline char CheckInFrustumSIMDWithTwoPoint(math::Vector<4, float>* eightPlanes, const math::Vector<4, float>* twoPoint)
+	inline char CheckInFrustumSIMDWithTwoPoint(const math::Vector<4, float>* eightPlanes, const math::Vector<4, float>* twoPoint)
 	{
 		//We can't use M256F. because two twoPoint isn't aligned to 32 byte
 

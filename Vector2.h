@@ -421,6 +421,17 @@ namespace math
 		return lhs.x * rhs.x + lhs.y * rhs.y;
 	}
 
+	/// <summary>
+	/// http://www.sunshine2k.de/articles/Notes_PerpDotProduct_R2.pdf
+	/// 
+	/// perpDot return area of the parallelogram from two vectors
+	/// </summary>
+	template <typename T>
+	[[nodiscard]] FORCE_INLINE constexpr auto perpDot(const Vector<2, T>& lhs, const Vector<2, T>& rhs)
+	{
+		return lhs.x * rhs.y - lhs.y * rhs.x;
+	}
+
 	template <typename T>
 	[[nodiscard]] FORCE_INLINE constexpr Vector<2, T> cos(const Vector<2, T>& vector)
 	{
