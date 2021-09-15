@@ -210,6 +210,8 @@ namespace math
 			return *this;
 		}
 
+	
+
 		FORCE_INLINE type operator+(const type& rhs) noexcept
 		{
 			return *this += rhs;
@@ -229,7 +231,6 @@ namespace math
 		{
 			return *this /= rhs;
 		}
-
 
 
 		FORCE_INLINE type& operator+=(float number) noexcept
@@ -567,9 +568,9 @@ namespace math
 
 
 	
-	inline Quaternion operator+(const Quaternion& vector) noexcept
+	inline Quaternion operator+(const Quaternion& quat) noexcept
 	{
-		return vector;
+		return quat;
 	}
 
 	
@@ -607,20 +608,20 @@ namespace math
 		return inverse(q) * v;
 	}
 
-	inline FORCE_INLINE Quaternion operator*(const Quaternion& q, const float& s)
+	inline FORCE_INLINE Quaternion operator*(const Quaternion& rhs, const float& s)
 	{
 		return Quaternion(
-			q.value.w * s, q.value.x * s, q.value.y * s, q.value.z * s);
+			rhs.value.w * s, rhs.value.x * s, rhs.value.y * s, rhs.value.z * s);
 	}
 
-	inline FORCE_INLINE Quaternion operator*(const float& s, const Quaternion& q)
+	inline FORCE_INLINE Quaternion operator*(const float& s, const Quaternion& rhs)
 	{
-		return q * s;
+		return rhs * s;
 	}
 
-	inline FORCE_INLINE Quaternion operator*(const Quaternion& p, const Quaternion& q)
+	inline FORCE_INLINE Quaternion operator*(const Quaternion& lhs, const Quaternion& rhs)
 	{
-		return p * q;
+		return lhs * rhs;
 	}
 
 // 	
