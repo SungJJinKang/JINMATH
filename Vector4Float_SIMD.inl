@@ -28,7 +28,8 @@ namespace math
 		static const type forward;
 		static const type right;
 		static const type up;
-
+		static const type zero;
+		static const type one;
 
 		FORCE_INLINE constexpr Vector() noexcept : x{ }, y{ }, z{ }, w{ }
 		{
@@ -170,12 +171,14 @@ namespace math
 			return *this;
 		}
 
+		/*
 		FORCE_INLINE type& operator=(const M128F& m128f) noexcept
 		{
 			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
 			std::memcpy(this, &m128f, sizeof(type));
 			return *this;
 		}
+		*/
 
 		/// <summary>
 		/// when type T is different with parameter's value type

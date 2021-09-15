@@ -32,6 +32,8 @@ namespace math
 		static const type forward;
 		static const type right;
 		static const type up;
+		static const type zero;
+		static const type one;
 
 
 		FORCE_INLINE constexpr Vector() noexcept : x{ }, y{ }, z{ }, w{ }
