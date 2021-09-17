@@ -20,6 +20,7 @@ typedef __m128d M128D;
 typedef __m128i M128I;
 
 
+
 typedef __m256	M256F;
 typedef __m256d M256D;
 typedef __m256i M256I;
@@ -49,8 +50,9 @@ typedef __m256i M256I;
 
 #define M256F_SWIZZLE(M256F, X, Y, Z, W) _mm256_permute_ps(M256F, SHUFFLEMASK(X, Y, Z, W)) 
 
-inline M128F M128F_Zero{ _mm_castsi128_ps(_mm_set1_epi16(0)) };
-inline M128F M128F_EVERY_BITS_ONE{ _mm_castsi128_ps(_mm_set1_epi16(-1)) };
+inline const M128F M128F_Zero{ _mm_castsi128_ps(_mm_set1_epi16(0)) };
+inline const M128F M128F_HALF_ONE{ _mm_set1_ps(0.5f) };
+inline const M128F M128F_EVERY_BITS_ONE{ _mm_castsi128_ps(_mm_set1_epi16(-1)) };
 
 FORCE_INLINE M128F M128F_ADD(const M128F& M128_A, const M128F& M128_B)
 {

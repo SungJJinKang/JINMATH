@@ -333,7 +333,7 @@ namespace math
 		}
 
 		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
-		FORCE_INLINE type& operator+=(const Vector<RightComponentSize, X>& rhs)  const
+		FORCE_INLINE type& operator+=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x += rhs.x;
 			y += rhs.y;
