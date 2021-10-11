@@ -1,6 +1,5 @@
 #pragma once
 #include <limits>
-#include <algorithm>
 
 #include "LMath_Core.h"
 
