@@ -2,16 +2,16 @@
 
 struct Vector3
 {
-	float x, y, z;
+	FLOAT32 x, y, z;
 };
 
 struct alignas(32) Position_BoundingSphereRadius
 {
 	Vector3 Position;
-	float BoundingSphereRadius;
+	FLOAT32 BoundingSphereRadius;
 };
 
-int main()
+INT32 main()
 {
 	Position_BoundingSphereRadius a;
 	std::cout << sizeof(Position_BoundingSphereRadius);

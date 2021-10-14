@@ -14,35 +14,35 @@ namespace math
 {
 	struct Quaternion
 	{
-		using value_type = typename float;
+		using value_type = typename FLOAT32;
 		using type = typename Quaternion;
 
-		Vector<4, float> value;
+		Vector<4, FLOAT32> value;
 
 		constexpr Quaternion() noexcept : value{ 0,0,0,1.0f }
 		{
 
 		}
 	
-		constexpr Quaternion(float value) noexcept
+		constexpr Quaternion(FLOAT32 value) noexcept
 			: value{ value , value , value , value }
 		{
 		}
 
 		template <typename X>
 		constexpr Quaternion(X xValue) noexcept
-			: value{ static_cast<float>(value) , static_cast<float>(value) , static_cast<float>(value) , static_cast<float>(value) }
+			: value{ static_cast<FLOAT32>(value) , static_cast<FLOAT32>(value) , static_cast<FLOAT32>(value) , static_cast<FLOAT32>(value) }
 		{
 		}
 
-		constexpr Quaternion(float xValue, float yValue, float zValue, float wValue) noexcept
+		constexpr Quaternion(FLOAT32 xValue, FLOAT32 yValue, FLOAT32 zValue, FLOAT32 wValue) noexcept
 			: value{ xValue , yValue , zValue , wValue }
 		{
 		}
 
 		template <typename X, typename Y, typename Z, typename W>
 		constexpr Quaternion(X xValue, Y yValue, Z zValue, W wValue) noexcept
-			: value{ static_cast<float>(xValue) , static_cast<float>(yValue) , static_cast<float>(zValue) , static_cast<float>(wValue) }
+			: value{ static_cast<FLOAT32>(xValue) , static_cast<FLOAT32>(yValue) , static_cast<FLOAT32>(zValue) , static_cast<FLOAT32>(wValue) }
 		{
 		}
 
@@ -57,7 +57,7 @@ namespace math
 		{
 		}
 
-		constexpr Quaternion(float s, const Vector<3, float>& vector) noexcept
+		constexpr Quaternion(FLOAT32 s, const Vector<3, FLOAT32>& vector) noexcept
 			: value{ vector.x, vector.y, vector.z, s }
 		{
 		}
@@ -65,24 +65,24 @@ namespace math
 
 		template <typename X, typename Y>
 		constexpr Quaternion(X s, const Vector<3, Y>& vector) noexcept
-			: value{ static_cast<float>(vector.x), static_cast<float>(vector.y), static_cast<float>(vector.z), static_cast<float>(s) }
+			: value{ static_cast<FLOAT32>(vector.x), static_cast<FLOAT32>(vector.y), static_cast<FLOAT32>(vector.z), static_cast<FLOAT32>(s) }
 		{
 		}
 
-		constexpr Quaternion(const Vector<3, float>& eulerAngle) noexcept
+		constexpr Quaternion(const Vector<3, FLOAT32>& eulerAngle) noexcept
 		{
 			*this = type::eulerAngle(eulerAngle);
 		}
 
-		static constexpr type mat2Quaternion(const Matrix<3, 3, float>& m)
+		static constexpr type mat2Quaternion(const Matrix<3, 3, FLOAT32>& m)
 		{
-			float fourXSquaredMinus1 = m[0][0] - m[1][1] - m[2][2];
-			float fourYSquaredMinus1 = m[1][1] - m[0][0] - m[2][2];
-			float fourZSquaredMinus1 = m[2][2] - m[0][0] - m[1][1];
-			float fourWSquaredMinus1 = m[0][0] + m[1][1] + m[2][2];
+			FLOAT32 fourXSquaredMinus1 = m[0][0] - m[1][1] - m[2][2];
+			FLOAT32 fourYSquaredMinus1 = m[1][1] - m[0][0] - m[2][2];
+			FLOAT32 fourZSquaredMinus1 = m[2][2] - m[0][0] - m[1][1];
+			FLOAT32 fourWSquaredMinus1 = m[0][0] + m[1][1] + m[2][2];
 
-			int biggestIndex = 0;
-			float fourBiggestSquaredMinus1 = fourWSquaredMinus1;
+			INT32 biggestIndex = 0;
+			FLOAT32 fourBiggestSquaredMinus1 = fourWSquaredMinus1;
 			if (fourXSquaredMinus1 > fourBiggestSquaredMinus1)
 			{
 				fourBiggestSquaredMinus1 = fourXSquaredMinus1;
@@ -99,31 +99,31 @@ namespace math
 				biggestIndex = 3;
 			}
 
-			float biggestVal = static_cast<float>(math::sqrt(fourBiggestSquaredMinus1 + static_cast<float>(1)) * static_cast<float>(0.5));
-			float mult = static_cast<float>(0.25) / biggestVal;
+			FLOAT32 biggestVal = static_cast<FLOAT32>(math::sqrt(fourBiggestSquaredMinus1 + static_cast<FLOAT32>(1)) * static_cast<FLOAT32>(0.5));
+			FLOAT32 mult = static_cast<FLOAT32>(0.25) / biggestVal;
 
 			switch (biggestIndex)
 			{
 			case 0:
-				return Quaternion<float>(biggestVal, (m[1][2] - m[2][1]) * mult, (m[2][0] - m[0][2]) * mult, (m[0][1] - m[1][0]) * mult);
+				return Quaternion<FLOAT32>(biggestVal, (m[1][2] - m[2][1]) * mult, (m[2][0] - m[0][2]) * mult, (m[0][1] - m[1][0]) * mult);
 			case 1:
-				return Quaternion<float>((m[1][2] - m[2][1]) * mult, biggestVal, (m[0][1] + m[1][0]) * mult, (m[2][0] + m[0][2]) * mult);
+				return Quaternion<FLOAT32>((m[1][2] - m[2][1]) * mult, biggestVal, (m[0][1] + m[1][0]) * mult, (m[2][0] + m[0][2]) * mult);
 			case 2:
-				return Quaternion<float>((m[2][0] - m[0][2]) * mult, (m[0][1] + m[1][0]) * mult, biggestVal, (m[1][2] + m[2][1]) * mult);
+				return Quaternion<FLOAT32>((m[2][0] - m[0][2]) * mult, (m[0][1] + m[1][0]) * mult, biggestVal, (m[1][2] + m[2][1]) * mult);
 			case 3:
-				return Quaternion<float>((m[0][1] - m[1][0]) * mult, (m[2][0] + m[0][2]) * mult, (m[1][2] + m[2][1]) * mult, biggestVal);
+				return Quaternion<FLOAT32>((m[0][1] - m[1][0]) * mult, (m[2][0] + m[0][2]) * mult, (m[1][2] + m[2][1]) * mult, biggestVal);
 			default: // Silence a -Wswitch-default warning in GCC. Should never actually get here. Assert is just for sanity.
 				assert(false);
-				return Quaternion<float>(1, 0, 0, 0);
+				return Quaternion<FLOAT32>(1, 0, 0, 0);
 			}
 		}
 
-		constexpr explicit Quaternion(const Matrix<3, 3, float>& m) noexcept
+		constexpr explicit Quaternion(const Matrix<3, 3, FLOAT32>& m) noexcept
 		{
 			mat2Quaternion(m);
 		}
 
-		constexpr explicit Quaternion(const Matrix<4, 4, float>& m) noexcept
+		constexpr explicit Quaternion(const Matrix<4, 4, FLOAT32>& m) noexcept
 		{
 			mat2Quaternion(m);
 		}
@@ -141,19 +141,19 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE constexpr type& operator=(const Matrix<4, 4, float>& m) noexcept
+		FORCE_INLINE constexpr type& operator=(const Matrix<4, 4, FLOAT32>& m) noexcept
 		{
 			mat2Quaternion(m);
 			return *this;
 		}
 
-		FORCE_INLINE constexpr type& operator=(const Matrix<3, 3, float>& m) noexcept
+		FORCE_INLINE constexpr type& operator=(const Matrix<3, 3, FLOAT32>& m) noexcept
 		{
 			mat2Quaternion(m);
 			return *this;
 		}
 
-		FORCE_INLINE constexpr type& operator=(const Vector<3, float>& eulerAngle) noexcept
+		FORCE_INLINE constexpr type& operator=(const Vector<3, FLOAT32>& eulerAngle) noexcept
 		{
 			*this = type::eulerAngle(eulerAngle);
 			return *this;
@@ -172,15 +172,15 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] inline static constexpr size_t componentCount()  noexcept { return 4; }
+		[[nodiscard]] inline static constexpr SIZE_T componentCount()  noexcept { return 4; }
 
-		[[nodiscard]] value_type& operator[](size_t i)
+		[[nodiscard]] value_type& operator[](SIZE_T i)
 		{
 			assert(i >= 0 || i < componentCount());
 			return value[i];
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr const value_type& operator[](size_t i) const
+		[[nodiscard]] FORCE_INLINE constexpr const value_type& operator[](SIZE_T i) const
 		{
 			assert(i >= 0 || i < componentCount());
 			return value[i];
@@ -210,8 +210,8 @@ namespace math
 		template <typename X>
 		FORCE_INLINE constexpr type& operator*=(const Quaternion<X>& rhs) noexcept
 		{
-			const Quaternion<float> p(*this);
-			const Quaternion<float> q(rhs);
+			const Quaternion<FLOAT32> p(*this);
+			const Quaternion<FLOAT32> q(rhs);
 
 			this->value.w = p.value.w * q.value.w - p.value.x * q.value.x - p.value.y * q.value.y - p.value.z * q.value.z;
 			this->value.x = p.value.w * q.value.x + p.value.x * q.value.w + p.value.y * q.value.z - p.value.z * q.value.y;
@@ -255,42 +255,42 @@ namespace math
 		}
 
 		/*
-		static Matrix<3, 3, float> convert_quaternion_to_matrix(const Quaternion& quaternion)
+		static Matrix<3, 3, FLOAT32> convert_quaternion_to_matrix(const Quaternion& quaternion)
 		{
 
 		}
 		*/
 
-		inline operator Matrix<3, 3, float>() const noexcept
+		inline operator Matrix<3, 3, FLOAT32>() const noexcept
 		{
-			Matrix<3, 3, float> Result(float(1));
-			float qxx(this->value.x * this->value.x);
-			float qyy(this->value.y * this->value.y);
-			float qzz(this->value.z * this->value.z);
-			float qxz(this->value.x * this->value.z);
-			float qxy(this->value.x * this->value.y);
-			float qyz(this->value.y * this->value.z);
-			float qwx(this->value.w * this->value.x);
-			float qwy(this->value.w * this->value.y);
-			float qwz(this->value.w * this->value.z);
+			Matrix<3, 3, FLOAT32> Result(FLOAT32(1));
+			FLOAT32 qxx(this->value.x * this->value.x);
+			FLOAT32 qyy(this->value.y * this->value.y);
+			FLOAT32 qzz(this->value.z * this->value.z);
+			FLOAT32 qxz(this->value.x * this->value.z);
+			FLOAT32 qxy(this->value.x * this->value.y);
+			FLOAT32 qyz(this->value.y * this->value.z);
+			FLOAT32 qwx(this->value.w * this->value.x);
+			FLOAT32 qwy(this->value.w * this->value.y);
+			FLOAT32 qwz(this->value.w * this->value.z);
 
-			Result[0][0] = float(1) - float(2) * (qyy + qzz);
-			Result[0][1] = float(2) * (qxy + qwz);
-			Result[0][2] = float(2) * (qxz - qwy);
+			Result[0][0] = FLOAT32(1) - FLOAT32(2) * (qyy + qzz);
+			Result[0][1] = FLOAT32(2) * (qxy + qwz);
+			Result[0][2] = FLOAT32(2) * (qxz - qwy);
 
-			Result[1][0] = float(2) * (qxy - qwz);
-			Result[1][1] = float(1) - float(2) * (qxx + qzz);
-			Result[1][2] = float(2) * (qyz + qwx);
+			Result[1][0] = FLOAT32(2) * (qxy - qwz);
+			Result[1][1] = FLOAT32(1) - FLOAT32(2) * (qxx + qzz);
+			Result[1][2] = FLOAT32(2) * (qyz + qwx);
 
-			Result[2][0] = float(2) * (qxz + qwy);
-			Result[2][1] = float(2) * (qyz - qwx);
-			Result[2][2] = float(1) - float(2) * (qxx + qyy);
+			Result[2][0] = FLOAT32(2) * (qxz + qwy);
+			Result[2][1] = FLOAT32(2) * (qyz - qwx);
+			Result[2][2] = FLOAT32(1) - FLOAT32(2) * (qxx + qyy);
 			return Result;
 		}
 
-		inline operator Matrix<4, 4, float>() const noexcept
+		inline operator Matrix<4, 4, FLOAT32>() const noexcept
 		{
-			return Matrix<4, 4, float>(this->operator math::Matrix<3, 3, float>());
+			return Matrix<4, 4, FLOAT32>(this->operator math::Matrix<3, 3, FLOAT32>());
 		}
 
 		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const type& rhs) noexcept
@@ -333,7 +333,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type operator++(int) noexcept
+		FORCE_INLINE constexpr type operator++(INT32) noexcept
 		{
 			type Quaternion{ *this };
 			++* this;
@@ -358,7 +358,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type operator--(int) noexcept
+		FORCE_INLINE constexpr type operator--(INT32) noexcept
 		{
 			type Quaternion{ *this };
 			--* this;
@@ -371,54 +371,54 @@ namespace math
 		}
 
 		/*
-		template<typename float>
-		static float angle(Quaternion<float> const& x)
+		template<typename FLOAT32>
+		static FLOAT32 angle(Quaternion<FLOAT32> const& x)
 		{
-			if (abs(x.w) > cos_one_over_two<float>())
+			if (abs(x.w) > cos_one_over_two<FLOAT32>())
 			{
-				float const a = asin(sqrt(x.x * x.x + x.y * x.y + x.z * x.z)) * static_cast<float>(2);
-				if (x.w < static_cast<float>(0))
-					return pi<float>() * static_cast<float>(2) - a;
+				FLOAT32 const a = asin(sqrt(x.x * x.x + x.y * x.y + x.z * x.z)) * static_cast<FLOAT32>(2);
+				if (x.w < static_cast<FLOAT32>(0))
+					return pi<FLOAT32>() * static_cast<FLOAT32>(2) - a;
 				return a;
 			}
 
-			return acos(x.w) * static_cast<float>(2);
+			return acos(x.w) * static_cast<FLOAT32>(2);
 		}
 
-		template<typename float>
-		static Vector<3, float> axis(qua<float, Q> const& x)
+		template<typename FLOAT32>
+		static Vector<3, FLOAT32> axis(qua<FLOAT32, Q> const& x)
 		{
-			float const tmp1 = static_cast<float>(1) - x.w * x.w;
-			if (tmp1 <= static_cast<float>(0))
-				return vec<3, float, Q>(0, 0, 1);
-			float const tmp2 = static_cast<float>(1) / sqrt(tmp1);
-			return vec<3, float, Q>(x.x * tmp2, x.y * tmp2, x.z * tmp2);
+			FLOAT32 const tmp1 = static_cast<FLOAT32>(1) - x.w * x.w;
+			if (tmp1 <= static_cast<FLOAT32>(0))
+				return vec<3, FLOAT32, Q>(0, 0, 1);
+			FLOAT32 const tmp2 = static_cast<FLOAT32>(1) / sqrt(tmp1);
+			return vec<3, FLOAT32, Q>(x.x * tmp2, x.y * tmp2, x.z * tmp2);
 		}
 		*/
 
-		static Quaternion<float> angleAxis(const float& angle, const Vector<3, float>& v)
+		static Quaternion<FLOAT32> angleAxis(const FLOAT32& angle, const Vector<3, FLOAT32>& v)
 		{
-			const float a{ angle };
-			const float s{ math::sin(a * static_cast<float>(0.5)) };
+			const FLOAT32 a{ angle };
+			const FLOAT32 s{ math::sin(a * static_cast<FLOAT32>(0.5)) };
 
-			return Quaternion<float>(math::cos(a * static_cast<float>(0.5)), v * s);
+			return Quaternion<FLOAT32>(math::cos(a * static_cast<FLOAT32>(0.5)), v * s);
 		}
 
 		template<typename X, typename Y>
-		static Quaternion<float> angleAxis(const X& angle, const Vector<3, Y>& v)
+		static Quaternion<FLOAT32> angleAxis(const X& angle, const Vector<3, Y>& v)
 		{
-			const float a{ angle };
-			const float s{ math::sin(a * static_cast<float>(0.5)) };
+			const FLOAT32 a{ angle };
+			const FLOAT32 s{ math::sin(a * static_cast<FLOAT32>(0.5)) };
 
-			return Quaternion<float>(math::cos(a * static_cast<float>(0.5)), v * s);
+			return Quaternion<FLOAT32>(math::cos(a * static_cast<FLOAT32>(0.5)), v * s);
 		}
 
-		static Quaternion<float> eulerAngle(const Vector<3, float>& eulerAngle) noexcept
+		static Quaternion<FLOAT32> eulerAngle(const Vector<3, FLOAT32>& eulerAngle) noexcept
 		{
-			Vector<3, float> c = math::cos(eulerAngle * float(0.5));
-			Vector<3, float> s = math::sin(eulerAngle * float(0.5));
+			Vector<3, FLOAT32> c = math::cos(eulerAngle * FLOAT32(0.5));
+			Vector<3, FLOAT32> s = math::sin(eulerAngle * FLOAT32(0.5));
 
-			return Quaternion<float>
+			return Quaternion<FLOAT32>
 			{
 				s.x* c.y* c.z - c.x * s.y * s.z,
 				c.x* s.y* c.z + s.x * c.y * s.z,
@@ -428,12 +428,12 @@ namespace math
 		}
 
 		template<typename X>
-		static Quaternion<float> EulerAngleToQuaternion(const Vector<3, X>& eulerAngle) noexcept
+		static Quaternion<FLOAT32> EulerAngleToQuaternion(const Vector<3, X>& eulerAngle) noexcept
 		{
-			Vector<3, float> c = math::cos(eulerAngle * float(0.5));
-			Vector<3, float> s = math::sin(eulerAngle * float(0.5));
+			Vector<3, FLOAT32> c = math::cos(eulerAngle * FLOAT32(0.5));
+			Vector<3, FLOAT32> s = math::sin(eulerAngle * FLOAT32(0.5));
 
-			return Quaternion<float>
+			return Quaternion<FLOAT32>
 			{
 				s.x * c.y * c.z - c.x * s.y * s.z,
 				c.x * s.y * c.z + s.x * c.y * s.z,
@@ -443,89 +443,89 @@ namespace math
 		}
 
 
-		template<typename float>
-		static float roll(const Quaternion<float>& q)
+		template<typename FLOAT32>
+		static FLOAT32 roll(const Quaternion<FLOAT32>& q)
 		{
-			const float y = static_cast<float>(2) * (q.value.x * q.value.y + q.value.w * q.value.z);
-			const float x = q.value.w * q.value.w + q.value.x * q.value.x - q.value.y * q.value.y - q.value.z * q.value.z;
+			const FLOAT32 y = static_cast<FLOAT32>(2) * (q.value.x * q.value.y + q.value.w * q.value.z);
+			const FLOAT32 x = q.value.w * q.value.w + q.value.x * q.value.x - q.value.y * q.value.y - q.value.z * q.value.z;
 
-			float epsilon = math::epsilon<float>();
-			if (Vector<2, float>(x, y) == epsilon && Vector<2, float>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
+			FLOAT32 epsilon = math::epsilon<FLOAT32>();
+			if (Vector<2, FLOAT32>(x, y) == epsilon && Vector<2, FLOAT32>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
 			{
-				return static_cast<float>(0);
+				return static_cast<FLOAT32>(0);
 			}
-			return static_cast<float>(math::atan2(y, x));
+			return static_cast<FLOAT32>(math::atan2(y, x));
 		}
 
-		template<typename float>
-		static float pitch(const Quaternion<float>& q)
+		template<typename FLOAT32>
+		static FLOAT32 pitch(const Quaternion<FLOAT32>& q)
 		{
-			//return float(atan(float(2) * (q.value.y * q.value.z + q.value.w * q.value.x).w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z));
-			const float y = static_cast<float>(2) * (q.value.y * q.value.z + q.value.w * q.value.x);
-			const float x = q.value.w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z;
+			//return FLOAT32(atan(FLOAT32(2) * (q.value.y * q.value.z + q.value.w * q.value.x).w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z));
+			const FLOAT32 y = static_cast<FLOAT32>(2) * (q.value.y * q.value.z + q.value.w * q.value.x);
+			const FLOAT32 x = q.value.w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z;
 
-			float epsilon = math::epsilon<float>();
-			if (Vector<2, float>(x, y) == epsilon && Vector<2, float>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
+			FLOAT32 epsilon = math::epsilon<FLOAT32>();
+			if (Vector<2, FLOAT32>(x, y) == epsilon && Vector<2, FLOAT32>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
 			{
-				return static_cast<float>(static_cast<float>(2) * math::atan2(q.value.x, q.value.w));
+				return static_cast<FLOAT32>(static_cast<FLOAT32>(2) * math::atan2(q.value.x, q.value.w));
 			}
 
-			return static_cast<float>(math::atan2(y, x));
+			return static_cast<FLOAT32>(math::atan2(y, x));
 		}
 
-		template<typename float>
-		static float yaw(const Quaternion<float>& q)
+		template<typename FLOAT32>
+		static FLOAT32 yaw(const Quaternion<FLOAT32>& q)
 		{
-			return math::asin(math::clamp(static_cast<float>(-2) * (q.value.x * q.value.z - q.value.w * q.value.y), static_cast<float>(-1), static_cast<float>(1)));
+			return math::asin(math::clamp(static_cast<FLOAT32>(-2) * (q.value.x * q.value.z - q.value.w * q.value.y), static_cast<FLOAT32>(-1), static_cast<FLOAT32>(1)));
 		}
 
-		template<typename float>
-		static Vector<3, float> QuaternionToEulerAngle(const Quaternion<float>& x)
+		template<typename FLOAT32>
+		static Vector<3, FLOAT32> QuaternionToEulerAngle(const Quaternion<FLOAT32>& x)
 		{
-			return Vector<3, float>(Quaternion<float>::pitch(x), Quaternion<float>::yaw(x), Quaternion<float>::roll(x));
+			return Vector<3, FLOAT32>(Quaternion<FLOAT32>::pitch(x), Quaternion<FLOAT32>::yaw(x), Quaternion<FLOAT32>::roll(x));
 		}
 	};
 
-	template<typename float>
-	float dot(const Quaternion<float>& a, const Quaternion<float>& b)
+	template<typename FLOAT32>
+	FLOAT32 dot(const Quaternion<FLOAT32>& a, const Quaternion<FLOAT32>& b)
 	{
 		return a.value.x * b.value.x + a.value.y * b.value.y + a.value.z * b.value.z + a.value.w * b.value.w;
 	}
 
-	template<typename float>
-	Quaternion<float> cross(const Quaternion<float>& q1, const Quaternion<float>& q2)
+	template<typename FLOAT32>
+	Quaternion<FLOAT32> cross(const Quaternion<FLOAT32>& q1, const Quaternion<FLOAT32>& q2)
 	{
-		return Quaternion<float>(
+		return Quaternion<FLOAT32>(
 			q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z,
 			q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y,
 			q1.w * q2.y + q1.y * q2.w + q1.z * q2.x - q1.x * q2.z,
 			q1.w * q2.z + q1.z * q2.w + q1.x * q2.y - q1.y * q2.x);
 	}
 
-	template<typename float>
-	Quaternion<float> conjugate(const Quaternion<float>& q)
+	template<typename FLOAT32>
+	Quaternion<FLOAT32> conjugate(const Quaternion<FLOAT32>& q)
 	{
-		return Quaternion<float>(q.value.w, -q.value.x, -q.value.y, -q.value.z);
+		return Quaternion<FLOAT32>(q.value.w, -q.value.x, -q.value.y, -q.value.z);
 	}
 
-	template<typename float>
-	Quaternion<float> inverse(const Quaternion<float>& q)
+	template<typename FLOAT32>
+	Quaternion<FLOAT32> inverse(const Quaternion<FLOAT32>& q)
 	{
 		return conjugate(q) / dot(q, q);
 	}
 
 
 
-	template<typename float>
-	Quaternion<float> operator+(const Quaternion<float>& vector) noexcept
+	template<typename FLOAT32>
+	Quaternion<FLOAT32> operator+(const Quaternion<FLOAT32>& vector) noexcept
 	{
 		return vector;
 	}
 
-	template<typename float>
-	Quaternion<float> operator-(const Quaternion<float>& vector) noexcept
+	template<typename FLOAT32>
+	Quaternion<FLOAT32> operator-(const Quaternion<FLOAT32>& vector) noexcept
 	{
-		return Quaternion<float>(
+		return Quaternion<FLOAT32>(
 			-vector.x,
 			-vector.y,
 			-vector.z,
@@ -535,57 +535,57 @@ namespace math
 
 	//
 
-	template<typename float>
-	FORCE_INLINE Vector<3, float>operator*(const Quaternion<float>& q, const Vector<3, float>& v)
+	template<typename FLOAT32>
+	FORCE_INLINE Vector<3, FLOAT32>operator*(const Quaternion<FLOAT32>& q, const Vector<3, FLOAT32>& v)
 	{
-		const Vector<3, float> QuatVector(q.value.x, q.value.y, q.value.z);
-		const Vector<3, float> uv(cross(QuatVector, v));
-		const Vector<3, float> uuv(cross(QuatVector, uv));
+		const Vector<3, FLOAT32> QuatVector(q.value.x, q.value.y, q.value.z);
+		const Vector<3, FLOAT32> uv(cross(QuatVector, v));
+		const Vector<3, FLOAT32> uuv(cross(QuatVector, uv));
 
-		return v + ((uv * q.value.w) + uuv) * static_cast<float>(2);
+		return v + ((uv * q.value.w) + uuv) * static_cast<FLOAT32>(2);
 	}
 
-	template<typename float>
-	FORCE_INLINE Vector<3, float>operator*(const Vector<3, float>& v, const Quaternion<float>& q)
+	template<typename FLOAT32>
+	FORCE_INLINE Vector<3, FLOAT32>operator*(const Vector<3, FLOAT32>& v, const Quaternion<FLOAT32>& q)
 	{
 		return inverse(q) * v;
 	}
 
-	template<typename float>
-	FORCE_INLINE Vector<4, float>operator*(const Quaternion<float>& q, const Vector<4, float>& v)
+	template<typename FLOAT32>
+	FORCE_INLINE Vector<4, FLOAT32>operator*(const Quaternion<FLOAT32>& q, const Vector<4, FLOAT32>& v)
 	{
-		return Vector<4, float>(q * Vector<3, float>(v), v.w);
+		return Vector<4, FLOAT32>(q * Vector<3, FLOAT32>(v), v.w);
 	}
 
-	template<typename float>
-	FORCE_INLINE Vector<4, float>operator*(const Vector<4, float>& v, const Quaternion<float>& q)
+	template<typename FLOAT32>
+	FORCE_INLINE Vector<4, FLOAT32>operator*(const Vector<4, FLOAT32>& v, const Quaternion<FLOAT32>& q)
 	{
 		return inverse(q) * v;
 	}
 
-	template<typename float, std::enable_if_t<CHECK_IS_NUMBER(float), bool> = true>
-	FORCE_INLINE Quaternion<float> operator*(const Quaternion<float>& q, const float& s)
+	template<typename FLOAT32, std::enable_if_t<CHECK_IS_NUMBER(FLOAT32), bool> = true>
+	FORCE_INLINE Quaternion<FLOAT32> operator*(const Quaternion<FLOAT32>& q, const FLOAT32& s)
 	{
-		return Quaternion<float>(
+		return Quaternion<FLOAT32>(
 			q.value.w * s, q.value.x * s, q.value.y * s, q.value.z * s);
 	}
 
-	template<typename float, std::enable_if_t<CHECK_IS_NUMBER(float), bool> = true>
-	FORCE_INLINE Quaternion<float> operator*(const float& s, const Quaternion<float>& q)
+	template<typename FLOAT32, std::enable_if_t<CHECK_IS_NUMBER(FLOAT32), bool> = true>
+	FORCE_INLINE Quaternion<FLOAT32> operator*(const FLOAT32& s, const Quaternion<FLOAT32>& q)
 	{
 		return q * s;
 	}
 
-	template<typename float, std::enable_if_t<CHECK_IS_NUMBER(float), bool> = true>
-	FORCE_INLINE Quaternion<float> operator*(const Quaternion<float>& p, const Quaternion<float>& q)
+	template<typename FLOAT32, std::enable_if_t<CHECK_IS_NUMBER(FLOAT32), bool> = true>
+	FORCE_INLINE Quaternion<FLOAT32> operator*(const Quaternion<FLOAT32>& p, const Quaternion<FLOAT32>& q)
 	{
 		return p * q;
 	}
 
-	template<typename float, std::enable_if_t<CHECK_IS_NUMBER(float), bool> = true>
-	FORCE_INLINE Quaternion<float> operator/(const Quaternion<float>& q, float s)
+	template<typename FLOAT32, std::enable_if_t<CHECK_IS_NUMBER(FLOAT32), bool> = true>
+	FORCE_INLINE Quaternion<FLOAT32> operator/(const Quaternion<FLOAT32>& q, FLOAT32 s)
 	{
-		return Quaternion<float>(
+		return Quaternion<FLOAT32>(
 			q.value.w / s, q.value.x / s, q.value.y / s, q.value.z / s);
 	}
 

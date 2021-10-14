@@ -7,30 +7,30 @@ namespace math
 	/// Because Matrix4X4Floag is aligned to 32 byte, It will works well with __m128 functions
 	/// </summary>
 	template <>
-	struct alignas(32) Matrix<4, 4, float>
+	struct alignas(32) Matrix<4, 4, FLOAT32>
 	{
-		using value_type = typename float;
-		using type = typename Matrix<4, 4, float>;
+		using value_type = typename FLOAT32;
+		using type = typename Matrix<4, 4, FLOAT32>;
 		template <typename T2>
 		using col_type_template = Vector<4, T2>;
 
-		using col_type = Vector<4, float>;
+		using col_type = Vector<4, FLOAT32>;
 
-		[[nodiscard]] FORCE_INLINE static size_t columnCount()  noexcept { return 4; }
+		[[nodiscard]] FORCE_INLINE static SIZE_T columnCount()  noexcept { return 4; }
 
 		/// <summary>
-		/// All columns always is aligned to 16 byte, because Matrix<4, 4, float> class is aligned to 16byte
+		/// All columns always is aligned to 16 byte, because Matrix<4, 4, FLOAT32> class is aligned to 16byte
 		/// columns[0] start from address of Matrix class
-		/// Vector<4, float> is 16 byte -> columns[1] is also aligned to 16 byte
+		/// Vector<4, FLOAT32> is 16 byte -> columns[1] is also aligned to 16 byte
 		/// </summary>
 		col_type columns[4];
 
-		FORCE_INLINE float* data() noexcept
+		FORCE_INLINE FLOAT32* data() noexcept
 		{
 			return columns[0].data();
 		}
 
-		const FORCE_INLINE float* data() const noexcept
+		const FORCE_INLINE FLOAT32* data() const noexcept
 		{
 			return columns[0].data();
 		}
@@ -42,9 +42,9 @@ namespace math
 			//std::memcpy(this->data(), matrix.data(), sizeof(type)); // this is slower than SIMD
 
 			M256F* A = reinterpret_cast<M256F*>(this);
-			const float* B = reinterpret_cast<const float*>(&matrix);
+			const FLOAT32* B = reinterpret_cast<const FLOAT32*>(&matrix);
 			A[0] = _mm256_load_ps(B); // copy 0 ~ 256 OF B to 0 ~ 256 this
-			A[1] = _mm256_load_ps(B + 8); // B + 8 -> B + sizeof(float) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
+			A[1] = _mm256_load_ps(B + 8); // B + 8 -> B + sizeof(FLOAT32) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
 
 		}
 
@@ -53,7 +53,7 @@ namespace math
 			M256F* A = reinterpret_cast<M256F*>(this);
 			const M128F* B = reinterpret_cast<const M128F*>(&column);
 			A[0] = _mm256_broadcast_ps(B); // copy 0 ~ 256 OF B to 0 ~ 256 this
-			A[1] = _mm256_broadcast_ps(B); // B + 8 -> B + sizeof(float) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
+			A[1] = _mm256_broadcast_ps(B); // B + 8 -> B + sizeof(FLOAT32) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
 		}
 
 		FORCE_INLINE Matrix() noexcept : columns{}
@@ -65,7 +65,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE Matrix(int *) noexcept
+		FORCE_INLINE Matrix(INT32 *) noexcept
 		{
 		}
 
@@ -220,13 +220,13 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE col_type& operator[](size_t i)
+		[[nodiscard]] FORCE_INLINE col_type& operator[](SIZE_T i)
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
 		}
 
-		[[nodiscard]] FORCE_INLINE const col_type& operator[](size_t i) const
+		[[nodiscard]] FORCE_INLINE const col_type& operator[](SIZE_T i) const
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
@@ -246,9 +246,9 @@ namespace math
 
 		inline thread_local static M256F _REULST_MAT4[2]{};
 		inline thread_local static M128F TEMP_M128F{};
-		inline thread_local static Vector<4, float> TEMP_VEC4{};
+		inline thread_local static Vector<4, FLOAT32> TEMP_VEC4{};
 
-		[[nodiscard]] inline type operator*(const Matrix<4, 4, float>& rhs) const noexcept
+		[[nodiscard]] inline type operator*(const Matrix<4, 4, FLOAT32>& rhs) const noexcept
 		{
 			const M128F* A = reinterpret_cast<const M128F*>(this);
 			//const M128F* A = (const M128F*)this->data(); // this is slower
@@ -286,7 +286,7 @@ namespace math
 		template <typename X>
 		[[nodiscard]] inline Vector<4, X> operator*(const Vector<4, X>& vector) const noexcept
 		{
-			return Vector<4, float>
+			return Vector<4, FLOAT32>
 			{
 				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2] + this->columns[3][0] * vector[3],
 					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2] + this->columns[3][1] * vector[3],
@@ -296,7 +296,7 @@ namespace math
 		}
 
 		template <>
-		[[nodiscard]] inline Vector<4, float> operator*(const Vector<4, float>& vector) const noexcept
+		[[nodiscard]] inline Vector<4, FLOAT32> operator*(const Vector<4, FLOAT32>& vector) const noexcept
 		{
 			const M128F* A = reinterpret_cast<const M128F*>(this);
 			const M128F* B = reinterpret_cast<const M128F*>(&vector);
@@ -330,8 +330,8 @@ namespace math
 		}	
 
 		
-		inline thread_local static Vector<4, float> Vec4_Parameter{1.0f};
-		inline thread_local static Vector<4, float> Vec4_Result{1.0f};
+		inline thread_local static Vector<4, FLOAT32> Vec4_Parameter{1.0f};
+		inline thread_local static Vector<4, FLOAT32> Vec4_Result{1.0f};
 		
 		inline static M128F AllOne{ 1.0f, 1.0f, 1.0f, 1.0f };
 		
@@ -342,10 +342,10 @@ namespace math
 		/// <param name="vector"></param>
 		/// <returns></returns>
 		template <>
-		[[nodiscard]] inline Vector<4, float> operator*(const Vector<3, float>& vector) const noexcept
+		[[nodiscard]] inline Vector<4, FLOAT32> operator*(const Vector<3, FLOAT32>& vector) const noexcept
 		{
 			//vec3 is not aligned to 128bit, so we need to copy temporary vec3 data to vec4
-			std::memcpy(&Vec4_Parameter, &vector, sizeof(Vector<3, float>));
+			std::memcpy(&Vec4_Parameter, &vector, sizeof(Vector<3, FLOAT32>));
 
 			const M128F* A = reinterpret_cast<const M128F*>(this);
 			const M128F* B = reinterpret_cast<const M128F*>(&vector);
@@ -369,9 +369,9 @@ namespace math
 // 		/// <param name="vector"></param>
 // 		/// <returns></returns>
 // 		template <>
-// 		[[nodiscard]] FORCE_INLINE Vector<3, float> operator*(const Vector<3, float>& vector) const noexcept
+// 		[[nodiscard]] FORCE_INLINE Vector<3, FLOAT32> operator*(const Vector<3, FLOAT32>& vector) const noexcept
 // 		{
-// 			Vector<4, float> Result{ nullptr };
+// 			Vector<4, FLOAT32> Result{ nullptr };
 // 			type Vec4{ vector };
 // 
 // 			const M128F* A = (const M128F*)this;
@@ -384,23 +384,23 @@ namespace math
 // 			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 2), A[2], *R);
 // 			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 3), A[3], *R);
 // 
-// 			return Vector<3, float>
+// 			return Vector<3, FLOAT32>
 // 			{
 // 				Result
 // 			};
 //   		}
 
-		FORCE_INLINE type operator+(float rhs) const noexcept
+		FORCE_INLINE type operator+(FLOAT32 rhs) const noexcept
 		{
 			return type(columns[0] + rhs, columns[1] + rhs, columns[2] + rhs, columns[3] + rhs);
 		}
 
-		FORCE_INLINE type operator-(float rhs) const noexcept
+		FORCE_INLINE type operator-(FLOAT32 rhs) const noexcept
 		{
 			return type(columns[0] - rhs, columns[1] - rhs, columns[2] - rhs, columns[3] - rhs);
 		}
 
-		FORCE_INLINE type operator*(float rhs) const noexcept
+		FORCE_INLINE type operator*(FLOAT32 rhs) const noexcept
 		{
 			return type(columns[0] * rhs, columns[1] * rhs, columns[2] * rhs, columns[3] * rhs);
 		}
@@ -471,7 +471,7 @@ namespace math
 		*/
 		//
 
-		FORCE_INLINE type& operator+=(float scalar) noexcept
+		FORCE_INLINE type& operator+=(FLOAT32 scalar) noexcept
 		{
 			columns[0] += scalar;
 			columns[1] += scalar;
@@ -480,7 +480,7 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE type& operator-=(float scalar) noexcept
+		FORCE_INLINE type& operator-=(FLOAT32 scalar) noexcept
 		{
 			columns[0] -= scalar;
 			columns[1] -= scalar;
@@ -489,7 +489,7 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE type& operator*=(float scalar) noexcept
+		FORCE_INLINE type& operator*=(FLOAT32 scalar) noexcept
 		{
 			columns[0] *= scalar;
 			columns[1] *= scalar;
@@ -544,12 +544,12 @@ namespace math
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1] || this->columns[2] != rhs.columns[2] || this->columns[3] != rhs.columns[3];
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator==(float number) const noexcept
+		[[nodiscard]] FORCE_INLINE bool operator==(FLOAT32 number) const noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number && this->columns[2] == number && this->columns[3] == number;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(float number) const noexcept
+		[[nodiscard]] FORCE_INLINE bool operator!=(FLOAT32 number) const noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number || this->columns[2] != number || this->columns[3] != number;
 		}
@@ -572,7 +572,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE type operator++(int) noexcept
+		FORCE_INLINE type operator++(INT32) noexcept
 		{
 			type Matrix{ *this };
 			++* this;
@@ -597,7 +597,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE type operator--(int) noexcept
+		FORCE_INLINE type operator--(INT32) noexcept
 		{
 			type Matrix{ *this };
 			--* this;
@@ -691,7 +691,7 @@ namespace math
 			return Result;
 		}
 
-		template <typename U = float, std::enable_if_t<std::is_signed_v<U>, bool> = true>
+		template <typename U = FLOAT32, std::enable_if_t<std::is_signed_v<U>, bool> = true>
 		inline value_type determinant() const noexcept
 		{
 			value_type SubFactor00 = columns[2][2] * columns[3][3] - columns[3][2] * columns[2][3];
@@ -720,15 +720,15 @@ namespace math
 	};
 
 	template <>
-	FORCE_INLINE Matrix<4, 4, float> operator+(const Matrix<4, 4, float>& matrix) noexcept
+	FORCE_INLINE Matrix<4, 4, FLOAT32> operator+(const Matrix<4, 4, FLOAT32>& matrix) noexcept
 	{
 		return matrix;
 	}
 
 	template <>
-	FORCE_INLINE Matrix<4, 4, float> operator-(const Matrix<4, 4, float>& matrix) noexcept
+	FORCE_INLINE Matrix<4, 4, FLOAT32> operator-(const Matrix<4, 4, FLOAT32>& matrix) noexcept
 	{
-		return Matrix<4, 4, float>(
+		return Matrix<4, 4, FLOAT32>(
 			-matrix.columns[0],
 			-matrix.columns[1],
 			-matrix.columns[2],
@@ -741,11 +741,11 @@ namespace math
 	/// <param name="eightPlanes"></param>
 	/// <param name="pt">position : x, y, z </param>
 	/// <returns></returns>
-// 	bool InFrustumSIMD(math::Vector<4, float>* eightPlanes, const math::Vector<4, float>& twoPoint)
+// 	bool InFrustumSIMD(math::Vector<4, FLOAT32>* eightPlanes, const math::Vector<4, FLOAT32>& twoPoint)
 // 	{
 // 		const M256F*
 // 
-// 		float d;
+// 		FLOAT32 d;
 // 		d = plane.a * pt.x + plane.b * pt.y + plane.c * pt.z + plane.d;
 // 		if (d < 0) return NEGATIVE;
 // 		if (d > 0) return POSITIVE;
@@ -770,7 +770,7 @@ namespace math
 	/// <param name="sixPlanes"></param>
 	/// <param name="twoPoint">aligned to 16 byte</param>
 	/// <returns>when first low bit is 1, Pos 1 is In Frustum, when second low bit is 1, Pos 2 is In Frustum,</returns>
-	inline char CheckInFrustumSIMDWithTwoPoint(const math::Vector<4, float>* eightPlanes, const math::Vector<4, float>* twoPoint)
+	inline char CheckInFrustumSIMDWithTwoPoint(const math::Vector<4, FLOAT32>* eightPlanes, const math::Vector<4, FLOAT32>* twoPoint)
 	{
 		//We can't use M256F. because two twoPoint isn't aligned to 32 byte
 
@@ -823,17 +823,17 @@ namespace math
 		M128F RMaskA = _mm_and_ps(dotPosA, dotPosA45); //when everty bits is 1, PointA is in frustum
 		M128F RMaskB = _mm_and_ps(dotPosB, dotPosB45);//when everty bits is 1, PointB is in frustum
 
-		int IsPointAInFrustum = _mm_test_all_ones(*reinterpret_cast<__m128i*>(&RMaskA)); // value is 1, Point in in frustum
-		int IsPointBInFrustum = _mm_test_all_ones(*reinterpret_cast<__m128i*>(&RMaskB));
+		INT32 IsPointAInFrustum = _mm_test_all_ones(*reinterpret_cast<__m128i*>(&RMaskA)); // value is 1, Point in in frustum
+		INT32 IsPointBInFrustum = _mm_test_all_ones(*reinterpret_cast<__m128i*>(&RMaskB));
 		
 		char IsPointABInFrustum = IsPointAInFrustum | (IsPointBInFrustum << 1);
 		return IsPointABInFrustum;
 	}
 
 	/*
-	inline char CheckInFrustumSIMDChunk(math::Vector<4, float>** arrayOfEightFrustumPlanes, unsigned int frustumCount, const math::Vector<4, float>* points, unsigned int pointCount, char* resultFlags)
+	inline char CheckInFrustumSIMDChunk(math::Vector<4, FLOAT32>** arrayOfEightFrustumPlanes, UINT32 frustumCount, const math::Vector<4, FLOAT32>* points, UINT32 pointCount, char* resultFlags)
 	{
-		for (unsigned int frustumIndex = 0; frustumIndex < frustumCount; ++frustumIndex)
+		for (UINT32 frustumIndex = 0; frustumIndex < frustumCount; ++frustumIndex)
 		{
 			const M256F* m128f_eightPlanes = reinterpret_cast<const M256F*>(arrayOfEightFrustumPlanes[frustumIndex]); // x of plane 0, 1, 2, 3  and y of plane 0, 1, 2, 3 
 		
@@ -846,7 +846,7 @@ namespace math
 
 			M256F dotPosA;
 
-			for (unsigned int pointIndex; pointIndex < pointCount; ++pointIndex)
+			for (UINT32 pointIndex; pointIndex < pointCount; ++pointIndex)
 			{
 				posA_xxxx = M256F_REPLICATE(points[pointIndex], 0); // xxxx of first twoPoint and xxxx of second twoPoint
 				posA_yyyy = M128F_REPLICATE(points[pointIndex], 1); // yyyy of first twoPoint and yyyy of second twoPoint
@@ -909,8 +909,8 @@ namespace math
 		M128F RMaskA = _mm_and_ps(dotPosA, dotPosA45); //when everty bits is 1, PointA is in frustum
 		M128F RMaskB = _mm_and_ps(dotPosB, dotPosB45);//when everty bits is 1, PointB is in frustum
 
-		int IsPointAInFrustum = _mm_test_all_ones(*reinterpret_cast<__m128i*>(&RMaskA)); // value is 1, Point in in frustum
-		int IsPointBInFrustum = _mm_test_all_ones(*reinterpret_cast<__m128i*>(&RMaskB));
+		INT32 IsPointAInFrustum = _mm_test_all_ones(*reinterpret_cast<__m128i*>(&RMaskA)); // value is 1, Point in in frustum
+		INT32 IsPointBInFrustum = _mm_test_all_ones(*reinterpret_cast<__m128i*>(&RMaskB));
 
 		char IsPointABInFrustum = IsPointAInFrustum | (IsPointBInFrustum << 1);
 		return IsPointABInFrustum;
@@ -925,7 +925,7 @@ namespace math
 	/// <param name="eightPlanes"></param>	
 	/// <param name="twoPoint"></param>
 	/// <returns></returns>
-// 	bool InFrustum256FSIMDWithTwoPoint(math::Vector<4, float>* eightPlanes, const math::Vector<4, float>* twoPoint)
+// 	bool InFrustum256FSIMDWithTwoPoint(math::Vector<4, FLOAT32>* eightPlanes, const math::Vector<4, FLOAT32>* twoPoint)
 // 	{
 // 		//We can't use M256F. because two twoPoint isn't aligned to 32 byte
 // 
@@ -938,7 +938,7 @@ namespace math
 // 		M128F posA_rrrr = M128F_REPLICATE(m128f_2Point[0], 3); // rrrr of first twoPoint and rrrr of second twoPoint
 // 
 // 		M256F dotTwoPos = M128F_MUL_AND_ADD(posA_xxxx, eightPlanes[2], eightPlanes[3]);
-// 		float d;
+// 		FLOAT32 d;
 // 		d = plane.a * pt.x + plane.b * pt.y + plane.c * pt.z + plane.d;
 // 		if (d < 0) return NEGATIVE;
 // 		if (d > 0) return POSITIVE;
@@ -960,7 +960,7 @@ namespace math
 	/// https://macton.smugmug.com/Other/2008-07-15-by-Eye-Fi/n-xmKDH/i-bJq8JqZ/A
 	/// </summary>
 	template <>
-	inline void ExtractPlanesFromVIewProjectionMatrix(const Matrix<4, 4, float>& viewProjectionMatrix, math::Vector<4, float>* sixPlanes, bool normalize) noexcept
+	inline void ExtractPlanesFromVIewProjectionMatrix(const Matrix<4, 4, FLOAT32>& viewProjectionMatrix, math::Vector<4, FLOAT32>* sixPlanes, bool normalize) noexcept
 	{
 		sixPlanes[0].x = viewProjectionMatrix[0][3] + viewProjectionMatrix[0][0];
 		sixPlanes[0].y = viewProjectionMatrix[1][3] + viewProjectionMatrix[1][0];
@@ -1027,7 +1027,7 @@ namespace math
 	/// <param name="normalize"></param>
 	/// <returns></returns>
 	template <>
-	inline void ExtractSIMDPlanesFromViewProjectionMatrix(const Matrix<4, 4, float>& viewProjectionMatrix, math::Vector<4, float>* eightPlanes, bool normalize) noexcept
+	inline void ExtractSIMDPlanesFromViewProjectionMatrix(const Matrix<4, 4, FLOAT32>& viewProjectionMatrix, math::Vector<4, FLOAT32>* eightPlanes, bool normalize) noexcept
 	{
 		
 		math::Vector4 sixPlane[6]{ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };

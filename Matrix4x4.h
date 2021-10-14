@@ -18,7 +18,7 @@ namespace math
 
 		using col_type = Vector<4, T>;
 
-		[[nodiscard]] FORCE_INLINE static constexpr size_t columnCount() noexcept { return 4; }
+		[[nodiscard]] FORCE_INLINE static constexpr SIZE_T columnCount() noexcept { return 4; }
 
 		/// <summary>
 		/// All columns always is aligned to 16 byte, because Matrix<4, 4, T> class is aligned to 16byte
@@ -194,13 +194,13 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr col_type& operator[](size_t i)
+		[[nodiscard]] FORCE_INLINE constexpr col_type& operator[](SIZE_T i)
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr const col_type& operator[](size_t i) const
+		[[nodiscard]] FORCE_INLINE constexpr const col_type& operator[](SIZE_T i) const
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
@@ -447,7 +447,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type operator++(int) noexcept
+		FORCE_INLINE constexpr type operator++(INT32) noexcept
 		{
 			type Matrix{ *this };
 			++* this;
@@ -472,7 +472,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type operator--(int) noexcept
+		FORCE_INLINE constexpr type operator--(INT32) noexcept
 		{
 			type Matrix{ *this };
 			--* this;
@@ -613,7 +613,7 @@ namespace math
 	template <typename T>
 	void NormalizePlane(Vector<4, T>& plane)
 	{
-		float mag = math::sqrt(plane.x * plane.x + plane.y * plane.y + plane.z * plane.z);
+		FLOAT32 mag = math::sqrt(plane.x * plane.x + plane.y * plane.y + plane.z * plane.z);
 		plane.x = plane.x / mag;
 		plane.y = plane.y / mag;
 		plane.z = plane.z / mag;
@@ -727,8 +727,8 @@ namespace math
 
 namespace math
 {
-	using Matrix4x4 = typename Matrix<4, 4, float>;
+	using Matrix4x4 = typename Matrix<4, 4, FLOAT32>;
 
-	extern template struct math::Matrix<4, 4, float>;
-	extern template struct math::Matrix<4, 4, double>;
+	extern template struct math::Matrix<4, 4, FLOAT32>;
+	extern template struct math::Matrix<4, 4, FLOAT64>;
 }

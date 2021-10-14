@@ -15,22 +15,22 @@ namespace math
 {
 	struct alignas(16) Quaternion
 	{
-		using value_type = typename float;
+		using value_type = typename FLOAT32;
 		using type = typename Quaternion;
 
-		Vector<4, float> value;
+		Vector<4, FLOAT32> value;
 
 		Quaternion() noexcept : value{ 0,0,0,1.0f }
 		{
 
 		}
 
-		FORCE_INLINE explicit Quaternion(float value) noexcept
+		FORCE_INLINE explicit Quaternion(FLOAT32 value) noexcept
 			: value{ value , value , value , value }
 		{
 		}
 
-		FORCE_INLINE Quaternion(float xValue, float yValue, float zValue, float wValue) noexcept
+		FORCE_INLINE Quaternion(FLOAT32 xValue, FLOAT32 yValue, FLOAT32 zValue, FLOAT32 wValue) noexcept
 			: value{ xValue , yValue , zValue , wValue }
 		{
 		}
@@ -46,25 +46,25 @@ namespace math
 			std::memcpy(this, &m128f, sizeof(type));
 		}
 
-		FORCE_INLINE Quaternion(float s, const Vector<3, float>& vector) noexcept
+		FORCE_INLINE Quaternion(FLOAT32 s, const Vector<3, FLOAT32>& vector) noexcept
 			: value{ vector.x, vector.y, vector.z, s }
 		{
 		}
 
-		FORCE_INLINE Quaternion(const Vector<3, float>& eulerAngle) noexcept
+		FORCE_INLINE Quaternion(const Vector<3, FLOAT32>& eulerAngle) noexcept
 		{
 			*this = type::eulerAngle(eulerAngle);
 		}
 
-		static type mat2Quaternion(const Matrix<3, 3, float>& m)
+		static type mat2Quaternion(const Matrix<3, 3, FLOAT32>& m)
 		{
-			float fourXSquaredMinus1 = m[0][0] - m[1][1] - m[2][2];
-			float fourYSquaredMinus1 = m[1][1] - m[0][0] - m[2][2];
-			float fourZSquaredMinus1 = m[2][2] - m[0][0] - m[1][1];
-			float fourWSquaredMinus1 = m[0][0] + m[1][1] + m[2][2];
+			FLOAT32 fourXSquaredMinus1 = m[0][0] - m[1][1] - m[2][2];
+			FLOAT32 fourYSquaredMinus1 = m[1][1] - m[0][0] - m[2][2];
+			FLOAT32 fourZSquaredMinus1 = m[2][2] - m[0][0] - m[1][1];
+			FLOAT32 fourWSquaredMinus1 = m[0][0] + m[1][1] + m[2][2];
 
-			int biggestIndex = 0;
-			float fourBiggestSquaredMinus1 = fourWSquaredMinus1;
+			INT32 biggestIndex = 0;
+			FLOAT32 fourBiggestSquaredMinus1 = fourWSquaredMinus1;
 			if (fourXSquaredMinus1 > fourBiggestSquaredMinus1)
 			{
 				fourBiggestSquaredMinus1 = fourXSquaredMinus1;
@@ -81,8 +81,8 @@ namespace math
 				biggestIndex = 3;
 			}
 
-			float biggestVal = static_cast<float>(math::sqrt(fourBiggestSquaredMinus1 + static_cast<float>(1)) * static_cast<float>(0.5));
-			float mult = static_cast<float>(0.25) / biggestVal;
+			FLOAT32 biggestVal = static_cast<FLOAT32>(math::sqrt(fourBiggestSquaredMinus1 + static_cast<FLOAT32>(1)) * static_cast<FLOAT32>(0.5));
+			FLOAT32 mult = static_cast<FLOAT32>(0.25) / biggestVal;
 
 			switch (biggestIndex)
 			{
@@ -100,12 +100,12 @@ namespace math
 			}
 		}
 
-		FORCE_INLINE Quaternion(const Matrix<3, 3, float>& m) noexcept
+		FORCE_INLINE Quaternion(const Matrix<3, 3, FLOAT32>& m) noexcept
 		{
 			mat2Quaternion(m);
 		}
 
-		FORCE_INLINE Quaternion(const Matrix<4, 4, float>& m) noexcept
+		FORCE_INLINE Quaternion(const Matrix<4, 4, FLOAT32>& m) noexcept
 		{
 			mat2Quaternion(m);
 		}
@@ -123,19 +123,19 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE type& operator=(const Matrix<4, 4, float>& m) noexcept
+		FORCE_INLINE type& operator=(const Matrix<4, 4, FLOAT32>& m) noexcept
 		{
 			mat2Quaternion(m);
 			return *this;
 		}
 
-		FORCE_INLINE type& operator=(const Matrix<3, 3, float>& m) noexcept
+		FORCE_INLINE type& operator=(const Matrix<3, 3, FLOAT32>& m) noexcept
 		{
 			mat2Quaternion(m);
 			return *this;
 		}
 
-		FORCE_INLINE type& operator=(const Vector<3, float>& eulerAngle) noexcept
+		FORCE_INLINE type& operator=(const Vector<3, FLOAT32>& eulerAngle) noexcept
 		{
 			*this = type::eulerAngle(eulerAngle);
 			return *this;
@@ -154,15 +154,15 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] inline static size_t componentCount()  noexcept { return 4; }
+		[[nodiscard]] inline static SIZE_T componentCount()  noexcept { return 4; }
 
-		[[nodiscard]] value_type& operator[](size_t i)
+		[[nodiscard]] value_type& operator[](SIZE_T i)
 		{
 			assert(i >= 0 || i < componentCount());
 			return value[i];
 		}
 
-		[[nodiscard]] FORCE_INLINE const value_type& operator[](size_t i) const
+		[[nodiscard]] FORCE_INLINE const value_type& operator[](SIZE_T i) const
 		{
 			assert(i >= 0 || i < componentCount());
 			return value[i];
@@ -233,7 +233,7 @@ namespace math
 		}
 
 
-		FORCE_INLINE type& operator+=(float number) noexcept
+		FORCE_INLINE type& operator+=(FLOAT32 number) noexcept
 		{
 			value.x += number;
 			value.y += number;
@@ -242,7 +242,7 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE type& operator-=(float number) noexcept
+		FORCE_INLINE type& operator-=(FLOAT32 number) noexcept
 		{
 			value.x -= number;
 			value.y -= number;
@@ -251,7 +251,7 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE type& operator*=(float number) noexcept
+		FORCE_INLINE type& operator*=(FLOAT32 number) noexcept
 		{
 			value.x *= number;
 			value.y *= number;
@@ -260,7 +260,7 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE type& operator/=(float number) noexcept
+		FORCE_INLINE type& operator/=(FLOAT32 number) noexcept
 		{
 			value.x /= number;
 			value.y /= number;
@@ -269,91 +269,91 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE type operator+(float number) noexcept
+		FORCE_INLINE type operator+(FLOAT32 number) noexcept
 		{
 			return *this += number;
 		}
 
-		FORCE_INLINE type operator-(float number) noexcept
+		FORCE_INLINE type operator-(FLOAT32 number) noexcept
 		{
 			return *this -= number;
 		}
 
-		FORCE_INLINE type operator*(float number) noexcept
+		FORCE_INLINE type operator*(FLOAT32 number) noexcept
 		{
 			return *this *= number;
 		}
 
-		FORCE_INLINE type operator/(float number)
+		FORCE_INLINE type operator/(FLOAT32 number)
 		{
 			return *this /= number;
 		}
 		/*
-		static Matrix<3, 3, float> convert_quaternion_to_matrix(const Quaternion& quaternion)
+		static Matrix<3, 3, FLOAT32> convert_quaternion_to_matrix(const Quaternion& quaternion)
 		{
 
 		}
 		*/
 
 		/*
-		inline operator Matrix<3, 3, float>() const noexcept
+		inline operator Matrix<3, 3, FLOAT32>() const noexcept
 		{
-			Matrix<3, 3, float> Result(float(1));
-			float qxx(this->value.x * this->value.x);
-			float qyy(this->value.y * this->value.y);
-			float qzz(this->value.z * this->value.z);
-			float qxz(this->value.x * this->value.z);
-			float qxy(this->value.x * this->value.y);
-			float qyz(this->value.y * this->value.z);
-			float qwx(this->value.w * this->value.x);
-			float qwy(this->value.w * this->value.y);
-			float qwz(this->value.w * this->value.z);
+			Matrix<3, 3, FLOAT32> Result(FLOAT32(1));
+			FLOAT32 qxx(this->value.x * this->value.x);
+			FLOAT32 qyy(this->value.y * this->value.y);
+			FLOAT32 qzz(this->value.z * this->value.z);
+			FLOAT32 qxz(this->value.x * this->value.z);
+			FLOAT32 qxy(this->value.x * this->value.y);
+			FLOAT32 qyz(this->value.y * this->value.z);
+			FLOAT32 qwx(this->value.w * this->value.x);
+			FLOAT32 qwy(this->value.w * this->value.y);
+			FLOAT32 qwz(this->value.w * this->value.z);
 
-			Result[0][0] = float(1) - float(2) * (qyy + qzz);
-			Result[0][1] = float(2) * (qxy + qwz);
-			Result[0][2] = float(2) * (qxz - qwy);
+			Result[0][0] = FLOAT32(1) - FLOAT32(2) * (qyy + qzz);
+			Result[0][1] = FLOAT32(2) * (qxy + qwz);
+			Result[0][2] = FLOAT32(2) * (qxz - qwy);
 
-			Result[1][0] = float(2) * (qxy - qwz);
-			Result[1][1] = float(1) - float(2) * (qxx + qzz);
-			Result[1][2] = float(2) * (qyz + qwx);
+			Result[1][0] = FLOAT32(2) * (qxy - qwz);
+			Result[1][1] = FLOAT32(1) - FLOAT32(2) * (qxx + qzz);
+			Result[1][2] = FLOAT32(2) * (qyz + qwx);
 
-			Result[2][0] = float(2) * (qxz + qwy);
-			Result[2][1] = float(2) * (qyz - qwx);
-			Result[2][2] = float(1) - float(2) * (qxx + qyy);
+			Result[2][0] = FLOAT32(2) * (qxz + qwy);
+			Result[2][1] = FLOAT32(2) * (qyz - qwx);
+			Result[2][2] = FLOAT32(1) - FLOAT32(2) * (qxx + qyy);
 			return Result;
 		}
 		*/
 
-		inline operator Matrix<3, 3, float>() const noexcept
+		inline operator Matrix<3, 3, FLOAT32>() const noexcept
 		{
-			Matrix<3, 3, float> Result(float(1));
-			float qxx(this->value.x * this->value.x);
-			float qyy(this->value.y * this->value.y);
-			float qzz(this->value.z * this->value.z);
-			float qxz(this->value.x * this->value.z);
-			float qxy(this->value.x * this->value.y);
-			float qyz(this->value.y * this->value.z);
-			float qwx(this->value.w * this->value.x);
-			float qwy(this->value.w * this->value.y);
-			float qwz(this->value.w * this->value.z);
+			Matrix<3, 3, FLOAT32> Result(FLOAT32(1));
+			FLOAT32 qxx(this->value.x * this->value.x);
+			FLOAT32 qyy(this->value.y * this->value.y);
+			FLOAT32 qzz(this->value.z * this->value.z);
+			FLOAT32 qxz(this->value.x * this->value.z);
+			FLOAT32 qxy(this->value.x * this->value.y);
+			FLOAT32 qyz(this->value.y * this->value.z);
+			FLOAT32 qwx(this->value.w * this->value.x);
+			FLOAT32 qwy(this->value.w * this->value.y);
+			FLOAT32 qwz(this->value.w * this->value.z);
 
-			Result[0][0] = float(1) - float(2) * (qyy + qzz);
-			Result[0][1] = float(2) * (qxy + qwz);
-			Result[0][2] = float(2) * (qxz - qwy);
+			Result[0][0] = FLOAT32(1) - FLOAT32(2) * (qyy + qzz);
+			Result[0][1] = FLOAT32(2) * (qxy + qwz);
+			Result[0][2] = FLOAT32(2) * (qxz - qwy);
 
-			Result[1][0] = float(2) * (qxy - qwz);
-			Result[1][1] = float(1) - float(2) * (qxx + qzz);
-			Result[1][2] = float(2) * (qyz + qwx);
+			Result[1][0] = FLOAT32(2) * (qxy - qwz);
+			Result[1][1] = FLOAT32(1) - FLOAT32(2) * (qxx + qzz);
+			Result[1][2] = FLOAT32(2) * (qyz + qwx);
 
-			Result[2][0] = float(2) * (qxz + qwy);
-			Result[2][1] = float(2) * (qyz - qwx);
-			Result[2][2] = float(1) - float(2) * (qxx + qyy);
+			Result[2][0] = FLOAT32(2) * (qxz + qwy);
+			Result[2][1] = FLOAT32(2) * (qyz - qwx);
+			Result[2][2] = FLOAT32(1) - FLOAT32(2) * (qxx + qyy);
 			return Result;
 		}
 
-		inline operator Matrix<4, 4, float>() const noexcept
+		inline operator Matrix<4, 4, FLOAT32>() const noexcept
 		{
-			return Matrix<4, 4, float>(this->operator math::Matrix<3, 3, float>());
+			return Matrix<4, 4, FLOAT32>(this->operator math::Matrix<3, 3, FLOAT32>());
 		}
 
 		[[nodiscard]] FORCE_INLINE bool operator==(const type& rhs) noexcept
@@ -366,12 +366,12 @@ namespace math
 			return this->value.x != rhs.value.x || this->value.y != rhs.value.y || this->value.z != rhs.value.z || this->value.w != rhs.value.w;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator==(float number) noexcept
+		[[nodiscard]] FORCE_INLINE bool operator==(FLOAT32 number) noexcept
 		{
 			return this->value.x == number && this->value.y == number && this->value.z == number && this->value.w == number;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(float number) noexcept
+		[[nodiscard]] FORCE_INLINE bool operator!=(FLOAT32 number) noexcept
 		{
 			return this->value.x != number || this->value.y != number || this->value.z != number || this->value.w != number;
 		}
@@ -394,7 +394,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE type operator++(int) noexcept
+		FORCE_INLINE type operator++(INT32) noexcept
 		{
 			type Quaternion{ *this };
 			++* this;
@@ -419,7 +419,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE type operator--(int) noexcept
+		FORCE_INLINE type operator--(INT32) noexcept
 		{
 			type Quaternion{ *this };
 			--* this;
@@ -433,42 +433,42 @@ namespace math
 
 		/*
 		
-		static float angle(Quaternion const& x)
+		static FLOAT32 angle(Quaternion const& x)
 		{
-			if (abs(x.w) > cos_one_over_two<float>())
+			if (abs(x.w) > cos_one_over_two<FLOAT32>())
 			{
-				float const a = asin(sqrt(x.x * x.x + x.y * x.y + x.z * x.z)) * static_cast<float>(2);
-				if (x.w < static_cast<float>(0))
-					return pi<float>() * static_cast<float>(2) - a;
+				FLOAT32 const a = asin(sqrt(x.x * x.x + x.y * x.y + x.z * x.z)) * static_cast<FLOAT32>(2);
+				if (x.w < static_cast<FLOAT32>(0))
+					return pi<FLOAT32>() * static_cast<FLOAT32>(2) - a;
 				return a;
 			}
 
-			return acos(x.w) * static_cast<float>(2);
+			return acos(x.w) * static_cast<FLOAT32>(2);
 		}
 
 		
-		static Vector<3, float> axis(qua<float, Q> const& x)
+		static Vector<3, FLOAT32> axis(qua<FLOAT32, Q> const& x)
 		{
-			float const tmp1 = static_cast<float>(1) - x.w * x.w;
-			if (tmp1 <= static_cast<float>(0))
-				return vec<3, float, Q>(0, 0, 1);
-			float const tmp2 = static_cast<float>(1) / sqrt(tmp1);
-			return vec<3, float, Q>(x.x * tmp2, x.y * tmp2, x.z * tmp2);
+			FLOAT32 const tmp1 = static_cast<FLOAT32>(1) - x.w * x.w;
+			if (tmp1 <= static_cast<FLOAT32>(0))
+				return vec<3, FLOAT32, Q>(0, 0, 1);
+			FLOAT32 const tmp2 = static_cast<FLOAT32>(1) / sqrt(tmp1);
+			return vec<3, FLOAT32, Q>(x.x * tmp2, x.y * tmp2, x.z * tmp2);
 		}
 		*/
 
-		static Quaternion angleAxis(const float& angle, const Vector<3, float>& v)
+		static Quaternion angleAxis(const FLOAT32& angle, const Vector<3, FLOAT32>& v)
 		{
-			const float a{ angle };
-			const float s{ math::sin(a * static_cast<float>(0.5)) };
+			const FLOAT32 a{ angle };
+			const FLOAT32 s{ math::sin(a * static_cast<FLOAT32>(0.5)) };
 
-			return Quaternion(math::cos(a * static_cast<float>(0.5)), v * s);
+			return Quaternion(math::cos(a * static_cast<FLOAT32>(0.5)), v * s);
 		}
 
-		static Quaternion eulerAngle(const Vector<3, float>& eulerAngle) noexcept
+		static Quaternion eulerAngle(const Vector<3, FLOAT32>& eulerAngle) noexcept
 		{
-			Vector<3, float> c = math::cos(eulerAngle * float(0.5));
-			Vector<3, float> s = math::sin(eulerAngle * float(0.5));
+			Vector<3, FLOAT32> c = math::cos(eulerAngle * FLOAT32(0.5));
+			Vector<3, FLOAT32> s = math::sin(eulerAngle * FLOAT32(0.5));
 
 			return Quaternion
 			{
@@ -479,10 +479,10 @@ namespace math
 			};
 		}
 
-		static Quaternion EulerAngleToQuaternion(const Vector<3, float>& eulerAngle) noexcept
+		static Quaternion EulerAngleToQuaternion(const Vector<3, FLOAT32>& eulerAngle) noexcept
 		{
-			Vector<3, float> c = math::cos(eulerAngle * float(0.5));
-			Vector<3, float> s = math::sin(eulerAngle * float(0.5));
+			Vector<3, FLOAT32> c = math::cos(eulerAngle * FLOAT32(0.5));
+			Vector<3, FLOAT32> s = math::sin(eulerAngle * FLOAT32(0.5));
 
 			return Quaternion
 			{
@@ -495,50 +495,50 @@ namespace math
 
 
 		
-		static float roll(const Quaternion& q)
+		static FLOAT32 roll(const Quaternion& q)
 		{
-			const float y = static_cast<float>(2) * (q.value.x * q.value.y + q.value.w * q.value.z);
-			const float x = q.value.w * q.value.w + q.value.x * q.value.x - q.value.y * q.value.y - q.value.z * q.value.z;
+			const FLOAT32 y = static_cast<FLOAT32>(2) * (q.value.x * q.value.y + q.value.w * q.value.z);
+			const FLOAT32 x = q.value.w * q.value.w + q.value.x * q.value.x - q.value.y * q.value.y - q.value.z * q.value.z;
 
-			float epsilon = math::epsilon<float>();
-			if (Vector<2, float>(x, y) == epsilon && Vector<2, float>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
+			FLOAT32 epsilon = math::epsilon<FLOAT32>();
+			if (Vector<2, FLOAT32>(x, y) == epsilon && Vector<2, FLOAT32>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
 			{
-				return static_cast<float>(0);
+				return static_cast<FLOAT32>(0);
 			}
-			return static_cast<float>(math::atan2(y, x));
+			return static_cast<FLOAT32>(math::atan2(y, x));
 		}
 
 		
-		static float pitch(const Quaternion& q)
+		static FLOAT32 pitch(const Quaternion& q)
 		{
-			//return float(atan(float(2) * (q.value.y * q.value.z + q.value.w * q.value.x).w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z));
-			const float y = static_cast<float>(2) * (q.value.y * q.value.z + q.value.w * q.value.x);
-			const float x = q.value.w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z;
+			//return FLOAT32(atan(FLOAT32(2) * (q.value.y * q.value.z + q.value.w * q.value.x).w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z));
+			const FLOAT32 y = static_cast<FLOAT32>(2) * (q.value.y * q.value.z + q.value.w * q.value.x);
+			const FLOAT32 x = q.value.w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z;
 
-			float epsilon = math::epsilon<float>();
-			if (Vector<2, float>(x, y) == epsilon && Vector<2, float>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
+			FLOAT32 epsilon = math::epsilon<FLOAT32>();
+			if (Vector<2, FLOAT32>(x, y) == epsilon && Vector<2, FLOAT32>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
 			{
-				return static_cast<float>(static_cast<float>(2) * math::atan2(q.value.x, q.value.w));
+				return static_cast<FLOAT32>(static_cast<FLOAT32>(2) * math::atan2(q.value.x, q.value.w));
 			}
 
-			return static_cast<float>(math::atan2(y, x));
+			return static_cast<FLOAT32>(math::atan2(y, x));
 		}
 
 		
-		static float yaw(const Quaternion& q)
+		static FLOAT32 yaw(const Quaternion& q)
 		{
-			return math::asin(math::clamp(static_cast<float>(-2) * (q.value.x * q.value.z - q.value.w * q.value.y), static_cast<float>(-1), static_cast<float>(1)));
+			return math::asin(math::clamp(static_cast<FLOAT32>(-2) * (q.value.x * q.value.z - q.value.w * q.value.y), static_cast<FLOAT32>(-1), static_cast<FLOAT32>(1)));
 		}
 
 		
-		static Vector<3, float> QuaternionToEulerAngle(const Quaternion& x)
+		static Vector<3, FLOAT32> QuaternionToEulerAngle(const Quaternion& x)
 		{
-			return Vector<3, float>(Quaternion::pitch(x), Quaternion::yaw(x), Quaternion::roll(x));
+			return Vector<3, FLOAT32>(Quaternion::pitch(x), Quaternion::yaw(x), Quaternion::roll(x));
 		}
 	};
 
 	
-	inline float dot(const Quaternion& a, const Quaternion& b)
+	inline FLOAT32 dot(const Quaternion& a, const Quaternion& b)
 	{
 		return a.value.x * b.value.x + a.value.y * b.value.y + a.value.z * b.value.z + a.value.w * b.value.w;
 	}
@@ -584,37 +584,37 @@ namespace math
 	}
 
 
-	inline FORCE_INLINE Vector<3, float> operator*(const Quaternion& q, const Vector<3, float>& v)
+	inline FORCE_INLINE Vector<3, FLOAT32> operator*(const Quaternion& q, const Vector<3, FLOAT32>& v)
 	{
-		const Vector<3, float> QuatVector(q.value.x, q.value.y, q.value.z);
-		const Vector<3, float> uv(cross(QuatVector, v));
-		const Vector<3, float> uuv(cross(QuatVector, uv));
+		const Vector<3, FLOAT32> QuatVector(q.value.x, q.value.y, q.value.z);
+		const Vector<3, FLOAT32> uv(cross(QuatVector, v));
+		const Vector<3, FLOAT32> uuv(cross(QuatVector, uv));
 
-		return v + ((uv * q.value.w) + uuv) * static_cast<float>(2);
+		return v + ((uv * q.value.w) + uuv) * static_cast<FLOAT32>(2);
 	}
 
-	inline FORCE_INLINE Vector<3, float> operator*(const Vector<3, float>& v, const Quaternion& q)
+	inline FORCE_INLINE Vector<3, FLOAT32> operator*(const Vector<3, FLOAT32>& v, const Quaternion& q)
 	{
 		return operator*(inverse(q), v);
 	}
 
-	inline FORCE_INLINE Vector<4, float> operator*(const Quaternion& q, const Vector<4, float>& v)
+	inline FORCE_INLINE Vector<4, FLOAT32> operator*(const Quaternion& q, const Vector<4, FLOAT32>& v)
 	{
-		return Vector<4, float>(q * Vector<3, float>(v), v.w);
+		return Vector<4, FLOAT32>(q * Vector<3, FLOAT32>(v), v.w);
 	}
 
-	inline FORCE_INLINE Vector<4, float> operator*(const Vector<4, float>& v, const Quaternion& q)
+	inline FORCE_INLINE Vector<4, FLOAT32> operator*(const Vector<4, FLOAT32>& v, const Quaternion& q)
 	{
 		return inverse(q) * v;
 	}
 
-	inline FORCE_INLINE Quaternion operator*(const Quaternion& rhs, const float& s)
+	inline FORCE_INLINE Quaternion operator*(const Quaternion& rhs, const FLOAT32& s)
 	{
 		return Quaternion(
 			rhs.value.w * s, rhs.value.x * s, rhs.value.y * s, rhs.value.z * s);
 	}
 
-	inline FORCE_INLINE Quaternion operator*(const float& s, const Quaternion& rhs)
+	inline FORCE_INLINE Quaternion operator*(const FLOAT32& s, const Quaternion& rhs)
 	{
 		return rhs * s;
 	}
@@ -625,7 +625,7 @@ namespace math
 	}
 
 // 	
-// 	FORCE_INLINE Quaternion operator/(const Quaternion& q, float s)
+// 	FORCE_INLINE Quaternion operator/(const Quaternion& q, FLOAT32 s)
 // 	{
 // 		return Quaternion(
 // 			q.value.w / s, q.value.x / s, q.value.y / s, q.value.z / s);

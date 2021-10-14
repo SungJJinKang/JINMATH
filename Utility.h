@@ -5,15 +5,15 @@
 
 namespace math
 {
-	inline constexpr float PI = 3.14159265358979323846f;
+	inline constexpr FLOAT32 PI = 3.14159265358979323846f;
 
-	inline constexpr float DEGREE_TO_RADIAN = PI / 180.0f;
+	inline constexpr FLOAT32 DEGREE_TO_RADIAN = PI / 180.0f;
 
-	inline constexpr float RADIAN_TO_DEGREE = 180.0f / PI;
+	inline constexpr FLOAT32 RADIAN_TO_DEGREE = 180.0f / PI;
 
 	
 
-	template<typename T = float, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
+	template<typename T = FLOAT32, std::enable_if_t<CHECK_IS_NUMBER(T), bool> = true>
 	FORCE_INLINE constexpr typename T epsilon()
 	{
 		return std::numeric_limits<T>::epsilon();
@@ -164,24 +164,24 @@ namespace math
 		return std::tan(radian);
 	}
 
-	FORCE_INLINE constexpr auto Equal(float a, float b)
+	FORCE_INLINE constexpr auto Equal(FLOAT32 a, FLOAT32 b)
 	{
-		return math::abs(a - b) < math::epsilon<float>();
+		return math::abs(a - b) < math::epsilon<FLOAT32>();
 	}
 
-	FORCE_INLINE constexpr auto Equal(double a, double b)
+	FORCE_INLINE constexpr auto Equal(FLOAT64 a, FLOAT64 b)
 	{
-		return math::abs(a - b) < math::epsilon<double>();
+		return math::abs(a - b) < math::epsilon<FLOAT64>();
 	}
 
-	FORCE_INLINE constexpr auto Equal(float a, double b)
+	FORCE_INLINE constexpr auto Equal(FLOAT32 a, FLOAT64 b)
 	{
-		return Equal(static_cast<double>(a), b);
+		return Equal(static_cast<FLOAT64>(a), b);
 	}
 
-	FORCE_INLINE constexpr auto Equal(double a, float b)
+	FORCE_INLINE constexpr auto Equal(FLOAT64 a, FLOAT32 b)
 	{
-		return Equal(a, static_cast<double>(b));
+		return Equal(a, static_cast<FLOAT64>(b));
 	}
 	/////
 

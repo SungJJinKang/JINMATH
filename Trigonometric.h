@@ -3,12 +3,12 @@
 namespace math
 {
 
-	float Pythagorean(float a, float b)
+	FLOAT32 Pythagorean(FLOAT32 a, FLOAT32 b)
 	{
 		return math::sqrt(a * a + b * b);
 	}
 	
-	float Pythagorean(float a, float b, float c)
+	FLOAT32 Pythagorean(FLOAT32 a, FLOAT32 b, FLOAT32 c)
 	{
 		return math::sqrt(a * a + b * b + c * c);
 	}

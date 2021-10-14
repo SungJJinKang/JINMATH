@@ -6,55 +6,55 @@
 
 using namespace math;
 
-template struct Matrix<1, 1, float>;
-template struct Matrix<2, 2, float>;
-template struct Matrix<3, 3, float>;
-template struct Matrix<4, 4, float>;
+template struct Matrix<1, 1, FLOAT32>;
+template struct Matrix<2, 2, FLOAT32>;
+template struct Matrix<3, 3, FLOAT32>;
+template struct Matrix<4, 4, FLOAT32>;
 
 
-template struct Matrix<1, 1, double>;
-template struct Matrix<2, 2, double>;
-template struct Matrix<3, 3, double>;
-template struct Matrix<4, 4, double>;
+template struct Matrix<1, 1, FLOAT64>;
+template struct Matrix<2, 2, FLOAT64>;
+template struct Matrix<3, 3, FLOAT64>;
+template struct Matrix<4, 4, FLOAT64>;
 
 
 
 /*
-template struct Matrix<1, 1, long double>;
-template struct Matrix<2, 2, long double>;
-template struct Matrix<3, 3, long double>;
+template struct Matrix<1, 1, long FLOAT64>;
+template struct Matrix<2, 2, long FLOAT64>;
+template struct Matrix<3, 3, long FLOAT64>;
 
-template struct Matrix<1, 1, short int>;
-template struct Matrix<2, 2, short int>;
-template struct Matrix<3, 3, short int>;
+template struct Matrix<1, 1, short INT32>;
+template struct Matrix<2, 2, short INT32>;
+template struct Matrix<3, 3, short INT32>;
 
-template struct Matrix<1, 1, int>;
-template struct Matrix<2, 2, int>;
-template struct Matrix<3, 3, int>;
+template struct Matrix<1, 1, INT32>;
+template struct Matrix<2, 2, INT32>;
+template struct Matrix<3, 3, INT32>;
 
-template struct Matrix<1, 1, long int>;
-template struct Matrix<2, 2, long int>;
-template struct Matrix<3, 3, long int>;
+template struct Matrix<1, 1, long INT32>;
+template struct Matrix<2, 2, long INT32>;
+template struct Matrix<3, 3, long INT32>;
 
-template struct Matrix<1, 1, long long int>;
-template struct Matrix<2, 2, long long int>;
-template struct Matrix<3, 3, long long int>;
+template struct Matrix<1, 1, long long INT32>;
+template struct Matrix<2, 2, long long INT32>;
+template struct Matrix<3, 3, long long INT32>;
 
-template struct Matrix<1, 1, unsigned short int>;
-template struct Matrix<2, 2, unsigned short int>;
-template struct Matrix<3, 3, unsigned short int>;
+template struct Matrix<1, 1, unsigned short INT32>;
+template struct Matrix<2, 2, unsigned short INT32>;
+template struct Matrix<3, 3, unsigned short INT32>;
 
-template struct Matrix<1, 1, unsigned int>;
-template struct Matrix<2, 2, unsigned int>;
-template struct Matrix<3, 3, unsigned int>;
+template struct Matrix<1, 1, UINT32>;
+template struct Matrix<2, 2, UINT32>;
+template struct Matrix<3, 3, UINT32>;
 
-template struct Matrix<1, 1, unsigned long int>;
-template struct Matrix<2, 2, unsigned long int>;
-template struct Matrix<3, 3, unsigned long int>;
+template struct Matrix<1, 1, UINT32 INT32>;
+template struct Matrix<2, 2, UINT32 INT32>;
+template struct Matrix<3, 3, UINT32 INT32>;
 
-template struct Matrix<1, 1, unsigned long long int>;
-template struct Matrix<2, 2, unsigned long long int>;
-template struct Matrix<3, 3, unsigned long long int>;
+template struct Matrix<1, 1, UINT64 INT32>;
+template struct Matrix<2, 2, UINT64 INT32>;
+template struct Matrix<3, 3, UINT64 INT32>;
 */
 
 

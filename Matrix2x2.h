@@ -16,7 +16,7 @@ namespace math
 		using col_type_template = Vector<2, T2>;
 		using col_type = Vector<2, T>;
 
-		[[nodiscard]] FORCE_INLINE static constexpr size_t columnCount() noexcept { return 2; }
+		[[nodiscard]] FORCE_INLINE static constexpr SIZE_T columnCount() noexcept { return 2; }
 		col_type columns[2];
 
 		FORCE_INLINE T* data() noexcept
@@ -165,13 +165,13 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr col_type& operator[](size_t i)
+		[[nodiscard]] FORCE_INLINE constexpr col_type& operator[](SIZE_T i)
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr const col_type& operator[](size_t i) const
+		[[nodiscard]] FORCE_INLINE constexpr const col_type& operator[](SIZE_T i) const
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
@@ -386,7 +386,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type operator++(int) noexcept
+		FORCE_INLINE constexpr type operator++(INT32) noexcept
 		{
 			type Matrix{ *this };
 			++* this;
@@ -409,7 +409,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type operator--(int) noexcept
+		FORCE_INLINE constexpr type operator--(INT32) noexcept
 		{
 			type Matrix{ *this };
 			--* this;
@@ -472,9 +472,9 @@ namespace math
 			-matrix.columns[1]);
 	}
 
-	using Matrix2x2 = typename Matrix<2, 2, float>;
+	using Matrix2x2 = typename Matrix<2, 2, FLOAT32>;
 
-	extern template struct math::Matrix<2, 2, float>;
-	extern template struct math::Matrix<2, 2, double>;
+	extern template struct math::Matrix<2, 2, FLOAT32>;
+	extern template struct math::Matrix<2, 2, FLOAT64>;
 
 }

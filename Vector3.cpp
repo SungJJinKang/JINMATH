@@ -10,4 +10,4 @@ template <typename T>
 const math::Vector<3, T> math::Vector<3, T>::up{ 0, static_cast<T>(1), 0 };
 
 
-template struct math::Vector<3, float>;
+template struct math::Vector<3, FLOAT32>;
