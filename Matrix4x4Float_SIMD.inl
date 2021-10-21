@@ -608,7 +608,7 @@ namespace math
 		{
 			return this->toString();
 		}
-		// TODO : Try make this using SIMD
+
 		inline type inverse() const noexcept
 		{
 			value_type Coef00 = columns[2][2] * columns[3][3] - columns[3][2] * columns[2][3];
