@@ -8,7 +8,7 @@
 
 #ifdef ACTIVATE_SIMD
 
-#ifdef __AVX__
+#if defined(__AVX__) || defined(__AVX2__)
 
 #ifndef SIMD_ENABLED
 #define SIMD_ENABLED

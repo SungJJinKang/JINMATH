@@ -1,4 +1,7 @@
-#include "Vector3.h"
+#include <Vector3.h>
+#include <Vector3.h>
+
+#include <SIMD_Core.h>
 
 namespace math
 {
@@ -52,8 +55,8 @@ namespace math
 		{
 			M256F* A = reinterpret_cast<M256F*>(this);
 			const M128F* B = reinterpret_cast<const M128F*>(&column);
-			A[0] = _mm256_broadcast_ps(B); // copy 0 ~ 256 OF B to 0 ~ 256 this
-			A[1] = _mm256_broadcast_ps(B); // B + 8 -> B + sizeof(FLOAT32) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
+			A[0] = _mm256_broadcast_ps(&(B->raw)); // copy 0 ~ 256 OF B to 0 ~ 256 this
+			A[1] = _mm256_broadcast_ps(&(B->raw)); // B + 8 -> B + sizeof(FLOAT32) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
 		}
 
 		FORCE_INLINE Matrix() noexcept : columns{}
@@ -333,7 +336,7 @@ namespace math
 		inline thread_local static Vector<4, FLOAT32> Vec4_Parameter{1.0f};
 		inline thread_local static Vector<4, FLOAT32> Vec4_Result{1.0f};
 		
-		inline static M128F AllOne{ 1.0f, 1.0f, 1.0f, 1.0f };
+		inline static M128F AllOne{ _mm_set1_ps(1.0f) };
 		
 		/// <summary>
 		/// 

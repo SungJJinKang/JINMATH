@@ -187,7 +187,7 @@ namespace math
 		}
 
 
-		inline static constexpr M128F QuaternionMultiplyMask1{};
+		//inline static constexpr M128F QuaternionMultiplyMask1{};
 
 		FORCE_INLINE type& operator*=(const Quaternion& rhs) noexcept
 		{

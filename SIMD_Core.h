@@ -14,6 +14,88 @@
 
 #include <immintrin.h>
 
+#if defined(__GNUC__)  || defined( __clang__)
+
+union __M128F {
+	__m128 raw;    // SSE 4 x float vector
+	float m128_f32[4];  // scalar array of 4 floats
+
+	FORCE_INLINE operator __m128() { return raw; }
+	FORCE_INLINE operator __m128() const { return raw; }
+
+	FORCE_INLINE __M128F() {}
+	FORCE_INLINE __M128F(const __m128& _raw) : raw{ _raw } {}
+};
+
+typedef __M128F M128F;
+
+union __M128D {
+	__m128d raw;    // SSE 4 x float vector
+	double m128_d32[2];  // scalar array of 4 floats
+
+	FORCE_INLINE operator __m128d() { return raw; }
+	FORCE_INLINE operator __m128d() const { return raw; }
+
+	FORCE_INLINE __M128D() {}
+	FORCE_INLINE __M128D(const __m128d& _raw) : raw{ _raw } {}
+};
+
+typedef __M128D M128D;
+
+union __M128I {
+	__m128i raw;    // SSE 4 x float vector
+	INT32 m128_i32[4];  // scalar array of 4 floats
+
+	FORCE_INLINE operator __m128i() { return raw; }
+	FORCE_INLINE operator __m128i() const { return raw; }
+
+	FORCE_INLINE __M128I() {}
+	FORCE_INLINE __M128I(const __m128i& _raw) : raw{ _raw } {}
+};
+
+typedef __M128I M128I;
+
+union __M256F {
+	__m256 raw;    // SSE 4 x float vector
+	float m128_f32[8];  // scalar array of 4 floats
+
+	FORCE_INLINE operator __m256() { return raw; }
+	FORCE_INLINE operator __m256() const { return raw; }
+
+	FORCE_INLINE __M256F() {}
+	FORCE_INLINE __M256F(const __m256& _raw) : raw{ _raw } {}
+};
+
+typedef __M256F M256F;
+
+union __M256D {
+	__m256d raw;    // SSE 4 x float vector
+	double m128_d32[4];  // scalar array of 4 floats
+
+	FORCE_INLINE operator __m256d() { return raw; }
+	FORCE_INLINE operator __m256d() const { return raw; }
+
+	FORCE_INLINE __M256D() {}
+	FORCE_INLINE __M256D(const __m256d& _raw) : raw{ _raw } {}
+};
+
+typedef __M256D M256D;
+
+union __M256I {
+	__m256i raw;    // SSE 4 x float vector
+	INT32 m128_i32[8];  // scalar array of 4 floats
+
+	FORCE_INLINE operator __m256i() { return raw; }
+	FORCE_INLINE operator __m256i() const { return raw; }
+
+	FORCE_INLINE __M256I() {}
+	FORCE_INLINE __M256I(const __m256i& _raw) : raw{ _raw } {}
+};
+
+typedef __M256I M256I;
+
+
+#elif defined(_MSC_VER))
 
 typedef __m128	M128F;
 typedef __m128d M128D;
@@ -24,6 +106,10 @@ typedef __m128i M128I;
 typedef __m256	M256F;
 typedef __m256d M256D;
 typedef __m256i M256I;
+
+#endif
+
+
 
 /*
 #ifndef M128F
@@ -56,7 +142,7 @@ inline const M128F M128F_EVERY_BITS_ONE{ _mm_castsi128_ps(_mm_set1_epi16(-1)) };
 
 FORCE_INLINE M128F M128F_ADD(const M128F& M128_A, const M128F& M128_B)
 {
-	return _mm_add_ps(M128_A, M128_B);
+	return _mm_add_ps(M128_A.raw, M128_B.raw);
 }
 
 FORCE_INLINE M256F M256F_ADD(const M256F& M256_A, const M256F& M256_B)

@@ -6,16 +6,16 @@
 
 using namespace math;
 
-template struct Matrix<1, 1, FLOAT32>;
-template struct Matrix<2, 2, FLOAT32>;
-template struct Matrix<3, 3, FLOAT32>;
-template struct Matrix<4, 4, FLOAT32>;
+template struct math::Matrix<1, 1, FLOAT32>;
+template struct math::Matrix<2, 2, FLOAT32>;
+template struct math::Matrix<3, 3, FLOAT32>;
+template struct math::Matrix<4, 4, FLOAT32>;
 
 
-template struct Matrix<1, 1, FLOAT64>;
-template struct Matrix<2, 2, FLOAT64>;
-template struct Matrix<3, 3, FLOAT64>;
-template struct Matrix<4, 4, FLOAT64>;
+template struct math::Matrix<1, 1, FLOAT64>;
+template struct math::Matrix<2, 2, FLOAT64>;
+template struct math::Matrix<3, 3, FLOAT64>;
+template struct math::Matrix<4, 4, FLOAT64>;
 
 
 
