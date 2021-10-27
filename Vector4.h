@@ -41,15 +41,7 @@ namespace math
 
 		}
 
-		/// <summary>
-		/// for not init
-		/// </summary>
-		/// <param name=""></param>
-		/// <returns></returns>
-		FORCE_INLINE Vector(INT32*) noexcept 
-		{
-
-		}
+	
 
 		FORCE_INLINE explicit constexpr Vector(T xValue)  noexcept
 			: x{ xValue }, y{ xValue }, z{ xValue }, w{ xValue }
@@ -73,10 +65,9 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE Vector(const Vector<3, T>& vector, T w = 0) noexcept
+		FORCE_INLINE constexpr Vector(const Vector<3, T>& vector, T _w = 0) noexcept
+			: x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ _w }
 		{
-			std::memcpy(this, &vector, sizeof(T) * 3);
-			this->w = w;
 		}
 
 		template <typename X>
@@ -85,9 +76,9 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE Vector(const type& vector) noexcept
+		FORCE_INLINE constexpr Vector(const type& vector) noexcept
+			: x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
 		{
-			std::memcpy(this, &vector, sizeof(type));
 		}
 
 		template <typename X>
@@ -125,10 +116,12 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE type& operator=(const Vector<3, T>& vector) noexcept
+		FORCE_INLINE constexpr type& operator=(const Vector<3, T>& vector) noexcept
 		{
-			std::memcpy(this, &vector, sizeof(T) * 3);
-			this->w = 0;
+			x = vector.x;
+			y = vector.y;
+			z = vector.z;
+
 			return *this;
 		}
 
@@ -142,9 +135,12 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE type& operator=(const type& vector) noexcept
+		FORCE_INLINE constexpr type& operator=(const type& vector) noexcept
 		{
-			std::memcpy(this, &vector, sizeof(type));
+			x = vector.x;
+			y = vector.y;
+			z = vector.w;
+			w = vector.z;
 			return *this;
 		}
 
@@ -170,9 +166,9 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE static constexpr SIZE_T componentCount() noexcept { return 4; }
+		[[nodiscard]] FORCE_INLINE static constexpr size_t componentCount() noexcept { return 4; }
 
-		[[nodiscard]] FORCE_INLINE constexpr value_type& operator[](SIZE_T i)
+		[[nodiscard]] FORCE_INLINE constexpr value_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -194,7 +190,7 @@ namespace math
 			}
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr const value_type& operator[](SIZE_T i) const
+		[[nodiscard]] FORCE_INLINE constexpr const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -248,37 +244,37 @@ namespace math
 			}
 		}
 
-		template <SIZE_T RightComponentSize, typename X>
+		template <size_t RightComponentSize, typename X>
 		FORCE_INLINE constexpr type operator+(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w);
 		}
 
-		template <SIZE_T RightComponentSize, typename X>
+		template <size_t RightComponentSize, typename X>
 		FORCE_INLINE constexpr type operator-(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w);
 		}
 
-		template <SIZE_T RightComponentSize, typename X>
+		template <size_t RightComponentSize, typename X>
 		FORCE_INLINE constexpr type operator*(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x * rhs.x, y * rhs.y, z * rhs.z, w * rhs.w);
 		}
 
-		template <SIZE_T RightComponentSize, typename X>
+		template <size_t RightComponentSize, typename X>
 		FORCE_INLINE constexpr type operator/(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
 		}
 
-		template <SIZE_T RightComponentSize, typename X>
+		template <size_t RightComponentSize, typename X>
 		FORCE_INLINE constexpr type operator%(const Vector<RightComponentSize, X>& rhs) const
 		{
 			return type(MODULO(T, x, rhs.x), MODULO(T, y, rhs.y), MODULO(T, z, rhs.z), MODULO(T, w, rhs.w));
 		}
 
-		template <SIZE_T RightComponentSize, typename X>
+		template <size_t RightComponentSize, typename X>
 		FORCE_INLINE constexpr type& operator+=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x += rhs.x;
@@ -288,7 +284,7 @@ namespace math
 			return *this;
 		}
 
-		template <SIZE_T RightComponentSize, typename X>
+		template <size_t RightComponentSize, typename X>
 		FORCE_INLINE constexpr type& operator-=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x -= rhs.x;
@@ -298,7 +294,7 @@ namespace math
 			return *this;
 		}
 
-		template <SIZE_T RightComponentSize, typename X>
+		template <size_t RightComponentSize, typename X>
 		FORCE_INLINE constexpr type& operator*=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x *= rhs.x;
@@ -308,7 +304,7 @@ namespace math
 			return *this;
 		}
 
-		template <SIZE_T RightComponentSize, typename X>
+		template <size_t RightComponentSize, typename X>
 		FORCE_INLINE constexpr type& operator/=(const Vector<RightComponentSize, X>& rhs)
 		{
 			x /= rhs.x;
@@ -318,7 +314,7 @@ namespace math
 			return *this;
 		}
 
-		template <SIZE_T RightComponentSize, typename X>
+		template <size_t RightComponentSize, typename X>
 		FORCE_INLINE type& operator%=(const Vector<RightComponentSize, X>& rhs)
 		{
 			MODULO(T, x, rhs.x);

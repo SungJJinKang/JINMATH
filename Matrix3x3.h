@@ -16,7 +16,7 @@ namespace math
 		using col_type_template = Vector<3, T2>;
 		using col_type = Vector<3, T>;
 
-		[[nodiscard]] FORCE_INLINE static constexpr SIZE_T columnCount()  noexcept { return 3; }
+		[[nodiscard]] FORCE_INLINE static constexpr size_t columnCount()  noexcept { return 3; }
 		col_type columns[3];
 
 		FORCE_INLINE T* data() noexcept
@@ -175,13 +175,13 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr col_type& operator[](SIZE_T i)
+		[[nodiscard]] FORCE_INLINE constexpr col_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr const col_type& operator[](SIZE_T i) const
+		[[nodiscard]] FORCE_INLINE constexpr const col_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];

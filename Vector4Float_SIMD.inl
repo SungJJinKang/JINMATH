@@ -1,6 +1,13 @@
+#include <TypeDef.h>
+#include "CompilerMacros.h"
+
+#include "SIMD_Core.h"
+#include "Vector3.h"
+
 namespace math
 {
-
+	template <size_t ComponentCount, typename T>
+	struct Vector;
 	/// <summary>
 	/// This class is made for SIMD computation. So it's aligned to 16 byte
 	/// </summary>
@@ -36,15 +43,6 @@ namespace math
 
 		}
 
-		/// <summary>
-		/// for Not Init
-		/// </summary>
-		/// <param name=""></param>
-		/// <returns></returns>
-		FORCE_INLINE Vector(INT32*) noexcept 
-		{
-
-		}
 
  		FORCE_INLINE constexpr explicit Vector(FLOAT32 xValue)  noexcept
  			: x{ xValue }, y{ xValue }, z{ xValue }, w{ xValue }
@@ -63,13 +61,13 @@ namespace math
 		}
 		
 		template <typename X>
-		FORCE_INLINE Vector(const Vector<1, X>& vector) noexcept
+		FORCE_INLINE constexpr Vector(const Vector<1, X>& vector) noexcept
 			: x{ static_cast<FLOAT32>(vector.x) }, y{ 0 }, z{ 0 }, w{ 0 }
 		{
 		}
 
 		template <typename X>
-		FORCE_INLINE Vector(const Vector<2, X>& vector) noexcept
+		FORCE_INLINE constexpr Vector(const Vector<2, X>& vector) noexcept
 			: x{ static_cast<FLOAT32>(vector.x) }, y{ static_cast<FLOAT32>(vector.y) }, z{ 0 }, w{ 0 }
 		{
 		}
@@ -79,35 +77,31 @@ namespace math
 		/// </summary>
 		/// <param name="vector"></param>
 		/// <returns></returns>
-		FORCE_INLINE Vector(const Vector<3, FLOAT32>& vector, FLOAT32 w = 0.0f) noexcept
+		FORCE_INLINE constexpr Vector(const Vector<3, FLOAT32>& vector, const FLOAT32 _w = 0.0f) noexcept
+			: x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ _w }
 		{
-			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
-			std::memcpy(this, &vector, sizeof(FLOAT32) * 3);
-			this->w = w;
 		}
 
 		template <typename X>
-		FORCE_INLINE Vector(const Vector<3, X>& vector, X w = 0) noexcept
+		FORCE_INLINE constexpr Vector(const Vector<3, X>& vector, X w = 0) noexcept
 			: x{ static_cast<FLOAT32>(vector.x) }, y{ static_cast<FLOAT32>(vector.y) }, z{ static_cast<FLOAT32>(vector.z) }, w{ static_cast<FLOAT32>(w) }
 		{
 		}
 
-		FORCE_INLINE Vector(const type& vector) noexcept
+		FORCE_INLINE constexpr Vector(const type& vector) noexcept
+			: x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
 		{
-			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
-			std::memcpy(this, &vector, sizeof(type));
 		}
 
 		template <typename X>
-		FORCE_INLINE Vector(const Vector<4, X>& vector) noexcept
+		FORCE_INLINE constexpr Vector(const Vector<4, X>& vector) noexcept
 			: x{ static_cast<FLOAT32>(vector.x) }, y{ static_cast<FLOAT32>(vector.y) }, z{ static_cast<FLOAT32>(vector.z) }, w{ static_cast<FLOAT32>(vector.w) }
 		{
 		}
 
-		FORCE_INLINE Vector(const M128F& m128f) noexcept
+		FORCE_INLINE constexpr Vector(const M128F& m128f) noexcept
+			: x{ m128f.m128_f32[0] }, y{ m128f.m128_f32[1] }, z{ m128f.m128_f32[2] }, w{ m128f.m128_f32[3] }
 		{
-			//this is faster than x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
-			std::memcpy(this, &m128f, sizeof(type));
 		}
 
 		FORCE_INLINE type& operator=(value_type xValue) noexcept
@@ -207,9 +201,9 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE static SIZE_T componentCount() noexcept { return 4; }
+		[[nodiscard]] FORCE_INLINE static size_t componentCount() noexcept { return 4; }
 
-		[[nodiscard]] FORCE_INLINE value_type& operator[](SIZE_T i)
+		[[nodiscard]] FORCE_INLINE value_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -231,7 +225,7 @@ namespace math
 			}
 		}
 
-		[[nodiscard]] FORCE_INLINE const value_type& operator[](SIZE_T i) const
+		[[nodiscard]] FORCE_INLINE const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -294,7 +288,7 @@ namespace math
 		/// <typeparam name="enable_if_t"></typeparam>
 		/// <param name="rhs"></param>
 		/// <returns></returns>
-		template <SIZE_T RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
 		FORCE_INLINE type operator+(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w);
@@ -308,31 +302,31 @@ namespace math
 		}
 		*/
 
-		template <SIZE_T RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
 		FORCE_INLINE type operator-(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w);
 		}
 
-		template <SIZE_T RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
 		FORCE_INLINE type operator*(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x * rhs.x, y * rhs.y, z * rhs.z, w * rhs.w);
 		}
 
-		template <SIZE_T RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
 		FORCE_INLINE type operator/(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
 		}
 
-		template <SIZE_T RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
 		FORCE_INLINE type operator%(const Vector<RightComponentSize, X>& rhs) const noexcept
 		{
 			return type(MODULO(FLOAT32, x, rhs.x), MODULO(FLOAT32, y, rhs.y), MODULO(FLOAT32, z, rhs.z), MODULO(FLOAT32, w, rhs.w));
 		}
 
-		template <SIZE_T RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
 		FORCE_INLINE type& operator+=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x += rhs.x;
@@ -342,7 +336,7 @@ namespace math
 			return *this;
 		}
 
-		template <SIZE_T RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
 		FORCE_INLINE type& operator-=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x -= rhs.x;
@@ -352,7 +346,7 @@ namespace math
 			return *this;
 		}
 
-		template <SIZE_T RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
 		FORCE_INLINE type& operator*=(const Vector<RightComponentSize, X>& rhs) noexcept
 		{
 			x *= rhs.x;
@@ -362,7 +356,7 @@ namespace math
 			return *this;
 		}
 
-		template <SIZE_T RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
 		FORCE_INLINE type& operator/=(const Vector<RightComponentSize, X>& rhs)
 		{
 			x /= rhs.x;
@@ -372,7 +366,7 @@ namespace math
 			return *this;
 		}
 
-		template <SIZE_T RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
+		template <size_t RightComponentSize, typename X, typename std::enable_if_t<RightComponentSize >= 4, bool> = true>
 		FORCE_INLINE type& operator%=(const Vector<RightComponentSize, X>& rhs)
 		{
 			MODULO(FLOAT32, x, rhs.x);

@@ -1,7 +1,7 @@
 #include <Vector3.h>
-#include <Vector3.h>
+#include <Vector4.h>
 
-#include <SIMD_Core.h>
+#include "SIMD_Core.h"
 
 namespace math
 {
@@ -19,7 +19,7 @@ namespace math
 
 		using col_type = Vector<4, FLOAT32>;
 
-		[[nodiscard]] FORCE_INLINE static SIZE_T columnCount()  noexcept { return 4; }
+		[[nodiscard]] FORCE_INLINE static size_t columnCount()  noexcept { return 4; }
 
 		/// <summary>
 		/// All columns always is aligned to 16 byte, because Matrix<4, 4, FLOAT32> class is aligned to 16byte
@@ -223,13 +223,13 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE col_type& operator[](SIZE_T i)
+		[[nodiscard]] FORCE_INLINE col_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
 		}
 
-		[[nodiscard]] FORCE_INLINE const col_type& operator[](SIZE_T i) const
+		[[nodiscard]] FORCE_INLINE const col_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
@@ -1033,7 +1033,7 @@ namespace math
 	inline void ExtractSIMDPlanesFromViewProjectionMatrix(const Matrix<4, 4, FLOAT32>& viewProjectionMatrix, math::Vector<4, FLOAT32>* eightPlanes, bool normalize) noexcept
 	{
 		
-		math::Vector4 sixPlane[6]{ nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
+		math::Vector4 sixPlane[6]{};
 
 		ExtractPlanesFromVIewProjectionMatrix(viewProjectionMatrix, sixPlane, normalize);
 
