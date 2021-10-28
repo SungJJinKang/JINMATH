@@ -395,3 +395,5 @@ MigrationBackup/
 FodyWeavers.xsd
 
 dependency
+
+*.csv
