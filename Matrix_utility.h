@@ -6,13 +6,13 @@
 namespace math
 {
 	template<typename T>
-	constexpr math::Matrix<4, 4, T> frustum(const T& left, const T& right, const T& bottom, const T& top, const T& nearVal, const T& farVal);
+	math::Matrix<4, 4, T> frustum(const T& left, const T& right, const T& bottom, const T& top, const T& nearVal, const T& farVal);
 
 	template<typename T>
-	constexpr math::Matrix<4, 4, T> infinitePerspective(T fovy, T aspect, T zNear);
+	math::Matrix<4, 4, T> infinitePerspective(T fovy, T aspect, T zNear);
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> lookAtRH(const math::Vector<3, T>& eye, const math::Vector<3, T>& center, const math::Vector<3, T>& up)
+	inline math::Matrix<4, 4, T> lookAtRH(const math::Vector<3, T>& eye, const math::Vector<3, T>& center, const math::Vector<3, T>& up)
 	{
 		const math::Vector<3, T> f((center - eye).normalized());
 		const math::Vector<3, T> s(normalize(cross(f, up)));
@@ -35,7 +35,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> lookAtLH(const math::Vector<3, T>& eye, const math::Vector<3, T>& center, const math::Vector<3, T>& up)
+	inline math::Matrix<4, 4, T> lookAtLH(const math::Vector<3, T>& eye, const math::Vector<3, T>& center, const math::Vector<3, T>& up)
 	{
 		const math::Vector<3, T> f(normalize(center - eye));
 		const math::Vector<3, T> s(normalize(cross(up, f)));
@@ -58,7 +58,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> lookAt(const math::Vector<3, T>& eye, const math::Vector<3, T>& center, const math::Vector<3, T>& up)
+	inline math::Matrix<4, 4, T> lookAt(const math::Vector<3, T>& eye, const math::Vector<3, T>& center, const math::Vector<3, T>& up)
 	{
 #       if (CURRENT_COORDINATE_SYSTEM == LEFT_HAND)
 		return lookAtLH(eye, center, up);
@@ -68,7 +68,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> orthoLH_ZO(T left, T right, T bottom, T top, T zNear, T zFar)
+	inline math::Matrix<4, 4, T> orthoLH_ZO(T left, T right, T bottom, T top, T zNear, T zFar)
 	{
 		math::Matrix<4, 4, T> Result(1);
 		Result[0][0] = static_cast<T>(2) / (right - left);
@@ -81,7 +81,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> orthoLH_NO(T left, T right, T bottom, T top, T zNear, T zFar)
+	inline math::Matrix<4, 4, T> orthoLH_NO(T left, T right, T bottom, T top, T zNear, T zFar)
 	{
 		math::Matrix<4, 4, T> Result(1);
 		Result[0][0] = static_cast<T>(2) / (right - left);
@@ -94,7 +94,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> orthoRH_ZO(T left, T right, T bottom, T top, T zNear, T zFar)
+	inline math::Matrix<4, 4, T> orthoRH_ZO(T left, T right, T bottom, T top, T zNear, T zFar)
 	{
 		math::Matrix<4, 4, T> Result(1);
 		Result[0][0] = static_cast<T>(2) / (right - left);
@@ -107,7 +107,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> orthoRH_NO(T left, T right, T bottom, T top, T zNear, T zFar)
+	inline math::Matrix<4, 4, T> orthoRH_NO(T left, T right, T bottom, T top, T zNear, T zFar)
 	{
 		math::Matrix<4, 4, T> Result(1);
 		Result[0][0] = static_cast<T>(2) / (right - left);
@@ -120,7 +120,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> ortho(const T& left, const T& right, const T& bottom, const T& top)
+	inline math::Matrix<4, 4, T> ortho(const T& left, const T& right, const T& bottom, const T& top)
 	{
 		math::Matrix<4, 4, T> Result(static_cast<T>(1));
 		Result[0][0] = static_cast<T>(2) / (right - left);
@@ -132,7 +132,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> ortho(T left, T right, T bottom, T top, T zNear, T zFar)
+	inline math::Matrix<4, 4, T> ortho(T left, T right, T bottom, T top, T zNear, T zFar)
 	{
 #		if CURRENT_SETTING == LEFT_HAND_ZERO_TO_ONE
 		return orthoLH_ZO(left, right, bottom, top, zNear, zFar);
@@ -146,7 +146,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> perspectiveRH_ZO(T fovy, T aspect, T zNear, T zFar)
+	inline math::Matrix<4, 4, T> perspectiveRH_ZO(T fovy, T aspect, T zNear, T zFar)
 	{
 		assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
 
@@ -162,7 +162,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> perspectiveRH_NO(T fovy, T aspect, T zNear, T zFar)
+	inline math::Matrix<4, 4, T> perspectiveRH_NO(T fovy, T aspect, T zNear, T zFar)
 	{
 		assert(math::abs(aspect - math::epsilon<T>()) > static_cast<T>(0));
 
@@ -178,7 +178,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> perspectiveLH_ZO(T fovy, T aspect, T zNear, T zFar)
+	inline math::Matrix<4, 4, T> perspectiveLH_ZO(T fovy, T aspect, T zNear, T zFar)
 	{
 		assert(abs(aspect - math::epsilon<T>()) > static_cast<T>(0));
 
@@ -194,7 +194,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> perspectiveLH_NO(T fovy, T aspect, T zNear, T zFar)
+	inline math::Matrix<4, 4, T> perspectiveLH_NO(T fovy, T aspect, T zNear, T zFar)
 	{
 		assert(abs(aspect - math::epsilon<T>()) > static_cast<T>(0));
 
@@ -210,7 +210,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> perspective(const T& fovy, const T& aspect, const T& zNear, const T& zFar)
+	inline math::Matrix<4, 4, T> perspective(const T& fovy, const T& aspect, const T& zNear, const T& zFar)
 	{
 #		if CURRENT_SETTING == LEFT_HAND_ZERO_TO_ONE
 			return perspectiveLH_ZO(fovy, aspect, zNear, zFar);
@@ -322,13 +322,13 @@ namespace math
 
 	/*
 	template<typename T, typename U>
-	constexpr math::Matrix<4, 4, T> pickMatrix(const math::Vector<2, T>& center, const math::Vector<2, T>& delta, const math::Vector<4, U>& viewport);
+	math::Matrix<4, 4, T> pickMatrix(const math::Vector<2, T>& center, const math::Vector<2, T>& delta, const math::Vector<4, U>& viewport);
 	*/
 
 
 
 	template<typename T, typename U>
-	inline constexpr math::Vector<3, T> projectZeroToOne(const math::Vector<3, T>& obj, const math::Matrix<4, 4, T>& model, const math::Matrix<4, 4, T>& proj, const math::Vector<4, U>& viewport)
+	inline math::Vector<3, T> projectZeroToOne(const math::Vector<3, T>& obj, const math::Matrix<4, 4, T>& model, const math::Matrix<4, 4, T>& proj, const math::Vector<4, U>& viewport)
 	{
 		math::Vector<4, T> tmp = math::Vector<4, T>(obj, static_cast<T>(1));
 		tmp = model * tmp;
@@ -345,7 +345,7 @@ namespace math
 	}
 
 	template<typename T, typename U>
-	inline constexpr math::Vector<3, T> projectNOneToOne(const math::Vector<3, T>& obj, const math::Matrix<4, 4, T>& model, const math::Matrix<4, 4, T>& proj, const math::Vector<4, U>& viewport)
+	inline math::Vector<3, T> projectNOneToOne(const math::Vector<3, T>& obj, const math::Matrix<4, 4, T>& model, const math::Matrix<4, 4, T>& proj, const math::Vector<4, U>& viewport)
 	{
 		math::Vector<4, T> tmp = math::Vector<4, T>(obj, static_cast<T>(1));
 		tmp = model * tmp;
@@ -360,7 +360,7 @@ namespace math
 	}
 
 	template<typename T, typename U>
-	inline constexpr math::Vector<3, T> project(const math::Vector<3, T>& obj, const math::Matrix<4, 4, T>& model, const math::Matrix<4, 4, T>& proj, const math::Vector<4, U>& viewport)
+	inline math::Vector<3, T> project(const math::Vector<3, T>& obj, const math::Matrix<4, 4, T>& model, const math::Matrix<4, 4, T>& proj, const math::Vector<4, U>& viewport)
 	{
 #		if CURRENT_CLIP_RANGE == CLIP_RANGE_NEGATIVE_ONE_TO_ONE
 		return projectZeroToOne(obj, model, proj, viewport);
@@ -370,7 +370,7 @@ namespace math
 	}
 
 	template<typename T>
-	inline constexpr math::Matrix<4, 4, T> rotate(const math::Matrix<4, 4, T>& m, const T& angle, const math::Vector<3, T>& v)
+	inline math::Matrix<4, 4, T> rotate(const math::Matrix<4, 4, T>& m, const T& angle, const math::Vector<3, T>& v)
 	{
 		const T a = angle;
 		const T c = math::cos(a);
@@ -401,13 +401,13 @@ namespace math
 	}
 
 	template<typename T>
-	FORCE_INLINE constexpr math::Matrix<4, 4, T> rotate(const T& angle, const math::Vector<3, T>& v)
+	FORCE_INLINE math::Matrix<4, 4, T> rotate(const T& angle, const math::Vector<3, T>& v)
 	{
 		return math::rotate(Matrix<4, 4, T>(static_cast<T>(1)), angle, v);
 	}
 
 	template<typename T>
-	FORCE_INLINE constexpr math::Matrix<4, 4, T> scale(const math::Matrix<4, 4, T>& m, const math::Vector<3, T>& v)
+	FORCE_INLINE math::Matrix<4, 4, T> scale(const math::Matrix<4, 4, T>& m, const math::Vector<3, T>& v)
 	{
 		math::Matrix<4, 4, T> Result;
 		Result[0] = m[0] * v[0];
@@ -418,13 +418,13 @@ namespace math
 	}
 
 	template<typename T>
-	FORCE_INLINE constexpr math::Matrix<4, 4, T> scale(const math::Vector<3, T>& v)
+	FORCE_INLINE math::Matrix<4, 4, T> scale(const math::Vector<3, T>& v)
 	{
 		return math::scale(Matrix<4, 4, T>(static_cast<T>(1)), v);
 	}
 
 	template<typename T>
-	FORCE_INLINE constexpr math::Matrix<4, 4, T> translate(const math::Matrix<4, 4, T>& m, const math::Vector<3, T>& v)
+	FORCE_INLINE math::Matrix<4, 4, T> translate(const math::Matrix<4, 4, T>& m, const math::Vector<3, T>& v)
 	{
 		math::Matrix<4, 4, T> Result(m);
 		Result[3] = m[0] * v[0] + m[1] * v[1] + m[2] * v[2] + m[3];
@@ -432,16 +432,16 @@ namespace math
 	}
 
 	template<typename T>
-	FORCE_INLINE constexpr math::Matrix<4, 4, T> translate(const math::Vector<3, T>& v)
+	FORCE_INLINE math::Matrix<4, 4, T> translate(const math::Vector<3, T>& v)
 	{
 		return math::translate(Matrix<4, 4, T>(static_cast<T>(1)), v);;
 	}
 
 	/*
 	template<typename T>
-	constexpr math::Matrix<4, 4, T> tweakedInfinitePerspective(T fovy, T aspect, T zNear);
+	math::Matrix<4, 4, T> tweakedInfinitePerspective(T fovy, T aspect, T zNear);
 
 	template<typename T, typename U>
-	constexpr math::Vector<3, T> unProject(const math::Vector<3, T>& win, const math::Matrix<4, 4, T>& model, const math::Matrix<4, 4, T>& proj, const math::Vector<4, U>& viewport);
+	math::Vector<3, T> unProject(const math::Vector<3, T>& win, const math::Matrix<4, 4, T>& model, const math::Matrix<4, 4, T>& proj, const math::Vector<4, U>& viewport);
 	*/
 }

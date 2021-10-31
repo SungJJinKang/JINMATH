@@ -19,51 +19,51 @@ namespace math
 
 		Vector<4, FLOAT32> value;
 
-		constexpr Quaternion() noexcept : value{ 0,0,0,1.0f }
+		Quaternion() noexcept : value{ 0,0,0,1.0f }
 		{
 
 		}
 	
-		constexpr Quaternion(FLOAT32 value) noexcept
+		Quaternion(FLOAT32 value) noexcept
 			: value{ value , value , value , value }
 		{
 		}
 
-		constexpr Quaternion(FLOAT32 xValue, FLOAT32 yValue, FLOAT32 zValue, FLOAT32 wValue) noexcept
+		Quaternion(FLOAT32 xValue, FLOAT32 yValue, FLOAT32 zValue, FLOAT32 wValue) noexcept
 			: value{ xValue , yValue , zValue , wValue }
 		{
 		}
 
 		template <typename X, typename Y, typename Z, typename W>
-		constexpr Quaternion(X xValue, Y yValue, Z zValue, W wValue) noexcept
+		Quaternion(X xValue, Y yValue, Z zValue, W wValue) noexcept
 			: value{ static_cast<FLOAT32>(xValue) , static_cast<FLOAT32>(yValue) , static_cast<FLOAT32>(zValue) , static_cast<FLOAT32>(wValue) }
 		{
 		}
 
-		constexpr Quaternion(const Quaternion& quat) noexcept
+		Quaternion(const Quaternion& quat) noexcept
 			: value{ quat.value }
 		{
 		}
 
 		
-		constexpr Quaternion(FLOAT32 s, const Vector<3, FLOAT32>& vector) noexcept
+		Quaternion(FLOAT32 s, const Vector<3, FLOAT32>& vector) noexcept
 			: value{ vector.x, vector.y, vector.z, s }
 		{
 		}
 
 
 		template <typename X, typename Y>
-		constexpr Quaternion(X s, const Vector<3, Y>& vector) noexcept
+		Quaternion(X s, const Vector<3, Y>& vector) noexcept
 			: value{ static_cast<FLOAT32>(vector.x), static_cast<FLOAT32>(vector.y), static_cast<FLOAT32>(vector.z), static_cast<FLOAT32>(s) }
 		{
 		}
 
-		constexpr Quaternion(const Vector<3, FLOAT32>& eulerAngle) noexcept
+		Quaternion(const Vector<3, FLOAT32>& eulerAngle) noexcept
 		{
 			*this = type::eulerAngle(eulerAngle);
 		}
 
-		static constexpr type mat2Quaternion(const Matrix<3, 3, FLOAT32>& m)
+		static type mat2Quaternion(const Matrix<3, 3, FLOAT32>& m)
 		{
 			FLOAT32 fourXSquaredMinus1 = m[0][0] - m[1][1] - m[2][2];
 			FLOAT32 fourYSquaredMinus1 = m[1][1] - m[0][0] - m[2][2];
@@ -107,36 +107,36 @@ namespace math
 			}
 		}
 
-		constexpr explicit Quaternion(const Matrix<3, 3, FLOAT32>& m) noexcept
+		explicit Quaternion(const Matrix<3, 3, FLOAT32>& m) noexcept
 		{
 			mat2Quaternion(m);
 		}
 
-		constexpr explicit Quaternion(const Matrix<4, 4, FLOAT32>& m) noexcept
+		explicit Quaternion(const Matrix<4, 4, FLOAT32>& m) noexcept
 		{
 			mat2Quaternion(m);
 		}
 
-		FORCE_INLINE constexpr type& operator=(const type& vector) noexcept
+		FORCE_INLINE type& operator=(const type& vector) noexcept
 		{
 			value = vector.value;
 			return *this;
 		}
 
 	
-		FORCE_INLINE constexpr type& operator=(const Matrix<4, 4, FLOAT32>& m) noexcept
+		FORCE_INLINE type& operator=(const Matrix<4, 4, FLOAT32>& m) noexcept
 		{
 			mat2Quaternion(m);
 			return *this;
 		}
 
-		FORCE_INLINE constexpr type& operator=(const Matrix<3, 3, FLOAT32>& m) noexcept
+		FORCE_INLINE type& operator=(const Matrix<3, 3, FLOAT32>& m) noexcept
 		{
 			mat2Quaternion(m);
 			return *this;
 		}
 
-		FORCE_INLINE constexpr type& operator=(const Vector<3, FLOAT32>& eulerAngle) noexcept
+		FORCE_INLINE type& operator=(const Vector<3, FLOAT32>& eulerAngle) noexcept
 		{
 			*this = type::eulerAngle(eulerAngle);
 			return *this;
@@ -155,7 +155,7 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] inline static constexpr size_t componentCount()  noexcept { return 4; }
+		[[nodiscard]] inline static size_t componentCount()  noexcept { return 4; }
 
 		[[nodiscard]] value_type& operator[](size_t i)
 		{
@@ -163,14 +163,14 @@ namespace math
 			return value[i];
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr const value_type& operator[](size_t i) const
+		[[nodiscard]] FORCE_INLINE const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
 			return value[i];
 		}
 
 		
-		FORCE_INLINE constexpr type& operator+=(const Quaternion& rhs) noexcept
+		FORCE_INLINE type& operator+=(const Quaternion& rhs) noexcept
 		{
 			value.x += rhs.value.x;
 			value.y += rhs.value.y;
@@ -179,7 +179,7 @@ namespace math
 			return *this;
 		}
 		
-		FORCE_INLINE constexpr type& operator-=(const Quaternion& rhs) noexcept
+		FORCE_INLINE type& operator-=(const Quaternion& rhs) noexcept
 		{
 			value.x -= rhs.value.x;
 			value.y -= rhs.value.y;
@@ -189,7 +189,7 @@ namespace math
 		}
 
 
-		FORCE_INLINE constexpr type& operator*=(const Quaternion& rhs) noexcept
+		FORCE_INLINE type& operator*=(const Quaternion& rhs) noexcept
 		{
 			const Quaternion p(*this);
 			const Quaternion q(rhs);
@@ -201,7 +201,7 @@ namespace math
 			return *this;
 		}
 		
-		FORCE_INLINE constexpr type& operator/=(const Quaternion& rhs) noexcept
+		FORCE_INLINE type& operator/=(const Quaternion& rhs) noexcept
 		{
 			value.x /= rhs.value.x;
 			value.y /= rhs.value.y;
@@ -210,25 +210,25 @@ namespace math
 			return *this;
 		}
 		
-		FORCE_INLINE constexpr type operator+(const Quaternion& rhs) noexcept
+		FORCE_INLINE type operator+(const Quaternion& rhs) noexcept
 		{
-			return *this += rhs;
+			return *this + rhs;
 		}
 
 
-		FORCE_INLINE constexpr type operator-(const Quaternion& rhs) noexcept
+		FORCE_INLINE type operator-(const Quaternion& rhs) noexcept
 		{
-			return *this -= rhs;
+			return *this - rhs;
 		}
 		
-		FORCE_INLINE constexpr type operator*(const Quaternion& rhs) noexcept
+		FORCE_INLINE type operator*(const Quaternion& rhs) noexcept
 		{
-			return *this *= rhs;
+			return *this * rhs;
 		}
 		
-		FORCE_INLINE constexpr type operator/(const Quaternion& rhs)
+		FORCE_INLINE type operator/(const Quaternion& rhs)
 		{
-			return *this /= rhs;
+			return *this / rhs;
 		}
 
 		/*
@@ -270,24 +270,24 @@ namespace math
 			return Matrix<4, 4, FLOAT32>(this->operator math::Matrix<3, 3, FLOAT32>());
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const type& rhs) noexcept
+		[[nodiscard]] FORCE_INLINE bool operator==(const type& rhs) noexcept
 		{
 			return this->value.x == rhs.value.x && this->value.y == rhs.value.y && this->value.z == rhs.value.z && this->value.w == rhs.value.w;
 		}
 
-		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const type& rhs) noexcept
+		[[nodiscard]] FORCE_INLINE bool operator!=(const type& rhs) noexcept
 		{
 			return this->value.x != rhs.value.x || this->value.y != rhs.value.y || this->value.z != rhs.value.z || this->value.w != rhs.value.w;
 		}
 
 		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr bool operator==(const X& number) noexcept
+		[[nodiscard]] FORCE_INLINE bool operator==(const X& number) noexcept
 		{
 			return this->value.x == number && this->value.y == number && this->value.z == number && this->value.w == number;
 		}
 
 		template <typename X>
-		[[nodiscard]] FORCE_INLINE constexpr bool operator!=(const X& number) noexcept
+		[[nodiscard]] FORCE_INLINE bool operator!=(const X& number) noexcept
 		{
 			return this->value.x != number || this->value.y != number || this->value.z != number || this->value.w != number;
 		}
@@ -296,7 +296,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type& operator++() noexcept
+		FORCE_INLINE type& operator++() noexcept
 		{
 			++value.x;
 			++value.y;
@@ -310,7 +310,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type operator++(INT32) noexcept
+		FORCE_INLINE type operator++(INT32) noexcept
 		{
 			type Quaternion{ *this };
 			++* this;
@@ -321,7 +321,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type& operator--() noexcept
+		FORCE_INLINE type& operator--() noexcept
 		{
 			--value.x;
 			--value.y;
@@ -335,7 +335,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE constexpr type operator--(INT32) noexcept
+		FORCE_INLINE type operator--(INT32) noexcept
 		{
 			type Quaternion{ *this };
 			--* this;
@@ -483,10 +483,16 @@ namespace math
 	{
 		return Quaternion(q.value.w, -q.value.x, -q.value.y, -q.value.z);
 	}
-	
+
+	FORCE_INLINE extern Quaternion operator/(const Quaternion& q, const FLOAT32 s)
+	{
+		return Quaternion(
+			q.value.w / s, q.value.x / s, q.value.y / s, q.value.z / s);
+	}
+
 	FORCE_INLINE extern Quaternion inverse(const Quaternion& q)
 	{
-		return conjugate(q) / dot(q, q);
+		return operator/(conjugate(q), dot(q, q));
 	}
 
 
@@ -547,11 +553,7 @@ namespace math
 		return p * q;
 	}
 	
-	FORCE_INLINE extern Quaternion operator/(const Quaternion& q, FLOAT32 s)
-	{
-		return Quaternion(
-			q.value.w / s, q.value.x / s, q.value.y / s, q.value.z / s);
-	}
+	
 
 }
 

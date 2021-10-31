@@ -25,13 +25,13 @@
 /*
 
 //simd function is not markd as constexpr
-//so enclosing function decide whether to use constexpr according to whether to support simd
+//so enclosing function decide whether to use according to whether to support simd
 #ifndef LMATH_CONSTEXPR
 
 #ifdef L_AVX
-#define LMATH_CONSTEXPR 
+#define LMATH_
 #else
-#define LMATH_CONSTEXPR constexpr
+#define LMATH_constexpr
 #endif
 
 #endif

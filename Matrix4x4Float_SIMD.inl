@@ -55,8 +55,8 @@ namespace math
 		{
 			M256F* A = reinterpret_cast<M256F*>(this);
 			const M128F* B = reinterpret_cast<const M128F*>(&column);
-			A[0] = _mm256_broadcast_ps(&(B->raw)); // copy 0 ~ 256 OF B to 0 ~ 256 this
-			A[1] = _mm256_broadcast_ps(&(B->raw)); // B + 8 -> B + sizeof(FLOAT32) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
+			A[0] = _mm256_broadcast_ps(B); // copy 0 ~ 256 OF B to 0 ~ 256 this
+			A[1] = _mm256_broadcast_ps(B); // B + 8 -> B + sizeof(FLOAT32) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
 		}
 
 		FORCE_INLINE Matrix() noexcept : columns{}

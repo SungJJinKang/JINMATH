@@ -38,13 +38,13 @@ namespace math
 		static const type zero;
 		static const type one;
 
-		FORCE_INLINE constexpr Vector() noexcept : x{ }, y{ }, z{ }, w{ }
+		FORCE_INLINE Vector() noexcept : x{ }, y{ }, z{ }, w{ }
 		{
 
 		}
 
 
- 		FORCE_INLINE constexpr explicit Vector(FLOAT32 xValue)  noexcept
+ 		FORCE_INLINE explicit Vector(FLOAT32 xValue)  noexcept
  			: x{ xValue }, y{ xValue }, z{ xValue }, w{ xValue }
  		{
  		}
@@ -55,19 +55,19 @@ namespace math
 // 			*reinterpret_cast<M128F*>(this) = _mm_set1_ps(xValue);
 // 		}
 		
-		FORCE_INLINE constexpr Vector(FLOAT32 xValue, FLOAT32 yValue, FLOAT32 zValue, FLOAT32 wValue) noexcept
+		FORCE_INLINE Vector(FLOAT32 xValue, FLOAT32 yValue, FLOAT32 zValue, FLOAT32 wValue) noexcept
 			: x{ xValue }, y{ yValue }, z{ zValue }, w{ wValue }
 		{
 		}
 		
 		template <typename X>
-		FORCE_INLINE constexpr Vector(const Vector<1, X>& vector) noexcept
+		FORCE_INLINE Vector(const Vector<1, X>& vector) noexcept
 			: x{ static_cast<FLOAT32>(vector.x) }, y{ 0 }, z{ 0 }, w{ 0 }
 		{
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr Vector(const Vector<2, X>& vector) noexcept
+		FORCE_INLINE Vector(const Vector<2, X>& vector) noexcept
 			: x{ static_cast<FLOAT32>(vector.x) }, y{ static_cast<FLOAT32>(vector.y) }, z{ 0 }, w{ 0 }
 		{
 		}
@@ -77,29 +77,29 @@ namespace math
 		/// </summary>
 		/// <param name="vector"></param>
 		/// <returns></returns>
-		FORCE_INLINE constexpr Vector(const Vector<3, FLOAT32>& vector, const FLOAT32 _w = 0.0f) noexcept
+		FORCE_INLINE Vector(const Vector<3, FLOAT32>& vector, const FLOAT32 _w = 0.0f) noexcept
 			: x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ _w }
 		{
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr Vector(const Vector<3, X>& vector, X w = 0) noexcept
+		FORCE_INLINE Vector(const Vector<3, X>& vector, X w = 0) noexcept
 			: x{ static_cast<FLOAT32>(vector.x) }, y{ static_cast<FLOAT32>(vector.y) }, z{ static_cast<FLOAT32>(vector.z) }, w{ static_cast<FLOAT32>(w) }
 		{
 		}
 
-		FORCE_INLINE constexpr Vector(const type& vector) noexcept
+		FORCE_INLINE Vector(const type& vector) noexcept
 			: x{ vector.x }, y{ vector.y }, z{ vector.z }, w{ vector.w }
 		{
 		}
 
 		template <typename X>
-		FORCE_INLINE constexpr Vector(const Vector<4, X>& vector) noexcept
+		FORCE_INLINE Vector(const Vector<4, X>& vector) noexcept
 			: x{ static_cast<FLOAT32>(vector.x) }, y{ static_cast<FLOAT32>(vector.y) }, z{ static_cast<FLOAT32>(vector.z) }, w{ static_cast<FLOAT32>(vector.w) }
 		{
 		}
 
-		FORCE_INLINE constexpr Vector(const M128F& m128f) noexcept
+		FORCE_INLINE Vector(const M128F& m128f) noexcept
 			: x{ m128f.m128_f32[0] }, y{ m128f.m128_f32[1] }, z{ m128f.m128_f32[2] }, w{ m128f.m128_f32[3] }
 		{
 		}
