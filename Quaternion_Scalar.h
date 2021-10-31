@@ -220,10 +220,17 @@ namespace math
 		{
 			return *this - rhs;
 		}
-		
+
 		FORCE_INLINE type operator*(const Quaternion& rhs) noexcept
 		{
-			return *this * rhs;
+			Quaternion result;
+
+			result.value.w = this->value.w * rhs.value.w - this->value.x * rhs.value.x - this->value.y * rhs.value.y - this->value.z * rhs.value.z;
+			result.value.x = this->value.w * rhs.value.x + this->value.x * rhs.value.w + this->value.y * rhs.value.z - this->value.z * rhs.value.y;
+			result.value.y = this->value.w * rhs.value.y + this->value.y * rhs.value.w + this->value.z * rhs.value.x - this->value.x * rhs.value.z;
+			result.value.z = this->value.w * rhs.value.z + this->value.z * rhs.value.w + this->value.x * rhs.value.y - this->value.y * rhs.value.x;
+
+			return result;
 		}
 		
 		FORCE_INLINE type operator/(const Quaternion& rhs)
@@ -550,7 +557,14 @@ namespace math
 
 	FORCE_INLINE extern Quaternion operator*(const Quaternion& p, const Quaternion& q)
 	{
-		return p * q;
+		Quaternion result;
+
+		result.value.w = p.value.w * q.value.w - p.value.x * q.value.x - p.value.y * q.value.y - p.value.z * q.value.z;
+		result.value.x = p.value.w * q.value.x + p.value.x * q.value.w + p.value.y * q.value.z - p.value.z * q.value.y;
+		result.value.y = p.value.w * q.value.y + p.value.y * q.value.w + p.value.z * q.value.x - p.value.x * q.value.z;
+		result.value.z = p.value.w * q.value.z + p.value.z * q.value.w + p.value.x * q.value.y - p.value.y * q.value.x;
+
+		return result;
 	}
 	
 	
