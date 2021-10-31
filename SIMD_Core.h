@@ -23,10 +23,12 @@ union __M128F {
 	FORCE_INLINE operator __m128() { return raw; }
 	FORCE_INLINE operator __m128() const { return raw; }
 	FORCE_INLINE operator __m128* () { return &raw; }
-	FORCE_INLINE operator __m128* () const { return &raw; }
+	FORCE_INLINE operator const __m128* () const { return &raw; }
+	FORCE_INLINE __m128* operator& () { return &raw; }
+	FORCE_INLINE const __m128* operator& () const { return &raw; }
 
 	FORCE_INLINE __M128F() {}
-	FORCE_INLINE __M128F(const __m128& _raw) : raw{ _raw } {}
+	FORCE_INLINE __M128F(const __m128& _raw) : raw(_raw) {}
 };
 
 using M128F = __M128F;
@@ -38,10 +40,12 @@ union __M128D {
 	FORCE_INLINE operator __m128d() { return raw; }
 	FORCE_INLINE operator __m128d() const { return raw; }
 	FORCE_INLINE operator __m128d* () { return &raw; }
-	FORCE_INLINE operator __m128d* () const { return &raw; }
+	FORCE_INLINE operator const __m128d* () const { return &raw; }
+	FORCE_INLINE __m128d* operator& () { return &raw; }
+	FORCE_INLINE const __m128d* operator& () const { return &raw; }
 
 	FORCE_INLINE __M128D() {}
-	FORCE_INLINE __M128D(const __m128d& _raw) : raw{ _raw } {}
+	FORCE_INLINE __M128D(const __m128d& _raw) : raw(_raw) {}
 };
 
 using M128D = __M128D;
@@ -53,10 +57,12 @@ union __M128I {
 	FORCE_INLINE operator __m128i() { return raw; }
 	FORCE_INLINE operator __m128i() const { return raw; }
 	FORCE_INLINE operator __m128i* () { return &raw; }
-	FORCE_INLINE operator __m128i* () const { return &raw; }
+	FORCE_INLINE operator const __m128i* () const { return &raw; }
+	FORCE_INLINE __m128i* operator& () { return &raw; }
+	FORCE_INLINE const __m128i* operator& () const { return &raw; }
 
 	FORCE_INLINE __M128I() {}
-	FORCE_INLINE __M128I(const __m128i& _raw) : raw{ _raw } {}
+	FORCE_INLINE __M128I(const __m128i& _raw) : raw(_raw) {}
 };
 
 using M128I = __M128I;
@@ -68,10 +74,12 @@ union __M256F {
 	FORCE_INLINE operator __m256() { return raw; }
 	FORCE_INLINE operator __m256() const { return raw; }
 	FORCE_INLINE operator __m256* () { return &raw; }
-	FORCE_INLINE operator __m256* () const { return &raw; }
+	FORCE_INLINE operator const __m256* () const { return &raw; }
+	FORCE_INLINE __m256* operator& () { return &raw; }
+	FORCE_INLINE const __m256* operator& () const { return &raw; }
 
 	FORCE_INLINE __M256F() {}
-	FORCE_INLINE __M256F(const __m256& _raw) : raw{ _raw } {}
+	FORCE_INLINE __M256F(const __m256& _raw) : raw(_raw) {}
 };
 
 using M256F = __M256F;
@@ -83,10 +91,12 @@ union __M256D {
 	FORCE_INLINE operator __m256d() { return raw; }
 	FORCE_INLINE operator __m256d() const { return raw; }
 	FORCE_INLINE operator __m256d* () { return &raw; }
-	FORCE_INLINE operator __m256d* () const { return &raw; }
+	FORCE_INLINE operator const __m256d* () const { return &raw; }
+	FORCE_INLINE __m256d* operator& () { return &raw; }
+	FORCE_INLINE const __m256d* operator& () const { return &raw; }
 
 	FORCE_INLINE __M256D() {}
-	FORCE_INLINE __M256D(const __m256d& _raw) : raw{ _raw } {}
+	FORCE_INLINE __M256D(const __m256d& _raw) : raw(_raw) {}
 };
 
 using M256D = __M256D;
@@ -98,10 +108,12 @@ union __M256I {
 	FORCE_INLINE operator __m256i() { return raw; }
 	FORCE_INLINE operator __m256i() const { return raw; }
 	FORCE_INLINE operator __m256i* () { return &raw; }
-	FORCE_INLINE operator __m256i* () const { return &raw; }
+	FORCE_INLINE operator const __m256i* () const { return &raw; }
+	FORCE_INLINE __m256i* operator& () { return &raw; }
+	FORCE_INLINE const __m256i* operator& () const { return &raw; }
 
 	FORCE_INLINE __M256I() {}
-	FORCE_INLINE __M256I(const __m256i& _raw) : raw{ _raw } {}
+	FORCE_INLINE __M256I(const __m256i& _raw) : raw(_raw) {}
 	};
 
 using M256I = __M256I;
@@ -159,56 +171,56 @@ using M256I = __m256i;
 #define M256F_SWIZZLE(_M256F, X, Y, Z, W) _mm256_permute_ps(_M256F, SHUFFLEMASK(X, Y, Z, W)) 
 #endif
 
-inline const M128F M128F_Zero{ _mm_castsi128_ps(_mm_set1_epi16(0)) };
-inline const M128F M128F_HALF_ONE{ _mm_set1_ps(0.5f) };
-inline const M128F M128F_EVERY_BITS_ONE{ _mm_castsi128_ps(_mm_set1_epi16(-1)) };
+inline extern const M128F M128F_Zero{ _mm_castsi128_ps(_mm_set1_epi16(0)) };
+inline extern const M128F M128F_HALF_ONE{ _mm_set1_ps(0.5f) };
+inline extern const M128F M128F_EVERY_BITS_ONE{ _mm_castsi128_ps(_mm_set1_epi16(-1)) };
 
-FORCE_INLINE M128F M128F_ADD(const M128F& M128_A, const M128F& M128_B)
+FORCE_INLINE extern M128F M128F_ADD(const M128F& M128_A, const M128F& M128_B)
 {
 	return _mm_add_ps(M128_A, M128_B);
 }
 
-FORCE_INLINE M256F M256F_ADD(const M256F& M256_A, const M256F& M256_B)
+FORCE_INLINE extern M256F M256F_ADD(const M256F& M256_A, const M256F& M256_B)
 {
 	return _mm256_add_ps(M256_A, M256_B);
 }
 
-FORCE_INLINE M128F M128F_SUB(const M128F& M128_A, const M128F& M128_B)
+FORCE_INLINE extern M128F M128F_SUB(const M128F& M128_A, const M128F& M128_B)
 {
 	return _mm_sub_ps(M128_A, M128_B);
 }
 
-FORCE_INLINE M256F M256F_SUB(const M256F& M256_A, const M256F& M256_B)
+FORCE_INLINE extern M256F M256F_SUB(const M256F& M256_A, const M256F& M256_B)
 {
 	return _mm256_sub_ps(M256_A, M256_B);
 }
 
-FORCE_INLINE M128F M128F_MUL(const M128F& M128_A, const M128F& M128_B)
+FORCE_INLINE extern M128F M128F_MUL(const M128F& M128_A, const M128F& M128_B)
 {
 	return _mm_mul_ps(M128_A, M128_B);
 }
 
-FORCE_INLINE M256F M256F_MUL(const M256F& M256_A, const M256F& M256_B)
+FORCE_INLINE extern M256F M256F_MUL(const M256F& M256_A, const M256F& M256_B)
 {
 	return _mm256_mul_ps(M256_A, M256_B);
 }
 
-FORCE_INLINE M128F M128F_DIV(const M128F& M128_A, const M128F& M128_B)
+FORCE_INLINE extern M128F M128F_DIV(const M128F& M128_A, const M128F& M128_B)
 {
 	return _mm_div_ps(M128_A, M128_B);
 }
 
-FORCE_INLINE M256F M256F_DIV(const M256F& M256_A, const M256F& M256_B)
+FORCE_INLINE extern M256F M256F_DIV(const M256F& M256_A, const M256F& M256_B)
 {
 	return _mm256_div_ps(M256_A, M256_B);
 }
 
-FORCE_INLINE M128F M128F_MUL_AND_ADD(const M128F& M128_A, const M128F& M128_B, const M128F& M128_C)
+FORCE_INLINE extern M128F M128F_MUL_AND_ADD(const M128F& M128_A, const M128F& M128_B, const M128F& M128_C)
 {
 	return M128F_ADD(M128F_MUL(M128_A, M128_B), M128_C);
 }
 
-FORCE_INLINE M256F M256F_MUL_AND_ADD(const M256F& M256_A, const M256F& M256_B, const M256F& M256_C)
+FORCE_INLINE extern M256F M256F_MUL_AND_ADD(const M256F& M256_A, const M256F& M256_B, const M256F& M256_C)
 {
 	return M256F_ADD(M256F_MUL(M256_A, M256_B), M256_C);
 }
@@ -234,13 +246,6 @@ FORCE_INLINE M256F M256F_CROSS(const M256F& M256_A, const M256F& M256_B)
 */
 
 
-FORCE_INLINE void M256F_SWAP(M128F& M128_A, M128F& M128_B, const M128F& MASK)
-{
-	M128F TEMP = M128_A;
-	M128_A = _mm_blendv_ps(M128_A, M128_B, MASK);
-	M128_B = _mm_blendv_ps(M128_B, TEMP, MASK);
-}
-
 /// <summary>
 ///
 /// FOR j := 0 to 7
@@ -258,7 +263,7 @@ FORCE_INLINE void M256F_SWAP(M128F& M128_A, M128F& M128_B, const M128F& MASK)
 /// <param name="M256_B"></param>
 /// <param name="MASK"></param>
 /// <returns></returns>
-FORCE_INLINE void M256F_SWAP(M256F& M256_A, M256F& M256_B, const M256F& MASK)
+FORCE_INLINE extern void M256F_SWAP(M256F& M256_A, M256F& M256_B, const M256F& MASK)
 {
 	M256F TEMP = M256_A;
 	M256_A = _mm256_blendv_ps(M256_A, M256_B, MASK);
