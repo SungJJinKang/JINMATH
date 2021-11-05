@@ -18,7 +18,7 @@ namespace math
 
 		using col_type = Vector<4, T>;
 
-		[[nodiscard]] FORCE_INLINE static size_t columnCount() noexcept { return 4; }
+		NO_DISCARD FORCE_INLINE static size_t columnCount() noexcept { return 4; }
 
 		/// <summary>
 		/// All columns always is aligned to 16 byte, because Matrix<4, 4, T> class is aligned to 16byte
@@ -194,13 +194,13 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE col_type& operator[](size_t i)
+		NO_DISCARD FORCE_INLINE col_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
 		}
 
-		[[nodiscard]] FORCE_INLINE const col_type& operator[](size_t i) const
+		NO_DISCARD FORCE_INLINE const col_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
@@ -221,7 +221,7 @@ namespace math
 		}
 
 		template <typename X>
-		[[nodiscard]] inline type operator*(const Matrix<4, 4, X>& rhs) const noexcept
+		NO_DISCARD inline type operator*(const Matrix<4, 4, X>& rhs) const noexcept
 		{
 			const col_type SrcA0 = columns[0];
 			const col_type SrcA1 = columns[1];
@@ -242,7 +242,7 @@ namespace math
 		}
 
 		template <typename X>
-		[[nodiscard]] inline Vector<4, X> operator*(const Vector<4, X>& vector) const noexcept
+		NO_DISCARD inline Vector<4, X> operator*(const Vector<4, X>& vector) const noexcept
 		{
 			return Vector<4, X>
 			{
@@ -254,7 +254,7 @@ namespace math
 		}
 		
 		template <typename X>
-		[[nodiscard]] inline Vector<4, X> operator*(const Vector<3, X>& vector) const noexcept
+		NO_DISCARD inline Vector<4, X> operator*(const Vector<3, X>& vector) const noexcept
 		{
 			return Vector<4, X>
 			{
@@ -409,22 +409,22 @@ namespace math
 
 		//
 
-		[[nodiscard]] FORCE_INLINE bool operator==(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(const type& rhs) const noexcept
 		{
 			return this->columns[0] == rhs.columns[0] && this->columns[1] == rhs.columns[1] && this->columns[2] == rhs.columns[2] && this->columns[3] == rhs.columns[3];
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(const type& rhs) const noexcept
 		{
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1] || this->columns[2] != rhs.columns[2] || this->columns[3] != rhs.columns[3];
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator==(T number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(T number) const noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number && this->columns[2] == number && this->columns[3] == number;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(T number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(T number) const noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number || this->columns[2] != number || this->columns[3] != number;
 		}

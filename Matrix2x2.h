@@ -16,7 +16,7 @@ namespace math
 		using col_type_template = Vector<2, T2>;
 		using col_type = Vector<2, T>;
 
-		[[nodiscard]] FORCE_INLINE static size_t columnCount() noexcept { return 2; }
+		NO_DISCARD FORCE_INLINE static size_t columnCount() noexcept { return 2; }
 		col_type columns[2];
 
 		FORCE_INLINE T* data() noexcept
@@ -165,13 +165,13 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE col_type& operator[](size_t i)
+		NO_DISCARD FORCE_INLINE col_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
 		}
 
-		[[nodiscard]] FORCE_INLINE const col_type& operator[](size_t i) const
+		NO_DISCARD FORCE_INLINE const col_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
@@ -192,7 +192,7 @@ namespace math
 		}
 
 		template <typename X>
-		[[nodiscard]] FORCE_INLINE type operator*(const Matrix<2, 2, X>& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE type operator*(const Matrix<2, 2, X>& rhs) const noexcept
 		{
 			const col_type SrcA0 = columns[0];
 			const col_type SrcA1 = columns[1];
@@ -207,7 +207,7 @@ namespace math
 		}
 
 		template <typename X>
-		[[nodiscard]] FORCE_INLINE Vector<2, X> operator*(const Vector<2, X>& vector) const noexcept
+		NO_DISCARD FORCE_INLINE Vector<2, X> operator*(const Vector<2, X>& vector) const noexcept
 		{
 			return  Vector<2, X>
 			{
@@ -350,22 +350,22 @@ namespace math
 
 		//
 
-		[[nodiscard]] FORCE_INLINE bool operator==(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(const type& rhs) const noexcept
 		{
 			return this->columns[0] == rhs.columns[0] && this->columns[1] == rhs.columns[1];
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(const type& rhs) const noexcept
 		{
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1];
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator==(T number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(T number) const noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(T number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(T number) const noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number;
 		}

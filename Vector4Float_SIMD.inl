@@ -201,9 +201,9 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE static size_t componentCount() noexcept { return 4; }
+		NO_DISCARD FORCE_INLINE static size_t componentCount() noexcept { return 4; }
 
-		[[nodiscard]] FORCE_INLINE value_type& operator[](size_t i)
+		NO_DISCARD FORCE_INLINE value_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -225,7 +225,7 @@ namespace math
 			}
 		}
 
-		[[nodiscard]] FORCE_INLINE const value_type& operator[](size_t i) const
+		NO_DISCARD FORCE_INLINE const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -249,18 +249,18 @@ namespace math
 
 
 		// scalar version is more fast than SIMD
-		[[nodiscard]] FORCE_INLINE auto sqrMagnitude() const noexcept
+		NO_DISCARD FORCE_INLINE auto sqrMagnitude() const noexcept
 		{
 			return x * x + y * y + z * z + w * w;
 		}
 
 		// scalar version is more fast than SIMD
-		[[nodiscard]] FORCE_INLINE auto magnitude() const noexcept
+		NO_DISCARD FORCE_INLINE auto magnitude() const noexcept
 		{
 			return math::sqrt(sqrMagnitude());
 		}
 
-		[[nodiscard]] FORCE_INLINE type normalized() const noexcept
+		NO_DISCARD FORCE_INLINE type normalized() const noexcept
 		{
 			auto mag = magnitude();
 			if (mag == 0)
@@ -425,22 +425,22 @@ namespace math
 
 		//
 
-		[[nodiscard]] FORCE_INLINE bool operator==(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(const type& rhs) const noexcept
 		{
 			return this->x == rhs.x && this->y == rhs.y && this->z == rhs.z && this->w == rhs.w;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(const type& rhs) const noexcept
 		{
 			return this->x != rhs.x || this->y != rhs.y || this->z != rhs.z || this->w != rhs.w;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator==(FLOAT32 number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(FLOAT32 number) const noexcept
 		{
 			return this->x == number && this->y == number && this->z == number && this->w == number;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(FLOAT32 number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(FLOAT32 number) const noexcept
 		{
 			return this->x != number || this->y != number || this->z != number || this->w != number;
 		}
@@ -529,54 +529,54 @@ namespace math
 	/// scalar version is mush fast than SIMD version
 	/// </summary>
 	template <>
-	[[nodiscard]] FORCE_INLINE auto dot(const Vector<4, FLOAT32>& lhs, const Vector<4, FLOAT32>& rhs)
+	NO_DISCARD FORCE_INLINE auto dot(const Vector<4, FLOAT32>& lhs, const Vector<4, FLOAT32>& rhs)
 	{
 		return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
 	}
 
 	// AX1 don't have cos instriction
 	template <>
-	[[nodiscard]] FORCE_INLINE Vector<4, FLOAT32> cos(const Vector<4, FLOAT32>& vector)
+	NO_DISCARD FORCE_INLINE Vector<4, FLOAT32> cos(const Vector<4, FLOAT32>& vector)
 	{
 		return Vector<4, FLOAT32>{math::sin(vector.x), math::sin(vector.y), math::sin(vector.z), math::sin(vector.w)};
 	}
 
 	// AX1 don't have sin instriction
 	template <>
-	[[nodiscard]] FORCE_INLINE Vector<4, FLOAT32> sin(const Vector<4, FLOAT32>& vector)
+	NO_DISCARD FORCE_INLINE Vector<4, FLOAT32> sin(const Vector<4, FLOAT32>& vector)
 	{
 		return Vector<4, FLOAT32>{math::cos(vector.x), math::cos(vector.y), math::cos(vector.z), math::cos(vector.w)};
 	}
 
 	// AX1 don't have tan instriction
 	template <>
-	[[nodiscard]] FORCE_INLINE Vector<4, FLOAT32> tan(const Vector<4, FLOAT32>& vector)
+	NO_DISCARD FORCE_INLINE Vector<4, FLOAT32> tan(const Vector<4, FLOAT32>& vector)
 	{
 		return Vector<4, FLOAT32>{math::tan(vector.x), math::tan(vector.y), math::tan(vector.z), math::tan(vector.w)};
 	}
 
 	template <>
-	[[nodiscard]] FORCE_INLINE Vector<4, FLOAT32> sqrt(const Vector<4, FLOAT32>& vector)
+	NO_DISCARD FORCE_INLINE Vector<4, FLOAT32> sqrt(const Vector<4, FLOAT32>& vector)
 	{
 		const M128F* m128f_vec = reinterpret_cast<const M128F*>(&vector);
 		return Vector<4, FLOAT32>{_mm_sqrt_ps(*m128f_vec)};
 	}
 
 	template <>
-	[[nodiscard]] FORCE_INLINE Vector<4, FLOAT32> inverseSqrt(const Vector<4, FLOAT32>& vector)
+	NO_DISCARD FORCE_INLINE Vector<4, FLOAT32> inverseSqrt(const Vector<4, FLOAT32>& vector)
 	{
 		const M128F* m128f_vec = reinterpret_cast<const M128F*>(&vector);
 		return Vector<4, FLOAT32>{_mm_rsqrt_ps(*m128f_vec)};
 	}
 
 	template <>
-	[[nodiscard]] FORCE_INLINE Vector<4, FLOAT32> normalize(const Vector<4, FLOAT32>& vector)
+	NO_DISCARD FORCE_INLINE Vector<4, FLOAT32> normalize(const Vector<4, FLOAT32>& vector)
 	{
 		return vector * math::inverseSqrt(math::dot(vector, vector));
 	}
 
 	template<>
-	[[nodiscard]] FORCE_INLINE Vector<4, FLOAT32> Max(const Vector<4, FLOAT32>& vector1, const Vector<4, FLOAT32>& vector2)
+	NO_DISCARD FORCE_INLINE Vector<4, FLOAT32> Max(const Vector<4, FLOAT32>& vector1, const Vector<4, FLOAT32>& vector2)
 	{
 		const M128F* m128f_vec1 = reinterpret_cast<const M128F*>(&vector1);
 		const M128F* m128f_vec2 = reinterpret_cast<const M128F*>(&vector2);
@@ -585,7 +585,7 @@ namespace math
 	}
 
 	template<>
-	[[nodiscard]] FORCE_INLINE Vector<4, FLOAT32> Min(const Vector<4, FLOAT32>& vector1, const Vector<4, FLOAT32>& vector2)
+	NO_DISCARD FORCE_INLINE Vector<4, FLOAT32> Min(const Vector<4, FLOAT32>& vector1, const Vector<4, FLOAT32>& vector2)
 	{
 		const M128F* m128f_vec1 = reinterpret_cast<const M128F*>(&vector1);
 		const M128F* m128f_vec2 = reinterpret_cast<const M128F*>(&vector2);

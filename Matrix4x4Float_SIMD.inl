@@ -19,7 +19,7 @@ namespace math
 
 		using col_type = Vector<4, FLOAT32>;
 
-		[[nodiscard]] FORCE_INLINE static size_t columnCount()  noexcept { return 4; }
+		NO_DISCARD FORCE_INLINE static size_t columnCount()  noexcept { return 4; }
 
 		/// <summary>
 		/// All columns always is aligned to 16 byte, because Matrix<4, 4, FLOAT32> class is aligned to 16byte
@@ -223,13 +223,13 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE col_type& operator[](size_t i)
+		NO_DISCARD FORCE_INLINE col_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
 		}
 
-		[[nodiscard]] FORCE_INLINE const col_type& operator[](size_t i) const
+		NO_DISCARD FORCE_INLINE const col_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
@@ -251,7 +251,7 @@ namespace math
 		inline thread_local static M128F TEMP_M128F{};
 		inline thread_local static Vector<4, FLOAT32> TEMP_VEC4{};
 
-		[[nodiscard]] inline type operator*(const Matrix<4, 4, FLOAT32>& rhs) const noexcept
+		NO_DISCARD inline type operator*(const Matrix<4, 4, FLOAT32>& rhs) const noexcept
 		{
 			const M128F* A = reinterpret_cast<const M128F*>(this);
 			//const M128F* A = (const M128F*)this->data(); // this is slower
@@ -287,7 +287,7 @@ namespace math
 
 
 		template <typename X>
-		[[nodiscard]] inline Vector<4, X> operator*(const Vector<4, X>& vector) const noexcept
+		NO_DISCARD inline Vector<4, X> operator*(const Vector<4, X>& vector) const noexcept
 		{
 			return Vector<4, FLOAT32>
 			{
@@ -299,7 +299,7 @@ namespace math
 		}
 
 		template <>
-		[[nodiscard]] inline Vector<4, FLOAT32> operator*(const Vector<4, FLOAT32>& vector) const noexcept
+		NO_DISCARD inline Vector<4, FLOAT32> operator*(const Vector<4, FLOAT32>& vector) const noexcept
 		{
 			const M128F* A = reinterpret_cast<const M128F*>(this);
 			const M128F* B = reinterpret_cast<const M128F*>(&vector);
@@ -321,7 +321,7 @@ namespace math
 		/// <param name="vector"></param>
 		/// <returns></returns>
 		template <typename X>
-		[[nodiscard]] inline Vector<4, X> operator*(const Vector<3, X>& vector) const noexcept
+		NO_DISCARD inline Vector<4, X> operator*(const Vector<3, X>& vector) const noexcept
 		{
 			return Vector<4, X>
 			{
@@ -345,7 +345,7 @@ namespace math
 		/// <param name="vector"></param>
 		/// <returns></returns>
 		template <>
-		[[nodiscard]] inline Vector<4, FLOAT32> operator*(const Vector<3, FLOAT32>& vector) const noexcept
+		NO_DISCARD inline Vector<4, FLOAT32> operator*(const Vector<3, FLOAT32>& vector) const noexcept
 		{
 			//vec3 is not aligned to 128bit, so we need to copy temporary vec3 data to vec4
 			std::memcpy(&Vec4_Parameter, &vector, sizeof(Vector<3, FLOAT32>));
@@ -372,7 +372,7 @@ namespace math
 // 		/// <param name="vector"></param>
 // 		/// <returns></returns>
 // 		template <>
-// 		[[nodiscard]] FORCE_INLINE Vector<3, FLOAT32> operator*(const Vector<3, FLOAT32>& vector) const noexcept
+// 		NO_DISCARD FORCE_INLINE Vector<3, FLOAT32> operator*(const Vector<3, FLOAT32>& vector) const noexcept
 // 		{
 // 			Vector<4, FLOAT32> Result{ nullptr };
 // 			type Vec4{ vector };
@@ -537,22 +537,22 @@ namespace math
 
 		//
 
-		[[nodiscard]] FORCE_INLINE bool operator==(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(const type& rhs) const noexcept
 		{
 			return this->columns[0] == rhs.columns[0] && this->columns[1] == rhs.columns[1] && this->columns[2] == rhs.columns[2] && this->columns[3] == rhs.columns[3];
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(const type& rhs) const noexcept
 		{
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1] || this->columns[2] != rhs.columns[2] || this->columns[3] != rhs.columns[3];
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator==(FLOAT32 number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(FLOAT32 number) const noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number && this->columns[2] == number && this->columns[3] == number;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(FLOAT32 number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(FLOAT32 number) const noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number || this->columns[2] != number || this->columns[3] != number;
 		}

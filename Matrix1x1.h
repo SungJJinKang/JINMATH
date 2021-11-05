@@ -16,7 +16,7 @@ namespace math
 		using col_type_template = Vector<1, T2>;
 		using col_type = Vector<1, T>;
 		
-		[[nodiscard]] FORCE_INLINE static size_t columnCount() noexcept { return 1; }
+		NO_DISCARD FORCE_INLINE static size_t columnCount() noexcept { return 1; }
 		col_type columns[1]; // don't change to column
 
 		FORCE_INLINE T* data() noexcept
@@ -139,13 +139,13 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE col_type& operator[](size_t i)
+		NO_DISCARD FORCE_INLINE col_type& operator[](size_t i)
 		{
 			assert(i == 0);
 			return columns[i];
 		}
 
-		[[nodiscard]] FORCE_INLINE const col_type& operator[](size_t i) const
+		NO_DISCARD FORCE_INLINE const col_type& operator[](size_t i) const
 		{
 			assert(i == 0);
 			return columns[i];
@@ -301,22 +301,22 @@ namespace math
 
 		//
 
-		[[nodiscard]] FORCE_INLINE bool operator==(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(const type& rhs) const noexcept
 		{
 			return this->columns[0] == rhs.columns[0];
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(const type& rhs) const noexcept
 		{
 			return this->columns[0] != rhs.columns[0];
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator==(T number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(T number) const noexcept
 		{
 			return this->columns[0] == number;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(T number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(T number) const noexcept
 		{
 			return this->columns[0] != number;
 		}

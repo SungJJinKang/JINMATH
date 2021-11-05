@@ -155,15 +155,15 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] inline static size_t componentCount()  noexcept { return 4; }
+		NO_DISCARD inline static size_t componentCount()  noexcept { return 4; }
 
-		[[nodiscard]] value_type& operator[](size_t i)
+		NO_DISCARD value_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < componentCount());
 			return value[i];
 		}
 
-		[[nodiscard]] FORCE_INLINE const value_type& operator[](size_t i) const
+		NO_DISCARD FORCE_INLINE const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
 			return value[i];
@@ -277,24 +277,24 @@ namespace math
 			return Matrix<4, 4, FLOAT32>(this->operator math::Matrix<3, 3, FLOAT32>());
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator==(const type& rhs) noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(const type& rhs) noexcept
 		{
 			return this->value.x == rhs.value.x && this->value.y == rhs.value.y && this->value.z == rhs.value.z && this->value.w == rhs.value.w;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(const type& rhs) noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(const type& rhs) noexcept
 		{
 			return this->value.x != rhs.value.x || this->value.y != rhs.value.y || this->value.z != rhs.value.z || this->value.w != rhs.value.w;
 		}
 
 		template <typename X>
-		[[nodiscard]] FORCE_INLINE bool operator==(const X& number) noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(const X& number) noexcept
 		{
 			return this->value.x == number && this->value.y == number && this->value.z == number && this->value.w == number;
 		}
 
 		template <typename X>
-		[[nodiscard]] FORCE_INLINE bool operator!=(const X& number) noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(const X& number) noexcept
 		{
 			return this->value.x != number || this->value.y != number || this->value.z != number || this->value.w != number;
 		}

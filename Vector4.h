@@ -166,9 +166,9 @@ namespace math
 			return ss.str();
 		}
 
-		[[nodiscard]] FORCE_INLINE static size_t componentCount() noexcept { return 4; }
+		NO_DISCARD FORCE_INLINE static size_t componentCount() noexcept { return 4; }
 
-		[[nodiscard]] FORCE_INLINE value_type& operator[](size_t i)
+		NO_DISCARD FORCE_INLINE value_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -190,7 +190,7 @@ namespace math
 			}
 		}
 
-		[[nodiscard]] FORCE_INLINE const value_type& operator[](size_t i) const
+		NO_DISCARD FORCE_INLINE const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -213,17 +213,17 @@ namespace math
 		}
 
 	
-		[[nodiscard]] FORCE_INLINE auto sqrMagnitude() const noexcept
+		NO_DISCARD FORCE_INLINE auto sqrMagnitude() const noexcept
 		{
 			return x * x + y * y + z * z + w * w;
 		}
 
-		[[nodiscard]] FORCE_INLINE auto magnitude() const noexcept
+		NO_DISCARD FORCE_INLINE auto magnitude() const noexcept
 		{
 			return math::sqrt(sqrMagnitude());
 		}
 
-		[[nodiscard]] FORCE_INLINE type normalized() const noexcept
+		NO_DISCARD FORCE_INLINE type normalized() const noexcept
 		{
 			auto mag = magnitude();
 			if (mag == 0)
@@ -373,22 +373,22 @@ namespace math
 
 		//
 
-		[[nodiscard]] FORCE_INLINE bool operator==(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(const type& rhs) const noexcept
 		{
 			return this->x == rhs.x && this->y == rhs.y && this->z == rhs.z && this->w == rhs.w;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(const type& rhs) const noexcept
 		{
 			return this->x != rhs.x || this->y != rhs.y || this->z != rhs.z || this->w != rhs.w;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator==(T number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(T number) const noexcept
 		{
 			return this->x == number && this->y == number && this->z == number && this->w == number;
 		}
 
-		[[nodiscard]] FORCE_INLINE bool operator!=(T number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(T number) const noexcept
 		{
 			return this->x != number || this->y != number || this->z != number || this->w != number;
 		}
@@ -470,55 +470,55 @@ namespace math
 	// //////////////////////////////////////////////////////
 
 	template <typename T>
-	[[nodiscard]] FORCE_INLINE auto dot(const Vector<4, T>& lhs, const Vector<4, T>& rhs)
+	NO_DISCARD FORCE_INLINE auto dot(const Vector<4, T>& lhs, const Vector<4, T>& rhs)
 	{
 		return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
 	}
 
 	template <typename T>
-	[[nodiscard]] FORCE_INLINE Vector<4, T> cos(const Vector<4, T>& vector)
+	NO_DISCARD FORCE_INLINE Vector<4, T> cos(const Vector<4, T>& vector)
 	{
 		return Vector<4, T>{math::sin(vector.x), math::sin(vector.y), math::sin(vector.z), math::sin(vector.w)};
 	}
 
 	template <typename T>
-	[[nodiscard]] FORCE_INLINE Vector<4, T> sin(const Vector<4, T>& vector)
+	NO_DISCARD FORCE_INLINE Vector<4, T> sin(const Vector<4, T>& vector)
 	{
 		return Vector<4, T>{math::cos(vector.x), math::cos(vector.y), math::cos(vector.z), math::cos(vector.w)};
 	}
 
 	template <typename T>
-	[[nodiscard]] FORCE_INLINE Vector<4, T> tan(const Vector<4, T>& vector)
+	NO_DISCARD FORCE_INLINE Vector<4, T> tan(const Vector<4, T>& vector)
 	{
 		return Vector<4, T>{math::tan(vector.x), math::tan(vector.y), math::tan(vector.z), math::tan(vector.w)};
 	}
 
 	template <typename T>
-	[[nodiscard]] FORCE_INLINE Vector<4, T> sqrt(const Vector<4, T>& vector)
+	NO_DISCARD FORCE_INLINE Vector<4, T> sqrt(const Vector<4, T>& vector)
 	{
 		return Vector<4, T>{sqrt(vector.x), sqrt(vector.y), sqrt(vector.z), sqrt(vector.w)};
 	}
 
 	template <typename T>
-	[[nodiscard]] FORCE_INLINE Vector<4, T> inverseSqrt(const Vector<4, T>& vector)
+	NO_DISCARD FORCE_INLINE Vector<4, T> inverseSqrt(const Vector<4, T>& vector)
 	{
 		return Vector<4, T>{inverseSqrt(vector.x), inverseSqrt(vector.y), inverseSqrt(vector.z), inverseSqrt(vector.w)};
 	}
 
 	template <typename T>
-	[[nodiscard]] FORCE_INLINE Vector<4, T> normalize(const Vector<4, T>& vector)
+	NO_DISCARD FORCE_INLINE Vector<4, T> normalize(const Vector<4, T>& vector)
 	{
 		return vector * inverseSqrt(dot(vector, vector));
 	}
 
 	template<typename T>
-	[[nodiscard]] FORCE_INLINE Vector<4, T> Max(const Vector<4, T>& vector1, const Vector<4, T>& vector2)
+	NO_DISCARD FORCE_INLINE Vector<4, T> Max(const Vector<4, T>& vector1, const Vector<4, T>& vector2)
 	{
 		return Vector<4, T>(math::Max(vector1.x, vector2.x), math::Max(vector1.y, vector2.y), math::Max(vector1.z, vector2.z), math::Max(vector1.w, vector2.w));
 	}
 
 	template<typename T>
-	[[nodiscard]] FORCE_INLINE Vector<4, T> Min(const Vector<4, T>& vector1, const Vector<4, T>& vector2)
+	NO_DISCARD FORCE_INLINE Vector<4, T> Min(const Vector<4, T>& vector1, const Vector<4, T>& vector2)
 	{
 		return Vector<4, T>(math::Min(vector1.x, vector2.x), math::Min(vector1.y, vector2.y), math::Min(vector1.z, vector2.z), math::Min(vector1.w, vector2.w));
 	}
