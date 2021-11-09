@@ -5,16 +5,16 @@
 namespace math
 {
 	template <typename T>
-	struct Matrix<3, 3, T>
+	struct _Matrix3x3
 	{
 		static_assert(CHECK_IS_NUMBER(T));
 		static_assert(CHECK_IS_NOT_CV(T));
 
 		using value_type = typename T;
-		using type = typename Matrix<3, 3, T>;
+		using type = typename _Matrix3x3<T>;
 		template <typename T2>
-		using col_type_template = Vector<3, T2>;
-		using col_type = Vector<3, T>;
+		using col_type_template = _Vector3<T2>;
+		using col_type = _Vector3<T>;
 
 		NO_DISCARD FORCE_INLINE static size_t columnCount()  noexcept { return 3; }
 		col_type columns[3];
@@ -31,7 +31,7 @@ namespace math
 
 		static const type identify;
 
-		FORCE_INLINE Matrix() noexcept : columns{}
+		FORCE_INLINE _Matrix3x3() noexcept : columns{}
 		{
 
 		}
@@ -41,7 +41,7 @@ namespace math
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		FORCE_INLINE explicit Matrix(value_type value) noexcept 
+		FORCE_INLINE explicit _Matrix3x3(value_type value) noexcept
 			: columns{ 
 			col_type(value, 0, 0),
 			col_type(0, value, 0), 
@@ -49,7 +49,7 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE Matrix
+		FORCE_INLINE _Matrix3x3
 		(
 			value_type x0, value_type y0, value_type z0,
 			value_type x1, value_type y1, value_type z1,
@@ -61,42 +61,36 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE Matrix(const col_type& column0Value, const col_type& column1Value, const col_type& column2Value) noexcept
+		FORCE_INLINE _Matrix3x3(const col_type& column0Value, const col_type& column1Value, const col_type& column2Value) noexcept
 			: columns{ column0Value, column1Value, column2Value }
 		{
 		}
 
 		template <typename X, typename Y, typename Z>
-		FORCE_INLINE Matrix(const col_type_template<X>& column0, const col_type_template<Y>& column1, const col_type_template<Z>& column2) noexcept
+		FORCE_INLINE _Matrix3x3(const col_type_template<X>& column0, const col_type_template<Y>& column1, const col_type_template<Z>& column2) noexcept
 			: columns{ column0, column1, column2 }
 		{
 		}
 
-		FORCE_INLINE explicit Matrix(const type& matrix) noexcept
+		FORCE_INLINE explicit _Matrix3x3(const type& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1], matrix.columns[2] }
 		{
 		}
-
+		
 		template <typename X>
-		FORCE_INLINE Matrix(const Matrix<1, 1, X>& matrix) noexcept
-			: columns{ matrix.columns[0], {0, 1, 0}, {0, 0, 1} }
-		{
-		}
-
-		template <typename X>
-		FORCE_INLINE Matrix(const Matrix<2, 2, X>& matrix) noexcept
+		FORCE_INLINE _Matrix3x3(const _Matrix2x2<X>& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1], {0, 0, 1} }
 		{
 		}
 
 		template <typename X>
-		FORCE_INLINE Matrix(const Matrix<3, 3, X>& matrix) noexcept
+		FORCE_INLINE _Matrix3x3(const _Matrix3x3<X>& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1], matrix.columns[2] }
 		{
 		}
 
 		template <typename X>
-		FORCE_INLINE Matrix(const Matrix<4, 4, X>& matrix) noexcept
+		FORCE_INLINE _Matrix3x3(const _Matrix4x4<X>& matrix) noexcept
 			: columns{ matrix.columns[0], matrix.columns[1], matrix.columns[2] }
 		{
 		}
@@ -124,18 +118,9 @@ namespace math
 			columns[2] = matrix.columns[2];
 			return *this;
 		}
-
+		
 		template <typename X>
-		FORCE_INLINE type& operator=(const Matrix<1, 1, X>& matrix) noexcept
-		{
-			columns[0] = matrix.columns[0];
-			columns[1] = 0;
-			columns[2] = 0;
-			return *this;
-		}
-
-		template <typename X>
-		FORCE_INLINE type& operator=(const Matrix<2, 2, X>& matrix) noexcept
+		FORCE_INLINE type& operator=(const _Matrix2x2<X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -144,7 +129,7 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE type& operator=(const Matrix<3, 3, X>& matrix) noexcept
+		FORCE_INLINE type& operator=(const _Matrix3x3<X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -153,7 +138,7 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE type& operator=(const Matrix<4, 4, X>& matrix) noexcept
+		FORCE_INLINE type& operator=(const _Matrix4x4<X>& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -190,19 +175,19 @@ namespace math
 
 
 		template <typename X>
-		FORCE_INLINE type operator+(const Matrix<3, 3, X>& rhs) const noexcept
+		FORCE_INLINE type operator+(const _Matrix3x3<X>& rhs) const noexcept
 		{
 			return type(columns[0] + rhs.columns[0], columns[1] + rhs.columns[1], columns[2] + rhs.columns[2]);
 		}
 
 		template <typename X>
-		FORCE_INLINE type operator-(const Matrix<3, 3, X>& rhs) const noexcept
+		FORCE_INLINE type operator-(const _Matrix3x3<X>& rhs) const noexcept
 		{
 			return type(columns[0] - rhs.columns[0], columns[1] - rhs.columns[1], columns[2] - rhs.columns[2]);
 		}
 
 		template <typename X>
-		NO_DISCARD FORCE_INLINE type operator*(const Matrix<3, 3, X>& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE type operator*(const _Matrix3x3<X>& rhs) const noexcept
 		{
 			const col_type SrcA0 = columns[0];
 			const col_type SrcA1 = columns[1];
@@ -212,7 +197,7 @@ namespace math
 			const col_type SrcB1 = rhs[1];
 			const col_type SrcB2 = rhs[2];
 
-			Matrix<3, 3, T> Result;
+			_Matrix3x3<T> Result;
 			Result[0] = SrcA0 * SrcB0[0] + SrcA1 * SrcB0[1] + SrcA2 * SrcB0[2];
 			Result[1] = SrcA0 * SrcB1[0] + SrcA1 * SrcB1[1] + SrcA2 * SrcB1[2];
 			Result[2] = SrcA0 * SrcB2[0] + SrcA1 * SrcB2[1] + SrcA2 * SrcB2[2];
@@ -220,9 +205,9 @@ namespace math
 		}
 
 		template <typename X>
-		NO_DISCARD FORCE_INLINE Vector<3, X> operator*(const Vector<3, X>& vector) const noexcept
+		NO_DISCARD FORCE_INLINE _Vector3<X> operator*(const _Vector3<X>& vector) const noexcept
 		{
-			return  Vector<3, X>
+			return  _Vector3<X>
 			{
 				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2],
 					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2],
@@ -259,7 +244,7 @@ namespace math
 		*/
 
 		template <typename X>
-		FORCE_INLINE type& operator+=(const Matrix<3, 3, X>& rhs) noexcept
+		FORCE_INLINE type& operator+=(const _Matrix3x3<X>& rhs) noexcept
 		{
 			columns[0] += rhs.columns[0];
 			columns[1] += rhs.columns[1];
@@ -268,7 +253,7 @@ namespace math
 		}
 
 		template <typename X>
-		FORCE_INLINE type& operator-=(const Matrix<3, 3, X>& rhs) noexcept
+		FORCE_INLINE type& operator-=(const _Matrix3x3<X>& rhs) noexcept
 		{
 			columns[0] -= rhs.columns[0];
 			columns[1] -= rhs.columns[1];
@@ -278,7 +263,7 @@ namespace math
 
 
 		template <typename X>
-		FORCE_INLINE type& operator*=(const Matrix<3, 3, X>& rhs) noexcept
+		FORCE_INLINE type& operator*=(const _Matrix3x3<X>& rhs) noexcept
 		{
 			return (*this = *this * rhs);
 		}
@@ -495,22 +480,24 @@ namespace math
 	};
 
 	template<typename T>
-	FORCE_INLINE Matrix<3, 3, T> operator+(const Matrix<3, 3, T>& matrix) noexcept
+	FORCE_INLINE _Matrix3x3<T> operator+(const _Matrix3x3<T>& matrix) noexcept
 	{
 		return matrix;
 	}
 
 	template<typename T>
-	FORCE_INLINE Matrix<3, 3, T> operator-(const Matrix<3, 3, T>& matrix) noexcept
+	FORCE_INLINE _Matrix3x3<T> operator-(const _Matrix3x3<T>& matrix) noexcept
 	{
-		return Matrix<3, 3, T>(
+		return _Matrix3x3<T>(
 			-matrix.columns[0],
 			-matrix.columns[1],
 			-matrix.columns[2]);
 	}
 
-	using Matrix3x3 = typename Matrix<3, 3, FLOAT32>;
+	using Matrix3x3 = typename _Matrix3x3<FLOAT32>;
 
-	extern template struct math::Matrix<3, 3, FLOAT32>;
-	extern template struct math::Matrix<3, 3, FLOAT64>;
+	extern template struct math::_Matrix3x3<FLOAT32>;
+	extern template struct math::_Matrix3x3<FLOAT64>;
 }
+
+clcpp_reflect(math::Matrix)
