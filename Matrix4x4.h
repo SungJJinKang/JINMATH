@@ -722,4 +722,4 @@ namespace math
 	extern template struct math::_Matrix4x4<FLOAT64>;
 }
 
-clcpp_reflect(math::Matrix)
+clcpp_reflect(math::Matrix4x4)

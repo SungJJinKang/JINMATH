@@ -29,12 +29,26 @@ namespace math
 			return &x;
 		}
 
-		static const type forward;
-		static const type right;
-		static const type up;
-		static const type zero;
-		static const type one;
-
+		static type forward()
+		{
+			return type(0, 0, static_cast<value_type>(-1), 0);
+		}
+		static type right()
+		{
+			return type(static_cast<value_type>(1), 0, 0, 0);
+		}
+		static type up()
+		{
+			return type(0, static_cast<value_type>(1), 0, 0);
+		}
+		static type zero()
+		{
+			return type(0, 0, 0, 0);
+		}
+		static type one()
+		{
+			return type(static_cast<value_type>(1), static_cast<value_type>(1), static_cast<value_type>(1), static_cast<value_type>(1));
+		}
 
 		FORCE_INLINE _Vector4() noexcept : x{ }, y{ }, z{ }, w{ }
 		{
@@ -542,11 +556,12 @@ namespace math
 
 namespace math
 {
+	extern template struct _Vector4<FLOAT32>;
+	extern template struct _Vector4<INT32>;
+
 	using Vector4 = _Vector4<FLOAT32>;
 	using Vector4Int = _Vector4<INT32>;
 
-	extern template struct _Vector4<FLOAT32>;
-	extern template struct _Vector4<INT32>;
 }
 
 clcpp_reflect(math::Vector4)

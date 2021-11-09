@@ -571,3 +571,4 @@ namespace math
 
 }
 
+clcpp_reflect(math::Quaternion)

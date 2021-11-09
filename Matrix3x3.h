@@ -505,4 +505,4 @@ namespace math
 	extern template struct math::_Matrix3x3<FLOAT64>;
 }
 
-clcpp_reflect(math::Matrix)
+clcpp_reflect(math::Matrix3x3)

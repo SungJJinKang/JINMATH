@@ -25,8 +25,15 @@ namespace math
 			return &x;
 		}
 
-		static const type right;
-		static const type up;
+
+		static type right()
+		{
+			return type(static_cast<value_type>(1), 0);
+		}
+		static type up()
+		{
+			return type(0, static_cast<value_type>(1));
+		}
 
 
 		FORCE_INLINE _Vector2() noexcept : x{}, y{}

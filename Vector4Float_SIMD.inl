@@ -6,8 +6,8 @@
 
 namespace math
 {
-	template <size_t ComponentCount, typename T>
-	struct Vector;
+	template <typename T>
+	struct _Vector4;
 	/// <summary>
 	/// This class is made for SIMD computation. So it's aligned to 16 byte
 	/// </summary>

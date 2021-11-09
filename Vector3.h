@@ -28,9 +28,18 @@ namespace math
 			return &x;
 		}
 
-		static const type forward;
-		static const type right;
-		static const type up;
+		static type forward()
+		{
+			return type(0, 0, static_cast<value_type>(-1));
+		}
+		static type right()
+		{
+			return type(static_cast<value_type>(1), 0, 0);
+		}
+		static type up()
+		{
+			return type(0, static_cast<value_type>(1), 0);
+		}
 
 		FORCE_INLINE _Vector3() noexcept : x{}, y{}, z{}
 		{
