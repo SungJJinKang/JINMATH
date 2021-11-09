@@ -34,6 +34,10 @@ namespace math
 
 		}
 
+		FORCE_INLINE explicit _Vector2(INT32*)  noexcept
+		{
+		}
+
 		FORCE_INLINE explicit _Vector2(T xValue)  noexcept
 			: x{ xValue }, y { xValue }
 		{

@@ -434,7 +434,7 @@ namespace math
 			const FLOAT32 x = q.value.w * q.value.w + q.value.x * q.value.x - q.value.y * q.value.y - q.value.z * q.value.z;
 
 			FLOAT32 epsilon = math::epsilon<FLOAT32>();
-			if (_Vector2<FLOAT32>(x, y) == epsilon && _Vector2<FLOAT32>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
+			if (_Vector2<FLOAT32>(x, y) == epsilon && _Vector2<FLOAT32>(0.0f) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
 			{
 				return static_cast<FLOAT32>(0);
 			}
@@ -449,7 +449,7 @@ namespace math
 			const FLOAT32 x = q.value.w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z;
 
 			FLOAT32 epsilon = math::epsilon<FLOAT32>();
-			if (_Vector2<FLOAT32>(x, y) == epsilon && _Vector2<FLOAT32>(0) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
+			if (_Vector2<FLOAT32>(x, y) == epsilon && _Vector2<FLOAT32>(0.0f) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
 			{
 				return static_cast<FLOAT32>(static_cast<FLOAT32>(2) * math::atan2(q.value.x, q.value.w));
 			}

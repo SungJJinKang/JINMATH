@@ -35,7 +35,12 @@ namespace math
 		{
 
 		}
-		
+
+		FORCE_INLINE _Matrix3x3(INT32*) noexcept
+		{
+
+		}
+	
 		/// <summary>
 		/// diagonal matrix
 		/// </summary>

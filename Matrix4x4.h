@@ -44,6 +44,11 @@ namespace math
 
 		}
 
+		FORCE_INLINE _Matrix4x4(INT32*) noexcept
+		{
+
+		}
+
 		/// <summary>
 		/// diagonal matrix
 		/// </summary>

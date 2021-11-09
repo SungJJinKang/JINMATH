@@ -48,6 +48,10 @@ namespace math
 		{
 		}
 
+		FORCE_INLINE explicit _Vector4(INT32*)  noexcept
+		{
+		}
+
 		FORCE_INLINE _Vector4(T xValue, T yValue, T zValue, T wValue) noexcept
 			: x{ xValue }, y{ yValue }, z{ zValue }, w{ wValue }
 		{

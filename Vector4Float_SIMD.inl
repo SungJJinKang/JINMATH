@@ -50,6 +50,10 @@ namespace math
  		{
  		}
 
+		FORCE_INLINE explicit _Vector4(INT32*)  noexcept
+		{
+		}
+
 		// This is more slow than scalar version
 // 		FORCE_INLINE Vector(FLOAT32 xValue)  noexcept
 // 		{
