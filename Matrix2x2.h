@@ -2,6 +2,7 @@
 #include "Matrix.h"
 
 #include "Vector2.h"
+
 namespace math
 {
 	template <typename T>
