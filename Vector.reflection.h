@@ -14,6 +14,7 @@
 
 
 #include <type_traits>
+#include <cassert>
 
 
 //-------------------------------------------
@@ -26,12 +27,11 @@
 
 #undef CURRENT_TYPE_ALIAS_math___Vector2
 #define CURRENT_TYPE_ALIAS_math___Vector2 \
-public: typedef math::_Vector2 Current;
+typedef math::_Vector2 Current;
 
 
 #undef TYPE_FULLNAME_HASH_VALUE_NAME_STRING_math___Vector2
 #define TYPE_FULLNAME_HASH_VALUE_NAME_STRING_math___Vector2 \
-public: \
 inline static const unsigned long int TYPE_FULL_NAME_HASH_VALUE = 5728349; \
 inline static const char* const TYPE_FULL_NAME = "math::_Vector2"; \
 inline static const char* const TYPE_SHORT_NAME = "_Vector2"; \
@@ -42,7 +42,7 @@ virtual const char* GetTypeShortName() const { return TYPE_SHORT_NAME; }
 
 #undef TYPE_CHECK_FUNCTION__Vector2
 #define TYPE_CHECK_FUNCTION__Vector2 \
-attrNoReflect void __TYPE_CHECK() { static_assert(std::is_same_v<std::decay<decltype(*this)>::type, Current> == true, "ERROR : WRONG TYPE. Please Check GENERATED_~ MACROS");} \
+attrNoReflect void __TYPE_CHECK() { static_assert(std::is_same_v<std::remove_reference<decltype(*this)>::type, Current> == true, "ERROR : WRONG TYPE. Please Check GENERATED_~ MACROS");} \
 
 
 #undef GENERATE_BODY_FULLNAME_math___Vector2
@@ -66,12 +66,11 @@ TYPE_CHECK_FUNCTION__Vector2 \
 
 #undef CURRENT_TYPE_ALIAS_math___Vector3
 #define CURRENT_TYPE_ALIAS_math___Vector3 \
-public: typedef math::_Vector3 Current;
+typedef math::_Vector3 Current;
 
 
 #undef TYPE_FULLNAME_HASH_VALUE_NAME_STRING_math___Vector3
 #define TYPE_FULLNAME_HASH_VALUE_NAME_STRING_math___Vector3 \
-public: \
 inline static const unsigned long int TYPE_FULL_NAME_HASH_VALUE = 3036592977; \
 inline static const char* const TYPE_FULL_NAME = "math::_Vector3"; \
 inline static const char* const TYPE_SHORT_NAME = "_Vector3"; \
@@ -82,7 +81,7 @@ virtual const char* GetTypeShortName() const { return TYPE_SHORT_NAME; }
 
 #undef TYPE_CHECK_FUNCTION__Vector3
 #define TYPE_CHECK_FUNCTION__Vector3 \
-attrNoReflect void __TYPE_CHECK() { static_assert(std::is_same_v<std::decay<decltype(*this)>::type, Current> == true, "ERROR : WRONG TYPE. Please Check GENERATED_~ MACROS");} \
+attrNoReflect void __TYPE_CHECK() { static_assert(std::is_same_v<std::remove_reference<decltype(*this)>::type, Current> == true, "ERROR : WRONG TYPE. Please Check GENERATED_~ MACROS");} \
 
 
 #undef GENERATE_BODY_FULLNAME_math___Vector3
@@ -106,12 +105,11 @@ TYPE_CHECK_FUNCTION__Vector3 \
 
 #undef CURRENT_TYPE_ALIAS_math___Vector4
 #define CURRENT_TYPE_ALIAS_math___Vector4 \
-public: typedef math::_Vector4 Current;
+typedef math::_Vector4 Current;
 
 
 #undef TYPE_FULLNAME_HASH_VALUE_NAME_STRING_math___Vector4
 #define TYPE_FULLNAME_HASH_VALUE_NAME_STRING_math___Vector4 \
-public: \
 inline static const unsigned long int TYPE_FULL_NAME_HASH_VALUE = 3242557799; \
 inline static const char* const TYPE_FULL_NAME = "math::_Vector4"; \
 inline static const char* const TYPE_SHORT_NAME = "_Vector4"; \
@@ -122,7 +120,7 @@ virtual const char* GetTypeShortName() const { return TYPE_SHORT_NAME; }
 
 #undef TYPE_CHECK_FUNCTION__Vector4
 #define TYPE_CHECK_FUNCTION__Vector4 \
-attrNoReflect void __TYPE_CHECK() { static_assert(std::is_same_v<std::decay<decltype(*this)>::type, Current> == true, "ERROR : WRONG TYPE. Please Check GENERATED_~ MACROS");} \
+attrNoReflect void __TYPE_CHECK() { static_assert(std::is_same_v<std::remove_reference<decltype(*this)>::type, Current> == true, "ERROR : WRONG TYPE. Please Check GENERATED_~ MACROS");} \
 
 
 #undef GENERATE_BODY_FULLNAME_math___Vector4
