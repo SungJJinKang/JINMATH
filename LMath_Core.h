@@ -93,7 +93,7 @@
 
 
 #include "TypeDef.h"
-#include "DObject/Reflection/Reflection.h"
+#include "Reflection/Reflection.h"
 
 D_REFLECT_ALL(math)
 namespace math
