@@ -91,12 +91,19 @@
 #endif
 #endif
 
-
 #include "TypeDef.h"
 #include "Reflection/Reflection.h"
 
-D_REFLECT_ALL(math)
+D_NAMESPACE(math)
 namespace math
 {
+	struct Matrix2x2;
+	struct Matrix3x3;
+	struct Matrix4x4;
 
+	struct Vector2;
+	struct Vector3;
+	struct Vector4;
+
+	struct Quaternion;
 }

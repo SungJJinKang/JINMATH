@@ -1,52 +1,84 @@
-#pragma once
-#include "Matrix.h"
+﻿#pragma once
+#include "LMath_Core.h"
 
 #include "Vector4.h"
 
+#include "SIMD_Core.h"
+
+#include "Matrix4x4.reflection.h"
 namespace math
 {
-	template <typename T>
-	struct _Matrix4x4
+	struct Matrix2x2;
+	struct Matrix3x3;
+	struct Matrix4x4;
+
+	struct Vector2;
+	struct Vector3;
+	struct Vector4;
+	
+	/// <summary>
+	/// This class is made for SIMD computation. So it's aligned to 32 byte
+	/// Because Matrix4X4Floag is aligned to 32 byte, It will works well with __m128 functions
+	/// </summary>
+	struct D_STRUCT alignas(32) Matrix4x4
 	{
-		static_assert(CHECK_IS_NUMBER(T));
-		static_assert(CHECK_IS_NOT_CV(T));
+		GENERATE_BODY()
 
-		using value_type = typename T;
-		using type = typename _Matrix4x4<T>;
-		template <typename T2>
-		using col_type_template = _Vector4<T2>;
+		using value_type = typename FLOAT32;
+		using type = typename Matrix4x4;
+		using col_type = Vector4;
 
-		using col_type = _Vector4<T>;
-
-		NO_DISCARD FORCE_INLINE static size_t columnCount() noexcept { return 4; }
+		NO_DISCARD FORCE_INLINE static size_t columnCount()  noexcept { return 4; }
 
 		/// <summary>
-		/// All columns always is aligned to 16 byte, because Matrix<T> class is aligned to 16byte
+		/// All columns always is aligned to 16 byte, because Matrix4x4 class is aligned to 16byte
 		/// columns[0] start from address of Matrix class
-		/// _Vector4<T> is 16 byte -> columns[1] is also aligned to 16 byte
+		/// Vector4 is 16 byte -> columns[1] is also aligned to 16 byte
 		/// </summary>
+		///
+
+		D_PROPERTY()
 		col_type columns[4];
 
-		FORCE_INLINE T* data() noexcept
+		FORCE_INLINE FLOAT32* data() noexcept
 		{
 			return columns[0].data();
 		}
 
-		const FORCE_INLINE T* data() const noexcept
+		const FORCE_INLINE FLOAT32* data() const noexcept
 		{
 			return columns[0].data();
 		}
 
-		static const type identify;
+		static const Matrix4x4 identify;
 
-		FORCE_INLINE _Matrix4x4() noexcept : columns{}
+		FORCE_INLINE void InitializeSIMD(const Matrix4x4& matrix) noexcept
 		{
+			//std::memcpy(this->data(), matrix.data(), sizeof(Matrix4x4)); // this is slower than SIMD
+
+			M256F* A = reinterpret_cast<M256F*>(this);
+			const FLOAT32* B = reinterpret_cast<const FLOAT32*>(&matrix);
+			A[0] = _mm256_load_ps(B); // copy 0 ~ 256 OF B to 0 ~ 256 this
+			A[1] = _mm256_load_ps(B + 8); // B + 8 -> B + sizeof(FLOAT32) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
 
 		}
 
-		FORCE_INLINE _Matrix4x4(INT32*) noexcept
+		FORCE_INLINE void InitializeSIMD(const col_type& column) noexcept
 		{
+			M256F* A = reinterpret_cast<M256F*>(this);
+			const M128F* B = reinterpret_cast<const M128F*>(&column);
+			A[0] = _mm256_broadcast_ps(&(*B)); // copy 0 ~ 256 OF B to 0 ~ 256 this
+			A[1] = _mm256_broadcast_ps(&(*B)); // B + 8 -> B + sizeof(FLOAT32) * 8  , copy 256 ~ 512 OF B to 256 ~ 512 this
+		}
 
+		FORCE_INLINE Matrix4x4() = delete;
+		/// <summary>
+		/// for not init
+		/// </summary>
+		/// <param name=""></param>
+		/// <returns></returns>
+		FORCE_INLINE Matrix4x4(INT32*) noexcept : columns{nullptr, nullptr , nullptr , nullptr }
+		{
 		}
 
 		/// <summary>
@@ -54,16 +86,18 @@ namespace math
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		FORCE_INLINE explicit _Matrix4x4(value_type value) noexcept
-			: columns{ 
-			col_type(value, 0, 0, 0), 
-			col_type(0, value, 0, 0), 
-			col_type(0, 0, value, 0), 
+		FORCE_INLINE explicit Matrix4x4(value_type value) noexcept
+			: columns{
+			col_type(value, 0, 0, 0),
+			col_type(0, value, 0, 0),
+			col_type(0, 0, value, 0),
 			col_type(0, 0, 0, value) }
 		{
 		}
 
-		FORCE_INLINE _Matrix4x4
+		// we can't use SIMD at here
+		// Parameters may is stored at register, not memory
+		FORCE_INLINE Matrix4x4
 		(
 			value_type x0, value_type y0, value_type z0, value_type w0,
 			value_type x1, value_type y1, value_type z1, value_type w1,
@@ -77,41 +111,26 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE _Matrix4x4(const col_type& column0Value, const col_type& column1Value, const col_type& column2Value, const col_type& column3Value) noexcept
-			: columns{ column0Value, column1Value, column2Value, column3Value }
+		FORCE_INLINE explicit Matrix4x4(const col_type& columnValue) : columns{ nullptr , nullptr , nullptr , nullptr }
 		{
+			this->InitializeSIMD(columnValue);
 		}
 
-		template <typename X, typename Y, typename Z, typename W>
-		FORCE_INLINE _Matrix4x4(const col_type_template<X>& column0, const col_type_template<Y>& column1, const col_type_template<Z>& column2, const col_type_template<W>& column3) noexcept
-			: columns{ column0, column1, column2, column3 }
-		{
-		}
-
-		FORCE_INLINE explicit _Matrix4x4(const type& matrix) noexcept
-			: columns{ matrix.columns[0], matrix.columns[1], matrix.columns[2], matrix.columns[3] }
+		FORCE_INLINE Matrix4x4(const col_type& column0Value, const col_type& column1Value, const col_type& column2Value, const col_type& column3Value) noexcept
+			: columns{ col_type{column0Value}, col_type{ column1Value}, col_type{column2Value}, col_type{column3Value} }
 		{
 		}
 		
-		template <typename X>
-		FORCE_INLINE _Matrix4x4(const _Matrix2x2<X>& matrix) noexcept
-			: columns{ matrix.columns[0], matrix.columns[1], {0, 0, 1, 0}, {0, 0, 0, 1} }
+		Matrix4x4(const Matrix2x2& matrix) noexcept;
+		Matrix4x4(const Matrix3x3& matrix) noexcept;
+
+
+		FORCE_INLINE Matrix4x4(const Matrix4x4& matrix) noexcept
+			: columns{ col_type{matrix.columns[0]}, col_type{matrix.columns[1]}, col_type{matrix.columns[2]}, col_type{matrix.columns[3]} }
 		{
 		}
 
-		template <typename X>
-		FORCE_INLINE _Matrix4x4(const _Matrix3x3<X>& matrix) noexcept
-			: columns{ matrix.columns[0], matrix.columns[1], matrix.columns[2], {0, 0, 0, 1} }
-		{
-		}
-
-		template <typename X>
-		FORCE_INLINE _Matrix4x4(const _Matrix4x4<X>& matrix) noexcept
-			: columns { matrix.columns[0], matrix.columns[1], matrix.columns[2], matrix.columns[3] }
-		{
-		}
-
-		FORCE_INLINE type& operator=(value_type value) noexcept
+		FORCE_INLINE Matrix4x4& operator=(value_type value) noexcept
 		{
 			columns[0] = value;
 			columns[1] = value;
@@ -120,67 +139,25 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE type& operator=(const col_type& column) noexcept
+		FORCE_INLINE Matrix4x4& operator=(const col_type& column) noexcept
 		{
-			columns[0] = column;
-			columns[1] = column;
-			columns[2] = column;
-			columns[3] = column;
-			return *this;
-		}
-
-		FORCE_INLINE type& operator=(const type& matrix) noexcept
-		{
-			columns[0] = matrix.columns[0];
-			columns[1] = matrix.columns[1];
-			columns[2] = matrix.columns[2];
-			columns[3] = matrix.columns[3];
+			this->InitializeSIMD(column);
 			return *this;
 		}
 		
-		template <typename X>
-		FORCE_INLINE type& operator=(const _Matrix2x2<X>& matrix) noexcept
-		{
-			columns[0] = matrix.columns[0];
-			columns[1] = matrix.columns[1];
-			columns[2] = 0;
-			columns[3] = { 0,0,0,1 };
-			return *this;
-		}
+		Matrix4x4& operator=(const Matrix2x2& matrix) noexcept;
 
-		template <typename X>
-		FORCE_INLINE type& operator=(const _Matrix3x3<X>& matrix) noexcept
-		{
-			columns[0] = matrix.columns[0];
-			columns[1] = matrix.columns[1];
-			columns[2] = matrix.columns[2];
-			columns[3] = { 0,0,0,1 };
-			return *this;
-		}
 
-		template <typename X>
-		FORCE_INLINE type& operator=(const _Matrix4x4<X>& matrix) noexcept
+		Matrix4x4& operator=(const Matrix3x3& matrix) noexcept;
+
+
+		FORCE_INLINE Matrix4x4& operator=(const Matrix4x4& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
 			columns[2] = matrix.columns[2];
 			columns[3] = matrix.columns[3];
 			return *this;
-		}
-
-		// 		Matrix(const type&) = default;
-		// 		Matrix(type&&) = default;
-		// 		type& opreator=(const type&) = default;
-		// 		type& opreator=(type&&) = default;
-
-		std::basic_string<char> toString() const noexcept
-		{
-			std::stringstream ss;
-			ss << columns[0].x << "  " << columns[1].x << "  " << columns[2].x << "  " << columns[3].x << '\n';
-			ss << columns[0].y << "  " << columns[1].y << "  " << columns[2].y << "  " << columns[3].y << '\n';
-			ss << columns[0].z << "  " << columns[1].z << "  " << columns[2].z << "  " << columns[3].z << '\n';
-			ss << columns[0].w << "  " << columns[1].w << "  " << columns[2].w << "  " << columns[3].w;
-			return ss.str();
 		}
 
 		NO_DISCARD FORCE_INLINE col_type& operator[](size_t i)
@@ -196,95 +173,162 @@ namespace math
 		}
 
 
-
-		template <typename X>
-		FORCE_INLINE type operator+(const _Matrix4x4<X>& rhs) const noexcept
+		FORCE_INLINE Matrix4x4 operator+(const Matrix4x4& rhs) const noexcept
 		{
-			return type(columns[0] + rhs.columns[0], columns[1] + rhs.columns[1], columns[2] + rhs.columns[2], columns[3] + rhs.columns[3]);
+			return Matrix4x4(columns[0] + rhs.columns[0], columns[1] + rhs.columns[1], columns[2] + rhs.columns[2], columns[3] + rhs.columns[3]);
 		}
 
-		template <typename X>
-		FORCE_INLINE type operator-(const _Matrix4x4<X>& rhs) const noexcept
+
+		FORCE_INLINE Matrix4x4 operator-(const Matrix4x4& rhs) const noexcept
 		{
-			return type(columns[0] - rhs.columns[0], columns[1] - rhs.columns[1], columns[2] - rhs.columns[2], columns[3] - rhs.columns[3]);
+			return Matrix4x4(columns[0] - rhs.columns[0], columns[1] - rhs.columns[1], columns[2] - rhs.columns[2], columns[3] - rhs.columns[3]);
 		}
 
-		template <typename X>
-		NO_DISCARD inline type operator*(const _Matrix4x4<X>& rhs) const noexcept
+		inline thread_local static M256F _REULST_MAT4[2]{};
+		inline thread_local static M128F TEMP_M128F{};
+		inline thread_local static Vector4 TEMP_VEC4{nullptr};
+
+		NO_DISCARD inline Matrix4x4 operator*(const Matrix4x4& rhs) const noexcept
 		{
-			const col_type SrcA0 = columns[0];
-			const col_type SrcA1 = columns[1];
-			const col_type SrcA2 = columns[2];
-			const col_type SrcA3 = columns[3];
+			const M128F* A = reinterpret_cast<const M128F*>(this);
+			//const M128F* A = (const M128F*)this->data(); // this is slower
+			const M128F* B = reinterpret_cast<const M128F*>(&rhs);
+			M128F* R = reinterpret_cast<M128F*>(&_REULST_MAT4);
 
-			const col_type SrcB0 = rhs[0];
-			const col_type SrcB1 = rhs[1];
-			const col_type SrcB2 = rhs[2];
-			const col_type SrcB3 = rhs[3];
+			// First row of result (Matrix1[0] * Matrix2).
+			TEMP_M128F = M128F_MUL(M128F_REPLICATE(B[0], 0), A[0]);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 1), A[1], TEMP_M128F);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 2), A[2], TEMP_M128F);
+			R[0] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[0], 3), A[3], TEMP_M128F);
 
-			_Matrix4x4<T> Result;
-			Result[0] = SrcA0 * SrcB0[0] + SrcA1 * SrcB0[1] + SrcA2 * SrcB0[2] + SrcA3 * SrcB0[3];
-			Result[1] = SrcA0 * SrcB1[0] + SrcA1 * SrcB1[1] + SrcA2 * SrcB1[2] + SrcA3 * SrcB1[3];
-			Result[2] = SrcA0 * SrcB2[0] + SrcA1 * SrcB2[1] + SrcA2 * SrcB2[2] + SrcA3 * SrcB2[3];
-			Result[3] = SrcA0 * SrcB3[0] + SrcA1 * SrcB3[1] + SrcA2 * SrcB3[2] + SrcA3 * SrcB3[3];
-			return Result;
+			// Second row of result (Matrix1[1] * Matrix2).
+			TEMP_M128F = M128F_MUL(M128F_REPLICATE(B[1], 0), A[0]);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[1], 1), A[1], TEMP_M128F);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[1], 2), A[2], TEMP_M128F);
+			R[1] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[1], 3), A[3], TEMP_M128F);
+
+			// Third row of result (Matrix1[2] * Matrix2).
+			TEMP_M128F = M128F_MUL(M128F_REPLICATE(B[2], 0), A[0]);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[2], 1), A[1], TEMP_M128F);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[2], 2), A[2], TEMP_M128F);
+			R[2] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[2], 3), A[3], TEMP_M128F);
+
+			// Fourth row of result (Matrix1[3] * Matrix2).
+			TEMP_M128F = M128F_MUL(M128F_REPLICATE(B[3], 0), A[0]);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[3], 1), A[1], TEMP_M128F);
+			TEMP_M128F = M128F_MUL_AND_ADD(M128F_REPLICATE(B[3], 2), A[2], TEMP_M128F);
+			R[3] = M128F_MUL_AND_ADD(M128F_REPLICATE(B[3], 3), A[3], TEMP_M128F);
+
+			return Matrix4x4{ *reinterpret_cast<Matrix4x4*>(&_REULST_MAT4) };
 		}
 
-		template <typename X>
-		NO_DISCARD inline _Vector4<X> operator*(const _Vector4<X>& vector) const noexcept
+		NO_DISCARD inline Vector4 operator*(const Vector4& vector) const noexcept
 		{
-			return _Vector4<X>
-			{
-				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2] + this->columns[3][0] * vector[3],
-					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2] + this->columns[3][1] * vector[3],
-					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2] + this->columns[3][2] * vector[3],
-					this->columns[0][3] * vector[0] + this->columns[1][3] * vector[1] + this->columns[2][3] * vector[2] + this->columns[3][3] * vector[3]
-			};
+			const M128F* A = reinterpret_cast<const M128F*>(this);
+			const M128F* B = reinterpret_cast<const M128F*>(&vector);
+			M128F* R = reinterpret_cast<M128F*>(&TEMP_VEC4);
+
+			// First row of result (Matrix1[0] * Matrix2).
+			*R = M128F_MUL(M128F_REPLICATE(*B, 0), A[0]);
+			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 1), A[1], *R);
+			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 2), A[2], *R);
+			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 3), A[3], *R);
+
+			return Vector4{ TEMP_VEC4 };
 		}
+
+
+		inline thread_local static Vector4 Vec4_Parameter{ 1.0f };
+		inline thread_local static Vector4 Vec4_Result{ 1.0f };
+
+		inline static M128F AllOne{ _mm_set1_ps(1.0f) };
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="X"></typeparam>
+		/// <param name="vector"></param>
+		/// <returns></returns>
 		
-		template <typename X>
-		NO_DISCARD inline _Vector4<X> operator*(const _Vector3<X>& vector) const noexcept
+		NO_DISCARD inline Vector4 operator*(const Vector3& vector) const noexcept
 		{
-			return _Vector4<X>
-			{
-				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1] + this->columns[2][0] * vector[2] + this->columns[3][0],
-					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1] + this->columns[2][1] * vector[2] + this->columns[3][1],
-					this->columns[0][2] * vector[0] + this->columns[1][2] * vector[1] + this->columns[2][2] * vector[2] + this->columns[3][2],
-					this->columns[0][3] * vector[0] + this->columns[1][3] * vector[1] + this->columns[2][3] * vector[2] + this->columns[3][3],
-			};
+			//vec3 is not aligned to 128bit, so we need to copy temporary vec3 data to vec4
+			Vec4_Parameter = vector;
+
+			const M128F* A = reinterpret_cast<const M128F*>(this);
+			const M128F* B = reinterpret_cast<const M128F*>(&vector);
+			M128F* R = reinterpret_cast<M128F*>(&Vec4_Result);
+
+			// First row of result (Matrix1[0] * Matrix2).
+			*R = M128F_MUL(M128F_REPLICATE(*B, 0), A[0]);
+			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 1), A[1], *R);
+			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 2), A[2], *R);
+			*R = M128F_MUL_AND_ADD(AllOne, A[3], *R);
+
+			return Vector4{ Vec4_Result };
 		}
 
-		FORCE_INLINE type operator+(T rhs) const noexcept
+
+
+
+		// 		/ <summary>
+		// 		/// 
+		// 		/// </summary>
+		// 		/// <param name="vector"></param>
+		// 		/// <returns></returns>
+		// 		
+		// 		NO_DISCARD FORCE_INLINE Vector3 operator*(const Vector3& vector) const noexcept
+		// 		{
+		// 			Vector4 Result{ nullptr };
+		// 			Matrix4x4 Vec4{ vector };
+		// 
+		// 			const M128F* A = (const M128F*)this;
+		// 			const M128F* B = (const M128F*)Vec4.data();
+		// 			M128F* R = reinterpret_cast<M128F*>(&Result);
+		// 
+		// 			// First row of result (Matrix1[0] * Matrix2).
+		// 			*R = M128F_MUL(M128F_REPLICATE(*B, 0), A[0]);
+		// 			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 1), A[1], *R);
+		// 			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 2), A[2], *R);
+		// 			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 3), A[3], *R);
+		// 
+		// 			return Vector3
+		// 			{
+		// 				Result
+		// 			};
+		//   		}
+
+		FORCE_INLINE Matrix4x4 operator+(FLOAT32 rhs) const noexcept
 		{
-			return type(columns[0] + rhs, columns[1] + rhs, columns[2] + rhs, columns[3] + rhs);
+			return Matrix4x4(columns[0] + rhs, columns[1] + rhs, columns[2] + rhs, columns[3] + rhs);
 		}
 
-		FORCE_INLINE type operator-(T rhs) const noexcept
+		FORCE_INLINE Matrix4x4 operator-(FLOAT32 rhs) const noexcept
 		{
-			return type(columns[0] - rhs, columns[1] - rhs, columns[2] - rhs, columns[3] - rhs);
+			return Matrix4x4(columns[0] - rhs, columns[1] - rhs, columns[2] - rhs, columns[3] - rhs);
 		}
 
-		FORCE_INLINE type operator*(T rhs) const noexcept
+		FORCE_INLINE Matrix4x4 operator*(FLOAT32 rhs) const noexcept
 		{
-			return type(columns[0] * rhs, columns[1] * rhs, columns[2] * rhs, columns[3] * rhs);
+			return Matrix4x4(columns[0] * rhs, columns[1] * rhs, columns[2] * rhs, columns[3] * rhs);
 		}
 
 		/*
-		template <typename X>
-		FORCE_INLINE type operator/(const Matrix<4, X>& rhs)
+
+		FORCE_INLINE Matrix4x4 operator/(const Matrix<4, X>& rhs)
 		{
-			return type(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
+			return Matrix4x4(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
 		}
 
-		template <typename X>
-		FORCE_INLINE type operator%(const Matrix<4, X>& rhs)
+
+		FORCE_INLINE Matrix4x4 operator%(const Matrix<4, X>& rhs)
 		{
-			return type(x % rhs.x, y % rhs.y, z % rhs.z, w % rhs.w);
+			return Matrix4x4(x % rhs.x, y % rhs.y, z % rhs.z, w % rhs.w);
 		}
 		*/
 
-		template <typename X>
-		FORCE_INLINE type& operator+=(const _Matrix4x4<X>& rhs) noexcept
+
+		FORCE_INLINE Matrix4x4& operator+=(const Matrix4x4& rhs) noexcept
 		{
 			columns[0] += rhs.columns[0];
 			columns[1] += rhs.columns[1];
@@ -293,8 +337,8 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE type& operator-=(const _Matrix4x4<X>& rhs) noexcept
+
+		FORCE_INLINE Matrix4x4& operator-=(const Matrix4x4& rhs) noexcept
 		{
 			columns[0] -= rhs.columns[0];
 			columns[1] -= rhs.columns[1];
@@ -303,18 +347,18 @@ namespace math
 			return *this;
 		}
 
-		
-		template <typename X>
-		FORCE_INLINE type& operator*=(const _Matrix4x4<X>& rhs) noexcept
+
+
+		FORCE_INLINE Matrix4x4& operator*=(const Matrix4x4& rhs) noexcept
 		{
 			return (*this = *this * rhs);
 		}
-		
+
 
 
 		/*
-		template <typename X>
-		FORCE_INLINE type& operator/=(const Matrix<4, X>& rhs)
+
+		FORCE_INLINE Matrix4x4& operator/=(const Matrix<4, X>& rhs)
 		{
 			x /= rhs.x;
 			y /= rhs.y;
@@ -323,8 +367,8 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE type& operator%=(const Matrix<4, X>& rhs)
+
+		FORCE_INLINE Matrix4x4& operator%=(const Matrix<4, X>& rhs)
 		{
 			x %= rhs.x;
 			y %= rhs.y;
@@ -335,7 +379,7 @@ namespace math
 		*/
 		//
 
-		FORCE_INLINE type& operator+=(T scalar) noexcept
+		FORCE_INLINE Matrix4x4& operator+=(FLOAT32 scalar) noexcept
 		{
 			columns[0] += scalar;
 			columns[1] += scalar;
@@ -344,7 +388,7 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE type& operator-=(T scalar) noexcept
+		FORCE_INLINE Matrix4x4& operator-=(FLOAT32 scalar) noexcept
 		{
 			columns[0] -= scalar;
 			columns[1] -= scalar;
@@ -353,7 +397,7 @@ namespace math
 			return *this;
 		}
 
-		FORCE_INLINE type& operator*=(T scalar) noexcept
+		FORCE_INLINE Matrix4x4& operator*=(FLOAT32 scalar) noexcept
 		{
 			columns[0] *= scalar;
 			columns[1] *= scalar;
@@ -363,8 +407,8 @@ namespace math
 		}
 
 		/*
-		template <typename X>
-		FORCE_INLINE type& operator/=(const X& scalar)
+
+		FORCE_INLINE Matrix4x4& operator/=(const X& scalar)
 		{
 			x /= scalar;
 			y /= scalar;
@@ -373,9 +417,9 @@ namespace math
 			return *this;
 		}
 
-		
+
 		template <typename X, std::enable_if_t<std::is_integral_v<X>, bool> = true>
-		FORCE_INLINE type& operator%=(const X& scalar)
+		FORCE_INLINE Matrix4x4& operator%=(const X& scalar)
 		{
 			x %= scalar;
 			y %= scalar;
@@ -385,7 +429,7 @@ namespace math
 		}
 
 		template <typename X, std::enable_if_t<std::is_floating_point_v<X>, bool> = true>
-		FORCE_INLINE type& operator%=(const X& scalar)
+		FORCE_INLINE Matrix4x4& operator%=(const X& scalar)
 		{
 
 			x %= std::fmod(x, scalar);
@@ -398,22 +442,22 @@ namespace math
 
 		//
 
-		NO_DISCARD FORCE_INLINE bool operator==(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(const Matrix4x4& rhs) const noexcept
 		{
 			return this->columns[0] == rhs.columns[0] && this->columns[1] == rhs.columns[1] && this->columns[2] == rhs.columns[2] && this->columns[3] == rhs.columns[3];
 		}
 
-		NO_DISCARD FORCE_INLINE bool operator!=(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(const Matrix4x4& rhs) const noexcept
 		{
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1] || this->columns[2] != rhs.columns[2] || this->columns[3] != rhs.columns[3];
 		}
 
-		NO_DISCARD FORCE_INLINE bool operator==(T number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(FLOAT32 number) const noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number && this->columns[2] == number && this->columns[3] == number;
 		}
 
-		NO_DISCARD FORCE_INLINE bool operator!=(T number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(FLOAT32 number) const noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number || this->columns[2] != number || this->columns[3] != number;
 		}
@@ -422,7 +466,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE type& operator++() noexcept
+		FORCE_INLINE Matrix4x4& operator++() noexcept
 		{
 			++columns[0];
 			++columns[1];
@@ -436,18 +480,18 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE type operator++(INT32) noexcept
+		FORCE_INLINE Matrix4x4 operator++(INT32) noexcept
 		{
-			type Matrix{ *this };
+			Matrix4x4 Matrix{ *this };
 			++* this;
-			return Matrix;
+			return Matrix4x4{ Matrix };
 		}
 
 		/// <summary>
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE type& operator--() noexcept
+		FORCE_INLINE Matrix4x4& operator--() noexcept
 		{
 			--columns[0];
 			--columns[1];
@@ -461,19 +505,14 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE type operator--(INT32) noexcept
+		FORCE_INLINE Matrix4x4 operator--(INT32) noexcept
 		{
-			type Matrix{ *this };
+			Matrix4x4 Matrix{ *this };
 			--* this;
-			return Matrix;
+			return Matrix4x4{ Matrix };
 		}
 
-		operator std::basic_string<char>() noexcept
-		{
-			return this->toString();
-		}
-
-		inline type inverse() const noexcept
+		inline Matrix4x4 inverse() const noexcept
 		{
 			value_type Coef00 = columns[2][2] * columns[3][3] - columns[3][2] * columns[2][3];
 			value_type Coef02 = columns[1][2] * columns[3][3] - columns[3][2] * columns[1][3];
@@ -518,7 +557,7 @@ namespace math
 
 			col_type SignA(+1, -1, +1, -1);
 			col_type SignB(-1, +1, -1, +1);
-			type Inverse(Inv0 * SignA, Inv1 * SignB, Inv2 * SignA, Inv3 * SignB);
+			Matrix4x4 Inverse(Inv0 * SignA, Inv1 * SignB, Inv2 * SignA, Inv3 * SignB);
 
 			col_type Row0(Inverse[0][0], Inverse[1][0], Inverse[2][0], Inverse[3][0]);
 
@@ -527,12 +566,12 @@ namespace math
 
 			value_type OneOverDeterminant = static_cast<value_type>(1) / Dot1;
 
-			return type{ Inverse * OneOverDeterminant };
+			return Matrix4x4{ Inverse * OneOverDeterminant };
 		}
 
-		inline type transpose() const noexcept
+		inline Matrix4x4 transpose() const noexcept
 		{
-			type Result;
+			Matrix4x4 Result{nullptr};
 			Result[0][0] = columns[0][0];
 			Result[0][1] = columns[1][0];
 			Result[0][2] = columns[2][0];
@@ -552,10 +591,9 @@ namespace math
 			Result[3][1] = columns[1][3];
 			Result[3][2] = columns[2][3];
 			Result[3][3] = columns[3][3];
-			return Result;
+			return Matrix4x4{ Result };
 		}
 
-		template <typename U = T, std::enable_if_t<std::is_signed_v<U>, bool> = true>
 		inline value_type determinant() const noexcept
 		{
 			value_type SubFactor00 = columns[2][2] * columns[3][3] - columns[3][2] * columns[2][3];
@@ -576,150 +614,25 @@ namespace math
 				columns[0][2] * DetCof[2] + columns[0][3] * DetCof[3];
 		}
 
-		
-		inline auto trace() const noexcept
+
+		FORCE_INLINE FLOAT32 trace() const noexcept
 		{
 			return columns[0][0] + columns[1][1] + columns[2][2] + columns[3][3];
 		}
 	};
 
-	template <typename T>
-	FORCE_INLINE _Matrix4x4<T> operator+(const _Matrix4x4<T>& matrix) noexcept
+	extern NO_DISCARD FORCE_INLINE Matrix4x4 operator+(const Matrix4x4& matrix) noexcept
 	{
-		return matrix;
+		return Matrix4x4{ matrix };
 	}
 
-	template <typename T>
-	FORCE_INLINE _Matrix4x4<T> operator-(const _Matrix4x4<T>& matrix) noexcept
+	extern NO_DISCARD FORCE_INLINE Matrix4x4 operator-(const Matrix4x4& matrix) noexcept
 	{
-		return _Matrix4x4<T>(
+		return Matrix4x4(
 			-matrix.columns[0],
 			-matrix.columns[1],
 			-matrix.columns[2],
 			-matrix.columns[3]);
 	}
-
-	template <typename T>
-	void NormalizePlane(_Vector4<T>& plane)
-	{
-		FLOAT32 mag = math::sqrt(plane.x * plane.x + plane.y * plane.y + plane.z * plane.z);
-		plane.x = plane.x / mag;
-		plane.y = plane.y / mag;
-		plane.z = plane.z / mag;
-		plane.w = plane.w / mag;
-	}
-
-	/// <summary>
-	/// Extract 6 Planes From MVPMatrix
-	/// Scalar Version
-	/// </summary>
-	template <typename T>
-	inline void ExtractPlanesFromVIewProjectionMatrix(const _Matrix4x4<T>& viewProjectionMatrix, math::_Vector4<T>* sixPlanes, bool normalize) noexcept
-	{
-		sixPlanes[0].x = viewProjectionMatrix[0][3] + viewProjectionMatrix[0][0];
-		sixPlanes[0].y = viewProjectionMatrix[1][3] + viewProjectionMatrix[1][0];
-		sixPlanes[0].z = viewProjectionMatrix[2][3] + viewProjectionMatrix[2][0];
-		sixPlanes[0].w = viewProjectionMatrix[3][3] + viewProjectionMatrix[3][0];
-		// Right clipping plane
-		sixPlanes[1].x = viewProjectionMatrix[0][3] - viewProjectionMatrix[0][0];
-		sixPlanes[1].y = viewProjectionMatrix[1][3] - viewProjectionMatrix[1][0];
-		sixPlanes[1].z = viewProjectionMatrix[2][3] - viewProjectionMatrix[2][0];
-		sixPlanes[1].w = viewProjectionMatrix[3][3] - viewProjectionMatrix[3][0];
-		// Top clipping plane
-		sixPlanes[2].x = viewProjectionMatrix[0][3] - viewProjectionMatrix[0][1];
-		sixPlanes[2].y = viewProjectionMatrix[1][3] - viewProjectionMatrix[1][1];
-		sixPlanes[2].z = viewProjectionMatrix[2][3] - viewProjectionMatrix[2][1];
-		sixPlanes[2].w = viewProjectionMatrix[3][3] - viewProjectionMatrix[3][1];
-		// Bottom clipping plane
-		sixPlanes[3].x = viewProjectionMatrix[0][3] + viewProjectionMatrix[0][1];
-		sixPlanes[3].y = viewProjectionMatrix[1][3] + viewProjectionMatrix[1][1];
-		sixPlanes[3].z = viewProjectionMatrix[2][3] + viewProjectionMatrix[2][1];
-		sixPlanes[3].w = viewProjectionMatrix[3][3] + viewProjectionMatrix[3][1];
-		// Near clipping plane
-		sixPlanes[4].x = viewProjectionMatrix[0][3] + viewProjectionMatrix[0][2];
-		sixPlanes[4].y = viewProjectionMatrix[1][3] + viewProjectionMatrix[1][2];
-		sixPlanes[4].z = viewProjectionMatrix[2][3] + viewProjectionMatrix[2][2];
-		sixPlanes[4].w = viewProjectionMatrix[3][3] + viewProjectionMatrix[3][2];
-		// Far clipping plane
-		sixPlanes[5].x = viewProjectionMatrix[0][3] - viewProjectionMatrix[0][2];
-		sixPlanes[5].y = viewProjectionMatrix[1][3] - viewProjectionMatrix[1][2];
-		sixPlanes[5].z = viewProjectionMatrix[2][3] - viewProjectionMatrix[2][2];
-		sixPlanes[5].w = viewProjectionMatrix[3][3] - viewProjectionMatrix[3][2];
-		// Normalize the plane equations, if requested
-		if (normalize == true)
-		{
-			sixPlanes[0].Normalize();
-			sixPlanes[1].Normalize();
-			sixPlanes[2].Normalize();
-			sixPlanes[3].Normalize();
-			sixPlanes[4].Normalize();
-			sixPlanes[5].Normalize();
-		}
-	}
-
-	template <typename T>
-	inline void ExtractSIMDPlanesFromViewProjectionMatrix(const _Matrix4x4<T>& viewProjectionMatrix, math::_Vector4<T>* eightPlanes, bool normalize) noexcept
-	{
-
-		math::Vector4 sixPlane[6]{};
-
-		ExtractPlanesFromVIewProjectionMatrix(viewProjectionMatrix, sixPlane, normalize);
-
-		eightPlanes[0].x = sixPlane[0].x;
-		eightPlanes[0].y = sixPlane[1].x;
-		eightPlanes[0].z = sixPlane[2].x;
-		eightPlanes[0].w = sixPlane[3].x;
-
-		eightPlanes[1].x = sixPlane[0].y;
-		eightPlanes[1].y = sixPlane[1].y;
-		eightPlanes[1].z = sixPlane[2].y;
-		eightPlanes[1].w = sixPlane[3].y;
-
-		eightPlanes[2].x = sixPlane[0].z;
-		eightPlanes[2].y = sixPlane[1].z;
-		eightPlanes[2].z = sixPlane[2].z;
-		eightPlanes[2].w = sixPlane[3].z;
-
-		eightPlanes[3].x = sixPlane[0].w;
-		eightPlanes[3].y = sixPlane[1].w;
-		eightPlanes[3].z = sixPlane[2].w;
-		eightPlanes[3].w = sixPlane[3].w;
-
-		eightPlanes[4].x = sixPlane[4].x;
-		eightPlanes[4].y = sixPlane[5].x;
-		eightPlanes[4].z = sixPlane[4].x;
-		eightPlanes[4].w = sixPlane[5].x;
-
-		eightPlanes[5].x = sixPlane[4].y;
-		eightPlanes[5].y = sixPlane[5].y;
-		eightPlanes[5].z = sixPlane[4].y;
-		eightPlanes[5].w = sixPlane[5].y;
-
-		eightPlanes[6].x = sixPlane[4].z;
-		eightPlanes[6].y = sixPlane[5].z;
-		eightPlanes[6].z = sixPlane[4].z;
-		eightPlanes[6].w = sixPlane[5].z;
-
-		eightPlanes[7].x = sixPlane[4].w;
-		eightPlanes[7].y = sixPlane[5].w;
-		eightPlanes[7].z = sixPlane[4].w;
-		eightPlanes[7].w = sixPlane[5].w;
-
-	}
-
+	
 }
-
-#include "SIMD_Core.h"
-#ifdef SIMD_ENABLED
-#include "Matrix4x4Float_SIMD.inl"
-#endif
-
-namespace math
-{
-	using Matrix4x4 = typename _Matrix4x4<FLOAT32>;
-
-	extern template struct math::_Matrix4x4<FLOAT32>;
-	extern template struct math::_Matrix4x4<FLOAT64>;
-}
-
-clcpp_reflect(math::Matrix4x4)

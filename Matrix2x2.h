@@ -1,43 +1,48 @@
 #pragma once
-#include "Matrix.h"
+#include "LMath_Core.h"
 
 #include "Vector2.h"
 
+#include "Matrix2x2.reflection.h"
 namespace math
 {
-	template <typename T>
-	struct _Matrix2x2
-	{
-		static_assert(CHECK_IS_NUMBER(T));
-		static_assert(CHECK_IS_NOT_CV(T));
 
-		using value_type = typename T;
-		using type = typename _Matrix2x2<T>;
-		template <typename T2>
-		using col_type_template = _Vector2<T2>;
-		using col_type = _Vector2<T>;
+	struct Matrix2x2;
+	struct Matrix3x3;
+	struct Matrix4x4;
+
+	struct Vector2;
+	struct Vector3;
+	struct Vector4;
+	
+	struct D_STRUCT Matrix2x2
+	{
+		GENERATE_BODY()
+
+		using value_type = float;
+		using type = typename Matrix2x2;
+		using col_type = Vector2;
 
 		NO_DISCARD FORCE_INLINE static size_t columnCount() noexcept { return 2; }
+
+		D_PROPERTY()
 		col_type columns[2];
 
-		FORCE_INLINE T* data() noexcept
+		FORCE_INLINE float* data() noexcept
 		{
 			return columns[0].data();
 		}
 
-		const FORCE_INLINE T* data() const noexcept
+		const FORCE_INLINE float* data() const noexcept
 		{
 			return columns[0].data();
 		}
 
-		static const type identify;
+		static const Matrix2x2 identify;
 
-		FORCE_INLINE _Matrix2x2() noexcept : columns{}
-		{
+		FORCE_INLINE Matrix2x2() = delete;
 
-		}
-
-		FORCE_INLINE _Matrix2x2(INT32*) noexcept
+		FORCE_INLINE Matrix2x2(INT32*) noexcept : columns{ nullptr, nullptr }
 		{
 
 		}
@@ -47,14 +52,14 @@ namespace math
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		FORCE_INLINE explicit _Matrix2x2(value_type value) noexcept
+		FORCE_INLINE explicit Matrix2x2(value_type value) noexcept
 			: columns{
 			col_type(value, 0),
 			col_type(0, value) }
 		{
 		}
 
-		FORCE_INLINE _Matrix2x2
+		FORCE_INLINE Matrix2x2
 		(
 			value_type x0, value_type y0,
 			value_type x1, value_type y1
@@ -64,98 +69,48 @@ namespace math
 		{
 		}
 
-
-		FORCE_INLINE _Matrix2x2(const col_type& column0Value, const col_type& column1Value) noexcept
-			: columns{ column0Value, column1Value }
-		{
-		}
-
-		template <typename X, typename Y>
-		FORCE_INLINE _Matrix2x2(const col_type_template<X>& column0, const col_type_template<Y>& column1) noexcept
-			: columns{ column0, column1 }
-		{
-		}
-
-		FORCE_INLINE explicit _Matrix2x2(const type& matrix) noexcept
-			: columns{ matrix.columns[0], matrix.columns[1] }
+		
+		FORCE_INLINE Matrix2x2(const col_type& column0, const col_type& column1) noexcept
+			: columns{ col_type{column0}, col_type{column1} }
 		{
 		}
 		
-		template <typename X>
-		FORCE_INLINE _Matrix2x2(const _Matrix2x2<X>& matrix) noexcept
-			: columns{ matrix.columns[0], matrix.columns[1] }
+		FORCE_INLINE Matrix2x2(const Matrix2x2& matrix) noexcept
+			: columns{ col_type{matrix.columns[0]}, col_type{matrix.columns[1]} }
 		{
 		}
 
-		template <typename X>
-		FORCE_INLINE _Matrix2x2(const _Matrix3x3<X>& matrix) noexcept
-			: columns{ matrix.columns[0], matrix.columns[1] }
-		{
-		}
+		
+		FORCE_INLINE explicit Matrix2x2(const Matrix3x3& matrix) noexcept;
 
-		template <typename X>
-		FORCE_INLINE _Matrix2x2(const _Matrix4x4<X>& matrix) noexcept
-			: columns{ matrix.columns[0], matrix.columns[1] }
-		{
-		}
 
-		FORCE_INLINE type& operator=(value_type value) noexcept
+		FORCE_INLINE explicit Matrix2x2(const Matrix4x4& matrix) noexcept;
+
+		FORCE_INLINE Matrix2x2& operator=(value_type value) noexcept
 		{
 			columns[0] = value;
 			columns[1] = value;
 			return *this;
 		}
 
-		FORCE_INLINE type& operator=(const col_type& column) noexcept
+		FORCE_INLINE Matrix2x2& operator=(const col_type& column) noexcept
 		{
 			columns[0] = column;
 			columns[1] = column;
 			return *this;
 		}
-
-		FORCE_INLINE type& operator=(const type& matrix) noexcept
-		{
-			columns[0] = matrix.columns[0];
-			columns[1] = matrix.columns[1];
-			return *this;
-		}
 		
-		template <typename X>
-		FORCE_INLINE type& operator=(const _Matrix2x2<X>& matrix) noexcept
+		FORCE_INLINE Matrix2x2& operator=(const Matrix2x2& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE type& operator=(const _Matrix3x3<X>& matrix) noexcept
-		{
-			columns[0] = matrix.columns[0];
-			columns[1] = matrix.columns[1];
-			return *this;
-		}
-
-		template <typename X>
-		FORCE_INLINE type& operator=(const _Matrix4x4<X>& matrix) noexcept
-		{
-			columns[0] = matrix.columns[0];
-			columns[1] = matrix.columns[1];
-			return *this;
-		}
-
-		// 		Matrix(const type&) = default;
-		// 		Matrix(type&&) = default;
-		// 		type& opreator=(const type&) = default;
-		// 		type& opreator=(type&&) = default;
-
-		std::basic_string<char> toString() const noexcept
-		{
-			std::stringstream ss;
-			ss << columns[0].x << "  " << columns[1].x << '\n';
-			ss << columns[0].y << "  " << columns[1].y;
-			return ss.str();
-		}
+		
+		FORCE_INLINE Matrix2x2& operator=(const Matrix3x3& matrix) noexcept;
+		
+		FORCE_INLINE Matrix2x2& operator=(const Matrix4x4& matrix) noexcept;
 
 		NO_DISCARD FORCE_INLINE col_type& operator[](size_t i)
 		{
@@ -171,82 +126,70 @@ namespace math
 
 
 
-		template <typename X>
-		FORCE_INLINE type operator+(const _Matrix2x2<X>& rhs) const noexcept
+		
+		FORCE_INLINE Matrix2x2 operator+(const Matrix2x2& rhs) const noexcept
 		{
-			return type(columns[0] + rhs.columns[0], columns[1] + rhs.columns[1]);
+			return Matrix2x2(columns[0] + rhs.columns[0], columns[1] + rhs.columns[1]);
 		}
 
-		template <typename X>
-		FORCE_INLINE type operator-(const _Matrix2x2<X>& rhs) const noexcept
+		
+		FORCE_INLINE Matrix2x2 operator-(const Matrix2x2& rhs) const noexcept
 		{
-			return type(columns[0] - rhs.columns[0], columns[1] - rhs.columns[1]);
+			return Matrix2x2(columns[0] - rhs.columns[0], columns[1] - rhs.columns[1]);
 		}
 
-		template <typename X>
-		NO_DISCARD FORCE_INLINE type operator*(const _Matrix2x2<X>& rhs) const noexcept
+		
+		NO_DISCARD FORCE_INLINE Matrix2x2 operator*(const Matrix2x2& rhs) const noexcept;
+
+
+		NO_DISCARD FORCE_INLINE Vector2 operator*(const Vector2& vector) const noexcept
 		{
-			const col_type SrcA0 = columns[0];
-			const col_type SrcA1 = columns[1];
-
-			const col_type SrcB0 = rhs[0];
-			const col_type SrcB1 = rhs[1];
-
-			_Matrix2x2<T> Result;
-			Result[0] = SrcA0 * SrcB0[0] + SrcA1 * SrcB0[1];
-			Result[1] = SrcA0 * SrcB1[0] + SrcA1 * SrcB1[1];
-			return type{ Result };
-		}
-
-		template <typename X>
-		NO_DISCARD FORCE_INLINE _Vector2<X> operator*(const _Vector2<X>& vector) const noexcept
-		{
-			return  _Vector2<X>
+			return Vector2
 			{
 				this->columns[0][0] * vector[0] + this->columns[1][0] * vector[1],
 					this->columns[0][1] * vector[0] + this->columns[1][1] * vector[1],
 			};
 		}
 
-		FORCE_INLINE type operator+(T rhs) const noexcept
+		FORCE_INLINE Matrix2x2 operator+(float rhs) const noexcept
 		{
-			return type(columns[0] + rhs, columns[1] + rhs);
+			return Matrix2x2(columns[0] + rhs, columns[1] + rhs);
 		}
 
-		FORCE_INLINE type operator-(T rhs) const noexcept
+		FORCE_INLINE Matrix2x2 operator-(float rhs) const noexcept
 		{
-			return type(columns[0] - rhs, columns[1] - rhs);
+			return Matrix2x2(columns[0] - rhs, columns[1] - rhs);
 		}
 
-		FORCE_INLINE type operator*(T rhs) const noexcept
+		FORCE_INLINE Matrix2x2 operator*(float rhs) const noexcept
 		{
-			return type(columns[0] * rhs, columns[1] * rhs);
+			return Matrix2x2(columns[0] * rhs, columns[1] * rhs);
 		}
 
 		/*
-		template <typename X>
-		FORCE_INLINE type operator/(const Matrix<4, X>& rhs)
+		
+		FORCE_INLINE Matrix2x2 operator/(const Matrix<4, X>& rhs)
 		{
-			return type(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
+			return Matrix2x2(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
 		}
 
-		template <typename X>
-		FORCE_INLINE type operator%(const Matrix<4, X>& rhs)
+		
+		FORCE_INLINE Matrix2x2 operator%(const Matrix<4, X>& rhs)
 		{
-			return type(x % rhs.x, y % rhs.y, z % rhs.z, w % rhs.w);
+			return Matrix2x2(x % rhs.x, y % rhs.y, z % rhs.z, w % rhs.w);
 		}
 		*/
 
-		template <typename X>
-		FORCE_INLINE type& operator+=(const _Matrix2x2<X>& rhs) noexcept
+		
+		FORCE_INLINE Matrix2x2& operator+=(const Matrix2x2& rhs) noexcept
 		{
 			columns[0] += rhs.columns[0];
 			columns[1] += rhs.columns[1];
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE type& operator-=(const _Matrix2x2<X>& rhs) noexcept
+		
+		FORCE_INLINE Matrix2x2& operator-=(const Matrix2x2& rhs) noexcept
 		{
 			columns[0] -= rhs.columns[0];
 			columns[1] -= rhs.columns[1];
@@ -254,8 +197,8 @@ namespace math
 		}
 
 
-		template <typename X>
-		FORCE_INLINE type& operator*=(const _Matrix2x2<X>& rhs) noexcept
+		
+		FORCE_INLINE Matrix2x2& operator*=(const Matrix2x2& rhs) noexcept
 		{
 			return (*this = *this * rhs);
 		}
@@ -263,8 +206,8 @@ namespace math
 
 
 		/*
-		template <typename X>
-		FORCE_INLINE type& operator/=(const Matrix<4, X>& rhs)
+		
+		FORCE_INLINE Matrix2x2& operator/=(const Matrix<4, X>& rhs)
 		{
 			x /= rhs.x;
 			y /= rhs.y;
@@ -273,8 +216,8 @@ namespace math
 			return *this;
 		}
 
-		template <typename X>
-		FORCE_INLINE type& operator%=(const Matrix<4, X>& rhs)
+		
+		FORCE_INLINE Matrix2x2& operator%=(const Matrix<4, X>& rhs)
 		{
 			x %= rhs.x;
 			y %= rhs.y;
@@ -285,21 +228,21 @@ namespace math
 		*/
 		//
 
-		FORCE_INLINE type& operator+=(T scalar) noexcept
+		FORCE_INLINE Matrix2x2& operator+=(float scalar) noexcept
 		{
 			columns[0] += scalar;
 			columns[1] += scalar;
 			return *this;
 		}
 
-		FORCE_INLINE type& operator-=(T scalar) noexcept
+		FORCE_INLINE Matrix2x2& operator-=(float scalar) noexcept
 		{
 			columns[0] -= scalar;
 			columns[1] -= scalar;
 			return *this;
 		}
 
-		FORCE_INLINE type& operator*=(T scalar) noexcept
+		FORCE_INLINE Matrix2x2& operator*=(float scalar) noexcept
 		{
 			columns[0] *= scalar;
 			columns[1] *= scalar;
@@ -307,8 +250,8 @@ namespace math
 		}
 
 		/*
-		template <typename X>
-		FORCE_INLINE type& operator/=(const X& scalar)
+		
+		FORCE_INLINE Matrix2x2& operator/=(const X& scalar)
 		{
 			x /= scalar;
 			y /= scalar;
@@ -319,7 +262,7 @@ namespace math
 
 
 		template <typename X, std::enable_if_t<std::is_integral_v<X>, bool> = true>
-		FORCE_INLINE type& operator%=(const X& scalar)
+		FORCE_INLINE Matrix2x2& operator%=(const X& scalar)
 		{
 			x %= scalar;
 			y %= scalar;
@@ -329,7 +272,7 @@ namespace math
 		}
 
 		template <typename X, std::enable_if_t<std::is_floating_point_v<X>, bool> = true>
-		FORCE_INLINE type& operator%=(const X& scalar)
+		FORCE_INLINE Matrix2x2& operator%=(const X& scalar)
 		{
 
 			x %= std::fmod(x, scalar);
@@ -342,22 +285,22 @@ namespace math
 
 		//
 
-		NO_DISCARD FORCE_INLINE bool operator==(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(const Matrix2x2& rhs) const noexcept
 		{
 			return this->columns[0] == rhs.columns[0] && this->columns[1] == rhs.columns[1];
 		}
 
-		NO_DISCARD FORCE_INLINE bool operator!=(const type& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(const Matrix2x2& rhs) const noexcept
 		{
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1];
 		}
 
-		NO_DISCARD FORCE_INLINE bool operator==(T number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(float number) const noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number;
 		}
 
-		NO_DISCARD FORCE_INLINE bool operator!=(T number) const noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(float number) const noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number;
 		}
@@ -366,7 +309,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE type& operator++() noexcept
+		FORCE_INLINE Matrix2x2& operator++() noexcept
 		{
 			++columns[0];
 			++columns[1];
@@ -378,18 +321,18 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE type operator++(INT32) noexcept
+		FORCE_INLINE Matrix2x2 operator++(INT32) noexcept
 		{
-			type Matrix{ *this };
+			Matrix2x2 Matrix{ *this };
 			++* this;
-			return Matrix;
+			return Matrix2x2{ Matrix };
 		}
 
 		/// <summary>
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE type& operator--() noexcept
+		FORCE_INLINE Matrix2x2& operator--() noexcept
 		{
 			--columns[0];
 			--columns[1];
@@ -401,26 +344,21 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE type operator--(INT32) noexcept
+		FORCE_INLINE Matrix2x2 operator--(INT32) noexcept
 		{
-			type Matrix{ *this };
+			Matrix2x2 Matrix{ *this };
 			--* this;
-			return Matrix;
+			return Matrix2x2{ Matrix };
 		}
-
-		operator std::basic_string<char>() const noexcept
-		{
-			return this->toString();
-		}
-
-		template <typename U = T, std::enable_if_t<std::is_signed_v<U>, bool> = true>
-		inline type inverse() const noexcept
+		
+		template <typename U = float, std::enable_if_t<std::is_signed_v<U>, bool> = true>
+		inline Matrix2x2 inverse() const noexcept
 		{
 			value_type OneOverDetercolumnsinant = static_cast<value_type>(1) / (
 				+columns[0][0] * columns[1][1]
 				- columns[1][0] * columns[0][1]);
 
-			type Inverse(
+			Matrix2x2 Inverse(
 				+columns[1][1] * OneOverDetercolumnsinant,
 				-columns[0][1] * OneOverDetercolumnsinant,
 				-columns[1][0] * OneOverDetercolumnsinant,
@@ -429,14 +367,14 @@ namespace math
 			return Inverse;
 		}
 
-		inline type transpose() const noexcept
+		inline Matrix2x2 transpose() const noexcept
 		{
-			type Result;
+			Matrix2x2 Result{ nullptr };
 			Result[0][0] = columns[0][0];
 			Result[0][1] = columns[1][0];
 			Result[1][0] = columns[0][1];
 			Result[1][1] = columns[1][1];
-			return Result;
+			return Matrix2x2{ Result };
 		}
 
 		inline value_type determinant() const noexcept
@@ -444,31 +382,23 @@ namespace math
 			return columns[0][0] * columns[1][1] - columns[1][0] * columns[0][1];
 		}
 
-		inline auto trace() const noexcept
+		inline FLOAT32 trace() const noexcept
 		{
 			return columns[0][0] + columns[1][1];
 		}
 	};
-
-	template<typename T>
-	FORCE_INLINE _Matrix2x2<T> operator+(const _Matrix2x2<T>& matrix) noexcept
+	
+	extern NO_DISCARD FORCE_INLINE Matrix2x2 operator+(const Matrix2x2& matrix) noexcept
 	{
-		return matrix;
+		return Matrix2x2{ matrix };
 	}
-
-	template<typename T>
-	FORCE_INLINE _Matrix2x2<T> operator-(const _Matrix2x2<T>& matrix) noexcept
+	
+	extern NO_DISCARD FORCE_INLINE Matrix2x2 operator-(const Matrix2x2& matrix) noexcept
 	{
-		return _Matrix2x2<T>(
+		return Matrix2x2(
 			-matrix.columns[0],
 			-matrix.columns[1]);
 	}
-
-	using Matrix2x2 = typename _Matrix2x2<FLOAT32>;
-
-	extern template struct math::_Matrix2x2<FLOAT32>;
-	extern template struct math::_Matrix2x2<FLOAT64>;
-
+	
 }
 
-clcpp_reflect(math::Matrix2x2)

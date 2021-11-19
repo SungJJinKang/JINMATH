@@ -5,20 +5,20 @@
 
 namespace math
 {
-	template<typename T>
-	math::_Matrix4x4<T> frustum(const T& left, const T& right, const T& bottom, const T& top, const T& nearVal, const T& farVal);
+	
+	math::Matrix4x4 frustum(const float& left, const float& right, const float& bottom, const float& top, const float& nearVal, const float& farVal);
 
-	template<typename T>
-	math::_Matrix4x4<T> infinitePerspective(T fovy, T aspect, T zNear);
+	
+	math::Matrix4x4 infinitePerspective(float fovy, float aspect, float zNear);
 
-	template<typename T>
-	inline math::_Matrix4x4<T> lookAtRH(const math::_Vector3<T>& eye, const math::_Vector3<T>& center, const math::_Vector3<T>& up)
+	
+	inline math::Matrix4x4 lookAtRH(const math::Vector3& eye, const math::Vector3& center, const math::Vector3& up)
 	{
-		const math::_Vector3<T> f((center - eye).normalized());
-		const math::_Vector3<T> s(normalize(cross(f, up)));
-		const math::_Vector3<T> u(cross(s, f));
+		const math::Vector3 f((center - eye).normalized());
+		const math::Vector3 s(normalize(cross(f, up)));
+		const math::Vector3 u(cross(s, f));
 
-		math::_Matrix4x4<T>  Result(1);
+		math::Matrix4x4  Result(1);
 		Result[0][0] = s.x;
 		Result[1][0] = s.y;
 		Result[2][0] = s.z;
@@ -34,14 +34,14 @@ namespace math
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> lookAtLH(const math::_Vector3<T>& eye, const math::_Vector3<T>& center, const math::_Vector3<T>& up)
+	
+	inline math::Matrix4x4 lookAtLH(const math::Vector3& eye, const math::Vector3& center, const math::Vector3& up)
 	{
-		const math::_Vector3<T> f(normalize(center - eye));
-		const math::_Vector3<T> s(normalize(cross(up, f)));
-		const math::_Vector3<T> u(cross(f, s));
+		const math::Vector3 f(normalize(center - eye));
+		const math::Vector3 s(normalize(cross(up, f)));
+		const math::Vector3 u(cross(f, s));
 
-		math::_Matrix4x4<T> Result(1);
+		math::Matrix4x4 Result(1);
 		Result[0][0] = s.x;
 		Result[1][0] = s.y;
 		Result[2][0] = s.z;
@@ -57,8 +57,8 @@ namespace math
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> lookAt(const math::_Vector3<T>& eye, const math::_Vector3<T>& center, const math::_Vector3<T>& up)
+	
+	inline math::Matrix4x4 lookAt(const math::Vector3& eye, const math::Vector3& center, const math::Vector3& up)
 	{
 #       if (CURRENT_COORDINATE_SYSTEM == LEFT_HAND)
 		return lookAtLH(eye, center, up);
@@ -67,72 +67,72 @@ namespace math
 #       endif
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> orthoLH_ZO(T left, T right, T bottom, T top, T zNear, T zFar)
+	
+	inline math::Matrix4x4 orthoLH_ZO(float left, float right, float bottom, float top, float zNear, float zFar)
 	{
-		math::_Matrix4x4<T> Result(1);
-		Result[0][0] = static_cast<T>(2) / (right - left);
-		Result[1][1] = static_cast<T>(2) / (top - bottom);
-		Result[2][2] = static_cast<T>(1) / (zFar - zNear);
+		math::Matrix4x4 Result(1);
+		Result[0][0] = static_cast<float>(2) / (right - left);
+		Result[1][1] = static_cast<float>(2) / (top - bottom);
+		Result[2][2] = static_cast<float>(1) / (zFar - zNear);
 		Result[3][0] = -(right + left) / (right - left);
 		Result[3][1] = -(top + bottom) / (top - bottom);
 		Result[3][2] = -zNear / (zFar - zNear);
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> orthoLH_NO(T left, T right, T bottom, T top, T zNear, T zFar)
+	
+	inline math::Matrix4x4 orthoLH_NO(float left, float right, float bottom, float top, float zNear, float zFar)
 	{
-		math::_Matrix4x4<T> Result(1);
-		Result[0][0] = static_cast<T>(2) / (right - left);
-		Result[1][1] = static_cast<T>(2) / (top - bottom);
-		Result[2][2] = static_cast<T>(2) / (zFar - zNear);
+		math::Matrix4x4 Result(1);
+		Result[0][0] = static_cast<float>(2) / (right - left);
+		Result[1][1] = static_cast<float>(2) / (top - bottom);
+		Result[2][2] = static_cast<float>(2) / (zFar - zNear);
 		Result[3][0] = -(right + left) / (right - left);
 		Result[3][1] = -(top + bottom) / (top - bottom);
 		Result[3][2] = -(zFar + zNear) / (zFar - zNear);
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> orthoRH_ZO(T left, T right, T bottom, T top, T zNear, T zFar)
+	
+	inline math::Matrix4x4 orthoRH_ZO(float left, float right, float bottom, float top, float zNear, float zFar)
 	{
-		math::_Matrix4x4<T> Result(1);
-		Result[0][0] = static_cast<T>(2) / (right - left);
-		Result[1][1] = static_cast<T>(2) / (top - bottom);
-		Result[2][2] = -static_cast<T>(1) / (zFar - zNear);
+		math::Matrix4x4 Result(1);
+		Result[0][0] = static_cast<float>(2) / (right - left);
+		Result[1][1] = static_cast<float>(2) / (top - bottom);
+		Result[2][2] = -static_cast<float>(1) / (zFar - zNear);
 		Result[3][0] = -(right + left) / (right - left);
 		Result[3][1] = -(top + bottom) / (top - bottom);
 		Result[3][2] = -zNear / (zFar - zNear);
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> orthoRH_NO(T left, T right, T bottom, T top, T zNear, T zFar)
+	
+	inline math::Matrix4x4 orthoRH_NO(float left, float right, float bottom, float top, float zNear, float zFar)
 	{
-		math::_Matrix4x4<T> Result(1);
-		Result[0][0] = static_cast<T>(2) / (right - left);
-		Result[1][1] = static_cast<T>(2) / (top - bottom);
-		Result[2][2] = -static_cast<T>(2) / (zFar - zNear);
+		math::Matrix4x4 Result(1);
+		Result[0][0] = static_cast<float>(2) / (right - left);
+		Result[1][1] = static_cast<float>(2) / (top - bottom);
+		Result[2][2] = -static_cast<float>(2) / (zFar - zNear);
 		Result[3][0] = -(right + left) / (right - left);
 		Result[3][1] = -(top + bottom) / (top - bottom);
 		Result[3][2] = -(zFar + zNear) / (zFar - zNear);
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> ortho(const T& left, const T& right, const T& bottom, const T& top)
+	
+	inline math::Matrix4x4 ortho(const float& left, const float& right, const float& bottom, const float& top)
 	{
-		math::_Matrix4x4<T> Result(static_cast<T>(1));
-		Result[0][0] = static_cast<T>(2) / (right - left);
-		Result[1][1] = static_cast<T>(2) / (top - bottom);
-		Result[2][2] = -static_cast<T>(1);
+		math::Matrix4x4 Result(static_cast<float>(1));
+		Result[0][0] = static_cast<float>(2) / (right - left);
+		Result[1][1] = static_cast<float>(2) / (top - bottom);
+		Result[2][2] = -static_cast<float>(1);
 		Result[3][0] = -(right + left) / (right - left);
 		Result[3][1] = -(top + bottom) / (top - bottom);
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> ortho(T left, T right, T bottom, T top, T zNear, T zFar)
+	
+	inline math::Matrix4x4 ortho(float left, float right, float bottom, float top, float zNear, float zFar)
 	{
 #		if CURRENT_SETTING == LEFT_HAND_ZERO_TO_ONE
 		return orthoLH_ZO(left, right, bottom, top, zNear, zFar);
@@ -145,72 +145,72 @@ namespace math
 #		endif
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> perspectiveRH_ZO(T fovy, T aspect, T zNear, T zFar)
+	
+	inline math::Matrix4x4 perspectiveRH_ZO(float fovy, float aspect, float zNear, float zFar)
 	{
-		assert(abs(aspect - std::numeric_limits<T>::epsilon()) > static_cast<T>(0));
+		assert(std::abs(aspect - std::numeric_limits<float>::epsilon()) > static_cast<float>(0));
 
-		T const tanHalfFovy = math::tan(fovy / static_cast<T>(2));
+		float const tanHalfFovy = std::tan(fovy / static_cast<float>(2));
 
-		math::_Matrix4x4<T> Result(static_cast<T>(0));
-		Result[0][0] = static_cast<T>(1) / (aspect * tanHalfFovy);
-		Result[1][1] = static_cast<T>(1) / (tanHalfFovy);
+		math::Matrix4x4 Result(static_cast<float>(0));
+		Result[0][0] = static_cast<float>(1) / (aspect * tanHalfFovy);
+		Result[1][1] = static_cast<float>(1) / (tanHalfFovy);
 		Result[2][2] = zFar / (zNear - zFar);
-		Result[2][3] = -static_cast<T>(1);
+		Result[2][3] = -static_cast<float>(1);
 		Result[3][2] = -(zFar * zNear) / (zFar - zNear);
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> perspectiveRH_NO(T fovy, T aspect, T zNear, T zFar)
+	
+	inline math::Matrix4x4 perspectiveRH_NO(float fovy, float aspect, float zNear, float zFar)
 	{
-		assert(math::abs(aspect - math::epsilon<T>()) > static_cast<T>(0));
+		assert(std::abs(aspect - std::numeric_limits<float>::epsilon()) > static_cast<float>(0));
 
-		T const tanHalfFovy = math::tan(fovy / static_cast<T>(2));
+		float const tanHalfFovy = std::tan(fovy / static_cast<float>(2));
 
-		math::_Matrix4x4<T> Result(static_cast<T>(0));
-		Result[0][0] = static_cast<T>(1) / (aspect * tanHalfFovy);
-		Result[1][1] = static_cast<T>(1) / (tanHalfFovy);
+		math::Matrix4x4 Result(static_cast<float>(0));
+		Result[0][0] = static_cast<float>(1) / (aspect * tanHalfFovy);
+		Result[1][1] = static_cast<float>(1) / (tanHalfFovy);
 		Result[2][2] = -(zFar + zNear) / (zFar - zNear);
-		Result[2][3] = -static_cast<T>(1);
-		Result[3][2] = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
+		Result[2][3] = -static_cast<float>(1);
+		Result[3][2] = -(static_cast<float>(2) * zFar * zNear) / (zFar - zNear);
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> perspectiveLH_ZO(T fovy, T aspect, T zNear, T zFar)
+	
+	inline math::Matrix4x4 perspectiveLH_ZO(float fovy, float aspect, float zNear, float zFar)
 	{
-		assert(abs(aspect - math::epsilon<T>()) > static_cast<T>(0));
+		assert(std::abs(aspect - std::numeric_limits<float>::epsilon()) > static_cast<float>(0));
 
-		T const tanHalfFovy = math::tan(fovy / static_cast<T>(2));
+		float const tanHalfFovy = std::tan(fovy / static_cast<float>(2));
 
-		math::_Matrix4x4<T> Result(static_cast<T>(0));
-		Result[0][0] = static_cast<T>(1) / (aspect * tanHalfFovy);
-		Result[1][1] = static_cast<T>(1) / (tanHalfFovy);
+		math::Matrix4x4 Result(static_cast<float>(0));
+		Result[0][0] = static_cast<float>(1) / (aspect * tanHalfFovy);
+		Result[1][1] = static_cast<float>(1) / (tanHalfFovy);
 		Result[2][2] = zFar / (zFar - zNear);
-		Result[2][3] = static_cast<T>(1);
+		Result[2][3] = static_cast<float>(1);
 		Result[3][2] = -(zFar * zNear) / (zFar - zNear);
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> perspectiveLH_NO(T fovy, T aspect, T zNear, T zFar)
+	
+	inline math::Matrix4x4 perspectiveLH_NO(float fovy, float aspect, float zNear, float zFar)
 	{
-		assert(abs(aspect - math::epsilon<T>()) > static_cast<T>(0));
+		assert(std::abs(aspect - std::numeric_limits<float>::epsilon()) > static_cast<float>(0));
 
-		T const tanHalfFovy = math::tan(fovy / static_cast<T>(2));
+		float const tanHalfFovy = std::tan(fovy / static_cast<float>(2));
 
-		math::_Matrix4x4<T> Result(static_cast<T>(0));
-		Result[0][0] = static_cast<T>(1) / (aspect * tanHalfFovy);
-		Result[1][1] = static_cast<T>(1) / (tanHalfFovy);
+		math::Matrix4x4 Result(static_cast<float>(0));
+		Result[0][0] = static_cast<float>(1) / (aspect * tanHalfFovy);
+		Result[1][1] = static_cast<float>(1) / (tanHalfFovy);
 		Result[2][2] = (zFar + zNear) / (zFar - zNear);
-		Result[2][3] = static_cast<T>(1);
-		Result[3][2] = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
+		Result[2][3] = static_cast<float>(1);
+		Result[3][2] = -(static_cast<float>(2) * zFar * zNear) / (zFar - zNear);
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> perspective(const T& fovy, const T& aspect, const T& zNear, const T& zFar)
+	
+	inline math::Matrix4x4 perspective(const float& fovy, const float& aspect, const float& zNear, const float& zFar)
 	{
 #		if CURRENT_SETTING == LEFT_HAND_ZERO_TO_ONE
 			return perspectiveLH_ZO(fovy, aspect, zNear, zFar);
@@ -225,89 +225,89 @@ namespace math
 
 
 
-	template<typename T>
-	inline math::_Matrix4x4<T> perspectiveFovRH_ZO(T fov, T width, T height, T zNear, T zFar)
+	
+	inline math::Matrix4x4 perspectiveFovRH_ZO(float fov, float width, float height, float zNear, float zFar)
 	{
-		assert(width > static_cast<T>(0));
-		assert(height > static_cast<T>(0));
-		assert(fov > static_cast<T>(0));
+		assert(width > static_cast<float>(0));
+		assert(height > static_cast<float>(0));
+		assert(fov > static_cast<float>(0));
 
-		T const rad = fov;
-		T const h = math::cos(static_cast<T>(0.5) * rad) / math::sin(static_cast<T>(0.5) * rad);
-		T const w = h * height / width; ///todo max(width , Height) / min(width , Height)?
+		float const rad = fov;
+		float const h = std::cos(static_cast<float>(0.5) * rad) / std::sin(static_cast<float>(0.5) * rad);
+		float const w = h * height / width; ///todo max(width , Height) / min(width , Height)?
 
-		math::_Matrix4x4<T> Result(static_cast<T>(0));
+		math::Matrix4x4 Result(static_cast<float>(0));
 		Result[0][0] = w;
 		Result[1][1] = h;
 		Result[2][2] = zFar / (zNear - zFar);
-		Result[2][3] = -static_cast<T>(1);
+		Result[2][3] = -static_cast<float>(1);
 		Result[3][2] = -(zFar * zNear) / (zFar - zNear);
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> perspectiveFovRH_NO(T fov, T width, T height, T zNear, T zFar)
+	
+	inline math::Matrix4x4 perspectiveFovRH_NO(float fov, float width, float height, float zNear, float zFar)
 	{
-		assert(width > static_cast<T>(0));
-		assert(height > static_cast<T>(0));
-		assert(fov > static_cast<T>(0));
+		assert(width > static_cast<float>(0));
+		assert(height > static_cast<float>(0));
+		assert(fov > static_cast<float>(0));
 
-		T const rad = fov;
-		T const h = math::cos(static_cast<T>(0.5) * rad) / math::sin(static_cast<T>(0.5) * rad);
-		T const w = h * height / width; ///todo max(width , Height) / min(width , Height)?
+		float const rad = fov;
+		float const h = std::cos(static_cast<float>(0.5) * rad) / std::sin(static_cast<float>(0.5) * rad);
+		float const w = h * height / width; ///todo max(width , Height) / min(width , Height)?
 
-		math::_Matrix4x4<T> Result(static_cast<T>(0));
+		math::Matrix4x4 Result(static_cast<float>(0));
 		Result[0][0] = w;
 		Result[1][1] = h;
 		Result[2][2] = -(zFar + zNear) / (zFar - zNear);
-		Result[2][3] = -static_cast<T>(1);
-		Result[3][2] = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
+		Result[2][3] = -static_cast<float>(1);
+		Result[3][2] = -(static_cast<float>(2) * zFar * zNear) / (zFar - zNear);
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> perspectiveFovLH_ZO(T fov, T width, T height, T zNear, T zFar)
+	
+	inline math::Matrix4x4 perspectiveFovLH_ZO(float fov, float width, float height, float zNear, float zFar)
 	{
-		assert(width > static_cast<T>(0));
-		assert(height > static_cast<T>(0));
-		assert(fov > static_cast<T>(0));
+		assert(width > static_cast<float>(0));
+		assert(height > static_cast<float>(0));
+		assert(fov > static_cast<float>(0));
 
-		T const rad = fov;
-		T const h = math::cos(static_cast<T>(0.5) * rad) / math::sin(static_cast<T>(0.5) * rad);
-		T const w = h * height / width; ///todo max(width , Height) / min(width , Height)?
+		float const rad = fov;
+		float const h = std::cos(static_cast<float>(0.5) * rad) / std::sin(static_cast<float>(0.5) * rad);
+		float const w = h * height / width; ///todo max(width , Height) / min(width , Height)?
 
-		math::_Matrix4x4<T> Result(static_cast<T>(0));
+		math::Matrix4x4 Result(static_cast<float>(0));
 		Result[0][0] = w;
 		Result[1][1] = h;
 		Result[2][2] = zFar / (zFar - zNear);
-		Result[2][3] = static_cast<T>(1);
+		Result[2][3] = static_cast<float>(1);
 		Result[3][2] = -(zFar * zNear) / (zFar - zNear);
 		return Result;
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> perspectiveFovLH_NO(T fov, T width, T height, T zNear, T zFar)
+	
+	inline math::Matrix4x4 perspectiveFovLH_NO(float fov, float width, float height, float zNear, float zFar)
 	{
-		assert(width > static_cast<T>(0));
-		assert(height > static_cast<T>(0));
-		assert(fov > static_cast<T>(0));
+		assert(width > static_cast<float>(0));
+		assert(height > static_cast<float>(0));
+		assert(fov > static_cast<float>(0));
 
-		T const rad = fov;
-		T const h = math::cos(static_cast<T>(0.5) * rad) / math::sin(static_cast<T>(0.5) * rad);
-		T const w = h * height / width; ///todo max(width , Height) / min(width , Height)?
+		float const rad = fov;
+		float const h = std::cos(static_cast<float>(0.5) * rad) / std::sin(static_cast<float>(0.5) * rad);
+		float const w = h * height / width; ///todo max(width , Height) / min(width , Height)?
 
-		math::_Matrix4x4<T> Result(static_cast<T>(0));
+		math::Matrix4x4 Result(static_cast<float>(0));
 		Result[0][0] = w;
 		Result[1][1] = h;
 		Result[2][2] = (zFar + zNear) / (zFar - zNear);
-		Result[2][3] = static_cast<T>(1);
-		Result[3][2] = -(static_cast<T>(2) * zFar * zNear) / (zFar - zNear);
+		Result[2][3] = static_cast<float>(1);
+		Result[3][2] = -(static_cast<float>(2) * zFar * zNear) / (zFar - zNear);
 		return Result;
 	}
 
 
-	template<typename T>
-	inline math::_Matrix4x4<T> perspectiveFov(T fov, T width, T height, T zNear, T zFar)
+	
+	inline math::Matrix4x4 perspectiveFov(float fov, float width, float height, float zNear, float zFar)
 	{
 #		if CURRENT_SETTING == LEFT_HAND_ZERO_TO_ONE
 		return perspectiveFovLH_ZO(fov, width, height, zNear, zFar);
@@ -321,46 +321,42 @@ namespace math
 	}
 
 	/*
-	template<typename T, typename U>
-	math::_Matrix4x4<T> pickMatrix(const math::_Vector2<T>& center, const math::_Vector2<T>& delta, const math::_Vector4<U>& viewport);
+	template<typename float, typename U>
+	math::Matrix4x4 pickMatrix(const math::Vector2& center, const math::Vector2& delta, const math::Vector4<U>& viewport);
 	*/
 
-
-
-	template<typename T, typename U>
-	inline math::_Vector3<T> projectZeroToOne(const math::_Vector3<T>& obj, const math::_Matrix4x4<T>& model, const math::_Matrix4x4<T>& proj, const math::_Vector4<U>& viewport)
+	
+	inline math::Vector3 projectZeroToOne(const math::Vector3& obj, const math::Matrix4x4& model, const math::Matrix4x4& proj, const math::Vector4& viewport)
 	{
-		math::_Vector4<T> tmp = math::_Vector4<T>(obj, static_cast<T>(1));
+		math::Vector4 tmp = math::Vector4(obj, static_cast<float>(1));
 		tmp = model * tmp;
 		tmp = proj * tmp;
 
 		tmp /= tmp.w;
-		tmp.x = tmp.x * static_cast<T>(0.5) + static_cast<T>(0.5);
-		tmp.y = tmp.y * static_cast<T>(0.5) + static_cast<T>(0.5);
+		tmp.x = tmp.x * static_cast<float>(0.5) + static_cast<float>(0.5);
+		tmp.y = tmp.y * static_cast<float>(0.5) + static_cast<float>(0.5);
 
-		tmp[0] = tmp[0] * T(viewport[2]) + T(viewport[0]);
-		tmp[1] = tmp[1] * T(viewport[3]) + T(viewport[1]);
+		tmp[0] = tmp[0] * float(viewport[2]) + float(viewport[0]);
+		tmp[1] = tmp[1] * float(viewport[3]) + float(viewport[1]);
 
-		return math::_Vector3<T>(tmp);
+		return math::Vector3(tmp);
 	}
 
-	template<typename T, typename U>
-	inline math::_Vector3<T> projectNOneToOne(const math::_Vector3<T>& obj, const math::_Matrix4x4<T>& model, const math::_Matrix4x4<T>& proj, const math::_Vector4<U>& viewport)
+	inline math::Vector3 projectNOneToOne(const math::Vector3& obj, const math::Matrix4x4& model, const math::Matrix4x4& proj, const math::Vector4& viewport)
 	{
-		math::_Vector4<T> tmp = math::_Vector4<T>(obj, static_cast<T>(1));
+		math::Vector4 tmp = math::Vector4(obj, static_cast<float>(1));
 		tmp = model * tmp;
 		tmp = proj * tmp;
 
 		tmp /= tmp.w;
-		tmp = tmp * static_cast<T>(0.5) + static_cast<T>(0.5);
-		tmp[0] = tmp[0] * T(viewport[2]) + T(viewport[0]);
-		tmp[1] = tmp[1] * T(viewport[3]) + T(viewport[1]);
+		tmp = tmp * static_cast<float>(0.5) + static_cast<float>(0.5);
+		tmp[0] = tmp[0] * float(viewport[2]) + float(viewport[0]);
+		tmp[1] = tmp[1] * float(viewport[3]) + float(viewport[1]);
 
-		return math::_Vector3<T>(tmp);
+		return math::Vector3(tmp);
 	}
-
-	template<typename T, typename U>
-	inline math::_Vector3<T> project(const math::_Vector3<T>& obj, const math::_Matrix4x4<T>& model, const math::_Matrix4x4<T>& proj, const math::_Vector4<U>& viewport)
+	
+	inline math::Vector3 project(const math::Vector3& obj, const math::Matrix4x4& model, const math::Matrix4x4& proj, const math::Vector4& viewport)
 	{
 #		if CURRENT_CLIP_RANGE == CLIP_RANGE_NEGATIVE_ONE_TO_ONE
 		return projectZeroToOne(obj, model, proj, viewport);
@@ -369,17 +365,17 @@ namespace math
 #		endif
 	}
 
-	template<typename T>
-	inline math::_Matrix4x4<T> rotate(const math::_Matrix4x4<T>& m, const T& angle, const math::_Vector3<T>& v)
+	
+	inline math::Matrix4x4 rotate(const math::Matrix4x4& m, const float& angle, const math::Vector3& v)
 	{
-		const T a = angle;
-		const T c = math::cos(a);
-		const T s = math::sin(a);
+		const float a = angle;
+		const float c = std::cos(a);
+		const float s = std::sin(a);
 
-		math::_Vector3<T> axis(v.normalized());
-		math::_Vector3<T> temp((T(1) - c) * axis);
+		math::Vector3 axis(v.normalized());
+		math::Vector3 temp((float(1) - c) * axis);
 
-		math::_Matrix4x4<T> Rotate;
+		math::Matrix4x4 Rotate{ nullptr };
 		Rotate[0][0] = c + temp[0] * axis[0];
 		Rotate[0][1] = temp[0] * axis[1] + s * axis[2];
 		Rotate[0][2] = temp[0] * axis[2] - s * axis[1];
@@ -392,7 +388,7 @@ namespace math
 		Rotate[2][1] = temp[2] * axis[1] - s * axis[0];
 		Rotate[2][2] = c + temp[2] * axis[2];
 
-		math::_Matrix4x4<T> Result;
+		math::Matrix4x4 Result{ nullptr };
 		Result[0] = m[0] * Rotate[0][0] + m[1] * Rotate[0][1] + m[2] * Rotate[0][2];
 		Result[1] = m[0] * Rotate[1][0] + m[1] * Rotate[1][1] + m[2] * Rotate[1][2];
 		Result[2] = m[0] * Rotate[2][0] + m[1] * Rotate[2][1] + m[2] * Rotate[2][2];
@@ -400,16 +396,16 @@ namespace math
 		return Result;
 	}
 
-	template<typename T>
-	FORCE_INLINE math::_Matrix4x4<T> rotate(const T& angle, const math::_Vector3<T>& v)
+	
+	FORCE_INLINE math::Matrix4x4 rotate(const float& angle, const math::Vector3& v)
 	{
-		return math::rotate(_Matrix4x4<T>(static_cast<T>(1)), angle, v);
+		return math::rotate(Matrix4x4(static_cast<float>(1)), angle, v);
 	}
 
-	template<typename T>
-	FORCE_INLINE math::_Matrix4x4<T> scale(const math::_Matrix4x4<T>& m, const math::_Vector3<T>& v)
+	
+	FORCE_INLINE math::Matrix4x4 scale(const math::Matrix4x4& m, const math::Vector3& v)
 	{
-		math::_Matrix4x4<T> Result;
+		math::Matrix4x4 Result{ nullptr };
 		Result[0] = m[0] * v[0];
 		Result[1] = m[1] * v[1];
 		Result[2] = m[2] * v[2];
@@ -417,31 +413,31 @@ namespace math
 		return Result;
 	}
 
-	template<typename T>
-	FORCE_INLINE math::_Matrix4x4<T> scale(const math::_Vector3<T>& v)
+	
+	FORCE_INLINE math::Matrix4x4 scale(const math::Vector3& v)
 	{
-		return math::scale(_Matrix4x4<T>(static_cast<T>(1)), v);
+		return math::scale(Matrix4x4(static_cast<float>(1)), v);
 	}
 
-	template<typename T>
-	FORCE_INLINE math::_Matrix4x4<T> translate(const math::_Matrix4x4<T>& m, const math::_Vector3<T>& v)
+	
+	FORCE_INLINE math::Matrix4x4 translate(const math::Matrix4x4& m, const math::Vector3& v)
 	{
-		math::_Matrix4x4<T> Result(m);
+		math::Matrix4x4 Result(m);
 		Result[3] = m[0] * v[0] + m[1] * v[1] + m[2] * v[2] + m[3];
 		return Result;
 	}
 
-	template<typename T>
-	FORCE_INLINE math::_Matrix4x4<T> translate(const math::_Vector3<T>& v)
+	
+	FORCE_INLINE math::Matrix4x4 translate(const math::Vector3& v)
 	{
-		return math::translate(_Matrix4x4<T>(static_cast<T>(1)), v);;
+		return math::translate(Matrix4x4(static_cast<float>(1)), v);;
 	}
 
 	/*
-	template<typename T>
-	math::_Matrix4x4<T> tweakedInfinitePerspective(T fovy, T aspect, T zNear);
+	
+	math::Matrix4x4 tweakedInfinitePerspective(float fovy, float aspect, float zNear);
 
-	template<typename T, typename U>
-	math::_Vector3<T> unProject(const math::_Vector3<T>& win, const math::_Matrix4x4<T>& model, const math::_Matrix4x4<T>& proj, const math::_Vector4<U>& viewport);
+	template<typename float, typename U>
+	math::Vector3 unProject(const math::Vector3& win, const math::Matrix4x4& model, const math::Matrix4x4& proj, const math::Vector4<U>& viewport);
 	*/
 }

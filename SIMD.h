@@ -2,11 +2,6 @@
 
 #include "LMath_Core.h"
 
-#ifndef ACTIVATE_SIMD
-#define ACTIVATE_SIMD
-#endif
-
-#ifdef ACTIVATE_SIMD
 
 #if defined(__AVX__) || defined(__AVX2__)
 
@@ -18,8 +13,12 @@
 #define L_AVX
 #endif
 
+#else
+
+#error "Please Enable AVX1 or AVX2 option"
+
 #endif
-#endif
+
 
 
 /*

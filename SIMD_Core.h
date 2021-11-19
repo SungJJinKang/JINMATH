@@ -8,10 +8,6 @@
 
 #include "SIMD.h"
 
-#ifdef SIMD_ENABLED
-
-
-
 #include <immintrin.h>
 
 #if defined(__GNUC__)  || defined( __clang__)
@@ -269,13 +265,4 @@ FORCE_INLINE extern void M256F_SWAP(M256F& M256_A, M256F& M256_B, const M256F& M
 	M256_A = _mm256_blendv_ps(M256_A, M256_B, MASK);
 	M256_B = _mm256_blendv_ps(M256_B, TEMP, MASK);
 }
-
-
-
-
-
-
-
-#endif
-
 
