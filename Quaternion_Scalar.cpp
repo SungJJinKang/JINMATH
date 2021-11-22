@@ -105,26 +105,17 @@ math::Quaternion::operator math::Matrix4x4() const noexcept
 	return Matrix4x4(this->operator math::Matrix3x3());
 }
 
+math::Vector3 math::Quaternion::ToEulerAngle() const
+{
+	return QuaternionToEulerAngle(*this);
+}
+
 math::Quaternion math::Quaternion::angleAxis(const FLOAT32& angle, const Vector3& v)
 {
 	const FLOAT32 a{ angle };
 	const FLOAT32 s{ std::sin(a * static_cast<FLOAT32>(0.5)) };
 
 	return Quaternion(std::cos(a * static_cast<FLOAT32>(0.5)), v * s);
-}
-
-math::Quaternion math::Quaternion::eulerAngle(const Vector3& eulerAngle) noexcept
-{
-	Vector3 c = cos(eulerAngle * FLOAT32(0.5));
-	Vector3 s = sin(eulerAngle * FLOAT32(0.5));
-
-	return Quaternion
-	{
-		s.x* c.y* c.z - c.x * s.y * s.z,
-		c.x* s.y* c.z + s.x * c.y * s.z,
-		c.x* c.y* s.z - s.x * s.y * c.z,
-		c.x* c.y* c.z + s.x * s.y * s.z
-	};
 }
 
 math::Quaternion math::Quaternion::EulerAngleToQuaternion(const Vector3& eulerAngle) noexcept

@@ -62,7 +62,7 @@ namespace math
 		
 		FORCE_INLINE explicit Quaternion(const Vector3& eulerAngle) noexcept : value(nullptr)
 		{
-			*this = type::eulerAngle(eulerAngle);
+			*this = type::EulerAngleToQuaternion(eulerAngle);
 		}
 
 		static type mat2Quaternion(const Matrix3x3& m);
@@ -87,7 +87,7 @@ namespace math
 
 		FORCE_INLINE type& operator=(const Vector3& eulerAngle) noexcept
 		{
-			*this = type::eulerAngle(eulerAngle);
+			*this = type::EulerAngleToQuaternion(eulerAngle);
 			return *this;
 		} 
 		
@@ -256,7 +256,8 @@ namespace math
 			--* this;
 			return type{ Quaternion };
 		}
-		
+
+		math::Vector3 ToEulerAngle() const;
 		/*
 		
 		static FLOAT32 angle(Quaternion const& x)
@@ -293,8 +294,6 @@ namespace math
 
 			return Quaternion(std::cos(a * static_cast<FLOAT32>(0.5)), v * s);
 		}
-
-		static Quaternion eulerAngle(const Vector3& eulerAngle) noexcept;
 		
 		static Quaternion EulerAngleToQuaternion(const Vector3& eulerAngle) noexcept;
 
