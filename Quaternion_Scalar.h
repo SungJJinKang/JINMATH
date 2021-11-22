@@ -26,6 +26,11 @@ namespace math
 		D_PROPERTY()
 		Vector4 value;
 
+		FORCE_INLINE FLOAT32* data() noexcept
+		{
+			return value.data();
+		}
+
 		Quaternion() noexcept = delete;
 
 		FORCE_INLINE Quaternion(int*) : value{nullptr}
