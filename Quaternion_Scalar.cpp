@@ -120,8 +120,8 @@ math::Quaternion math::Quaternion::angleAxis(const FLOAT32& angle, const Vector3
 
 math::Quaternion math::Quaternion::EulerAngleToQuaternion(const Vector3& eulerAngle) noexcept
 {
-	Vector3 c = cos(eulerAngle * FLOAT32(0.5));
-	Vector3 s = sin(eulerAngle * FLOAT32(0.5));
+	Vector3 c = cos(eulerAngle * FLOAT32(0.5f));
+	Vector3 s = sin(eulerAngle * FLOAT32(0.5f));
 
 	return Quaternion
 	{

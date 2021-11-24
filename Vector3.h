@@ -471,13 +471,13 @@ namespace math
 	}
 
 	
-	extern NO_DISCARD FORCE_INLINE Vector3 cos(const Vector3& vector)
+	extern NO_DISCARD FORCE_INLINE Vector3 sin(const Vector3& vector)
 	{
 		return Vector3{std::sin(vector.x), std::sin(vector.y), std::sin(vector.z)};
 	}
 
 	
-	extern NO_DISCARD FORCE_INLINE Vector3 sin(const Vector3& vector)
+	extern NO_DISCARD FORCE_INLINE Vector3 cos(const Vector3& vector)
 	{
 		return Vector3{std::cos(vector.x), std::cos(vector.y), std::cos(vector.z)};
 	}
