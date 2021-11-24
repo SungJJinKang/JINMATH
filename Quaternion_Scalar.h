@@ -23,6 +23,9 @@ namespace math
 		using value_type = typename FLOAT32;
 		using type = typename Quaternion;
 
+		/// <summary>
+		/// this is radian
+		/// </summary>
 		D_PROPERTY()
 		Vector4 value;
 
