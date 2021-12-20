@@ -183,13 +183,12 @@ namespace math
 		{
 			return Matrix4x4(columns[0] - rhs.columns[0], columns[1] - rhs.columns[1], columns[2] - rhs.columns[2], columns[3] - rhs.columns[3]);
 		}
-
-		inline thread_local static M256F _REULST_MAT4[2]{};
-		inline thread_local static M128F TEMP_M128F{};
-		inline thread_local static Vector4 TEMP_VEC4{nullptr};
-
+		
 		NO_DISCARD inline Matrix4x4 operator*(const Matrix4x4& rhs) const noexcept
 		{
+			M256F _REULST_MAT4[2];
+			M128F TEMP_M128F;
+
 			const M128F* A = reinterpret_cast<const M128F*>(this);
 			//const M128F* A = (const M128F*)this->data(); // this is slower
 			const M128F* B = reinterpret_cast<const M128F*>(&rhs);
@@ -224,6 +223,8 @@ namespace math
 
 		NO_DISCARD inline Vector4 operator*(const Vector4& vector) const noexcept
 		{
+			Vector4 TEMP_VEC4{ nullptr };
+
 			const M128F* A = reinterpret_cast<const M128F*>(this);
 			const M128F* B = reinterpret_cast<const M128F*>(&vector);
 			M128F* R = reinterpret_cast<M128F*>(&TEMP_VEC4);
