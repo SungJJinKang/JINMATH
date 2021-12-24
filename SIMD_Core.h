@@ -167,9 +167,6 @@ using M256I = __m256i;
 #define M256F_SWIZZLE(_M256F, X, Y, Z, W) _mm256_permute_ps(_M256F, SHUFFLEMASK(X, Y, Z, W)) 
 #endif
 
-inline extern const M128F M128F_Zero{ _mm_castsi128_ps(_mm_set1_epi16(0)) };
-inline extern const M128F M128F_HALF_ONE{ _mm_set1_ps(0.5f) };
-inline extern const M128F M128F_EVERY_BITS_ONE{ _mm_castsi128_ps(_mm_set1_epi16(-1)) };
 
 FORCE_INLINE extern M128F M128F_ADD(const M128F& M128_A, const M128F& M128_B)
 {
@@ -242,27 +239,15 @@ FORCE_INLINE M256F M256F_CROSS(const M256F& M256_A, const M256F& M256_B)
 */
 
 
-/// <summary>
-///
-/// FOR j := 0 to 7
-///		i: = j * 32
-///		IF MASK[i + 31]
-///			dst[i + 31:i] : = M256_B[i + 31:i]
-///		ELSE
-///			dst[i + 31:i] : = M256_A[i + 31:i]
-///		FI
-/// ENDFOR
-/// dst[MAX:256] : = 0
-/// 
-/// </summary>
-/// <param name="M256_A"></param>
-/// <param name="M256_B"></param>
-/// <param name="MASK"></param>
-/// <returns></returns>
-FORCE_INLINE extern void M256F_SWAP(M256F& M256_A, M256F& M256_B, const M256F& MASK)
+FORCE_INLINE extern M256F M256F_SELECT(const M256F& M256_A, const M256F& M256_B, const M256F& MASK)
 {
-	M256F TEMP = M256_A;
-	M256_A = _mm256_blendv_ps(M256_A, M256_B, MASK);
-	M256_B = _mm256_blendv_ps(M256_B, TEMP, MASK);
+	return _mm256_blendv_ps(M256_A, M256_B, MASK);
 }
 
+FORCE_INLINE extern void M256F_SWAP(M256F& M256_A, M256F& M256_B, const M256F& MASK)
+{
+	const M256F TEMP_A = M256_A;
+	const M256F TEMP_B = M256_B;
+	M256_A = M256F_SELECT(TEMP_A, TEMP_B, MASK);
+	M256_B = M256F_SELECT(TEMP_B, TEMP_A, MASK);
+}
