@@ -152,7 +152,7 @@ namespace math
 		NO_DISCARD FORCE_INLINE Vector3 normalized() const noexcept
 		{
 			FLOAT32 mag = magnitude();
-			if (mag == 0)
+			if (mag == 0.0f)
 				return Vector3{0.0f, 0.0f, 0.0f};
 
 			return Vector3{ static_cast<value_type>(x / mag), static_cast<value_type>(y / mag), static_cast<value_type>(z / mag) };

@@ -53,14 +53,22 @@ namespace math
 		return std::atan2(value1, value2);
 	}
 
-	template<typename T, typename Limit>
-	FORCE_INLINE typename T clamp(T value, Limit Min, Limit Max)
+	template<typename X>
+	FORCE_INLINE X Max(const X x, const  X y)
 	{
-		if (value < Min)
-			return Min;
-		else if (value > Max)
-			return Max;
-		return value;
+		return (x > y) ? x : y;
+	}
+
+	template<typename X>
+	FORCE_INLINE X Min(const X x, const  X y)
+	{
+		return (x < y) ? x : y;
+	}
+
+	template<typename T, typename Limit>
+	FORCE_INLINE typename T clamp(T value, Limit minVal, Limit maxVal)
+	{
+		return math::Min(math::Max(value, minVal), maxVal);
 	}
 
 	template<typename T>
@@ -122,17 +130,7 @@ namespace math
 		return std::log10(value);
 	}
 
-	template<typename X>
-	FORCE_INLINE X Max(const X x, const  X y)
-	{
-		return (x > y) ? x : y;
-	}
-
-	template<typename X>
-	FORCE_INLINE X Min(const X x, const  X y)
-	{
-		return (x < y) ? x : y;
-	}
+	
 
 	/*template<typename T>
 	FORCE_INLINE typename T PerlinNoise(T value);*/

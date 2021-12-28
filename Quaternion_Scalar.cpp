@@ -120,16 +120,16 @@ math::Quaternion math::Quaternion::angleAxis(const FLOAT32& angle, const Vector3
 
 math::Quaternion math::Quaternion::EulerAngleToQuaternion(const Vector3& eulerAngle) noexcept
 {
-	Vector3 c = cos(eulerAngle * FLOAT32(0.5f));
-	Vector3 s = sin(eulerAngle * FLOAT32(0.5f));
+	Vector3 c = math::cos(eulerAngle * FLOAT32(0.5f));
+	Vector3 s = math::sin(eulerAngle * FLOAT32(0.5f));
 
-	return Quaternion
-	{
-		s.x * c.y * c.z - c.x * s.y * s.z,
-		c.x * s.y * c.z + s.x * c.y * s.z,
-		c.x * c.y * s.z - s.x * s.y * c.z,
-		c.x * c.y * c.z + s.x * s.y * s.z
-	};
+	Quaternion result{ nullptr };
+	result.value[3] = c.x * c.y * c.z + s.x * s.y * s.z;
+	result.value[0] = s.x * c.y * c.z - c.x * s.y * s.z;
+	result.value[1] = c.x * s.y * c.z + s.x * c.y * s.z;
+	result.value[2] = c.x * c.y * s.z - s.x * s.y * c.z;
+
+	return result;
 }
 
 FLOAT32 math::Quaternion::roll(const Quaternion& q)
@@ -137,8 +137,8 @@ FLOAT32 math::Quaternion::roll(const Quaternion& q)
 	const FLOAT32 y = static_cast<FLOAT32>(2) * (q.value.x * q.value.y + q.value.w * q.value.z);
 	const FLOAT32 x = q.value.w * q.value.w + q.value.x * q.value.x - q.value.y * q.value.y - q.value.z * q.value.z;
 
-	FLOAT32 epsilon = std::numeric_limits<FLOAT32>::epsilon();;
-	if (Vector2(x, y) == epsilon && Vector2(0.0f) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
+	const FLOAT32 epsilon = std::numeric_limits<FLOAT32>::epsilon();;
+	if (std::abs(x) < epsilon && std::abs(y) < epsilon)  //avoid atan2(0,0) - handle singularity - Matiis
 	{
 		return static_cast<FLOAT32>(0);
 	}
@@ -151,8 +151,8 @@ FLOAT32 math::Quaternion::pitch(const Quaternion& q)
 	const FLOAT32 y = static_cast<FLOAT32>(2) * (q.value.y * q.value.z + q.value.w * q.value.x);
 	const FLOAT32 x = q.value.w * q.value.w - q.value.x * q.value.x - q.value.y * q.value.y + q.value.z * q.value.z;
 
-	FLOAT32 epsilon = std::numeric_limits<FLOAT32>::epsilon();;
-	if (Vector2(x, y) == epsilon && Vector2(0.0f) == epsilon) //avoid atan2(0,0) - handle singularity - Matiis
+	const FLOAT32 epsilon = std::numeric_limits<FLOAT32>::epsilon();;
+	if (std::abs(x) < epsilon && std::abs(y) < epsilon) //avoid atan2(0,0) - handle singularity - Matiis
 	{
 		return static_cast<FLOAT32>(static_cast<FLOAT32>(2) * math::atan2(q.value.x, q.value.w));
 	}

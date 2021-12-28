@@ -19,9 +19,9 @@ math::Matrix4x4::Matrix4x4(const Matrix3x3& matrix) noexcept
 	:
 	columns
 	{
-		col_type{matrix.columns[0]},
-		col_type{matrix.columns[1]},
-		col_type{matrix.columns[2]},
+		col_type{matrix.columns[0], 0.0f},
+		col_type{matrix.columns[1], 0.0f},
+		col_type{matrix.columns[2], 0.0f},
 		math::Vector4{0, 0, 0, 1}
 	}
 {

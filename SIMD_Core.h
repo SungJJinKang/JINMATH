@@ -215,7 +215,7 @@ FORCE_INLINE extern M128F M128F_MUL_AND_ADD(const M128F& M128_A, const M128F& M1
 
 FORCE_INLINE extern M256F M256F_MUL_AND_ADD(const M256F& M256_A, const M256F& M256_B, const M256F& M256_C)
 {
-	return M256F_ADD(M256F_MUL(M256_A, M256_B), M256_C);
+	return _mm256_fmadd_ps(M256_A, M256_B, M256_C);
 }
 
 /*
