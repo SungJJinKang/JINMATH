@@ -35,7 +35,3 @@ math::Vector4::type& math::Vector4::operator=(const Vector3& vector) noexcept
 	return *this;
 }
 
-extern NO_DISCARD math::Vector4 math::normalize(const Vector4& vector)
-{
-	return vector * math::inverseSqrt(math::dot(vector, vector));
-}

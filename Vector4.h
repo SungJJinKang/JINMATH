@@ -89,7 +89,7 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE explicit Vector4(const M128F& m128f) noexcept
+		FORCE_INLINE Vector4(const __m128& m128f) noexcept
 			: x{ m128f.m128_f32[0] }, y{ m128f.m128_f32[1] }, z{ m128f.m128_f32[2] }, w{ m128f.m128_f32[3] }
 		{
 		}
@@ -165,42 +165,14 @@ namespace math
 		}
 
 
-		// scalar version is more fast than SIMD
-		NO_DISCARD FORCE_INLINE float sqrMagnitude() const noexcept
-		{
-			return x * x + y * y + z * z + w * w;
-		}
-
-		// scalar version is more fast than SIMD
-		NO_DISCARD FORCE_INLINE float magnitude() const noexcept
-		{
-			return std::sqrt(sqrMagnitude());
-		}
-
-		NO_DISCARD FORCE_INLINE Vector4 normalized() const noexcept
-		{
-			FLOAT32 mag = magnitude();
-			if (mag == 0)
-				return Vector4{0.0f, 0.0f, 0.0f, 0.0f};
-
-			return Vector4{ static_cast<value_type>(x / mag), static_cast<value_type>(y / mag), static_cast<value_type>(z / mag), static_cast<value_type>(w / mag) };
-		}
-
-		FORCE_INLINE void Normalize()
-		{
-			FLOAT32 mag = magnitude();
-			if (mag > std::numeric_limits<FLOAT32>::epsilon())
-			{
-				x = static_cast<value_type>(x / mag);
-				y = static_cast<value_type>(y / mag);
-				z = static_cast<value_type>(z / mag);
-				w = static_cast<value_type>(w / mag);
-			}
-		}
+		
 		
 		FORCE_INLINE operator Vector4()
 		{
-			return Vector4{ x, y, z, w };
+			Vector4 result{ nullptr };
+			*reinterpret_cast<M128F*>(result.data()) = *reinterpret_cast<const M128F*>(data());
+
+			return result;
 		}
 
 
@@ -214,7 +186,10 @@ namespace math
 
 		FORCE_INLINE Vector4 operator+(const Vector4& rhs) const noexcept
 		{
-			return Vector4(x + rhs.x, y + rhs.y, z + rhs.z, w + rhs.w);
+			Vector4 Result{ nullptr };
+			*reinterpret_cast<M128F*>(&Result) = _mm_add_ps(*reinterpret_cast<const M128F*>(data()), *reinterpret_cast<const M128F*>(rhs.data()));
+
+			return Result;
 		}
 
 		/*
@@ -228,19 +203,28 @@ namespace math
 
 		FORCE_INLINE Vector4 operator-(const Vector4& rhs) const noexcept
 		{
-			return Vector4(x - rhs.x, y - rhs.y, z - rhs.z, w - rhs.w);
+			Vector4 Result{ nullptr };
+			*reinterpret_cast<M128F*>(&Result) = _mm_sub_ps(*reinterpret_cast<const M128F*>(data()), *reinterpret_cast<const M128F*>(rhs.data()));
+
+			return Result;
 		}
 
 
 		FORCE_INLINE Vector4 operator*(const Vector4& rhs) const noexcept
 		{
-			return Vector4(x * rhs.x, y * rhs.y, z * rhs.z, w * rhs.w);
+			Vector4 Result{ nullptr };
+			*reinterpret_cast<M128F*>(&Result) = _mm_mul_ps(*reinterpret_cast<const M128F*>(data()), *reinterpret_cast<const M128F*>(rhs.data()));
+			 
+			return Result;
 		}
 
 
 		FORCE_INLINE Vector4 operator/(const Vector4& rhs) const noexcept
 		{
-			return Vector4(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
+			Vector4 Result{ nullptr };
+			*reinterpret_cast<M128F*>(&Result) = _mm_div_ps(*reinterpret_cast<const M128F*>(data()), *reinterpret_cast<const M128F*>(rhs.data()));
+
+			return Result;
 		}
 
 
@@ -252,40 +236,32 @@ namespace math
 
 		FORCE_INLINE Vector4& operator+=(const Vector4& rhs) noexcept
 		{
-			x += rhs.x;
-			y += rhs.y;
-			z += rhs.z;
-			w += rhs.w;
+			*reinterpret_cast<M128F*>(data()) = _mm_add_ps(*reinterpret_cast<const M128F*>(data()), *reinterpret_cast<const M128F*>(rhs.data()));
+
 			return *this;
 		}
 
 
 		FORCE_INLINE Vector4& operator-=(const Vector4& rhs) noexcept
 		{
-			x -= rhs.x;
-			y -= rhs.y;
-			z -= rhs.z;
-			w -= rhs.w;
+			*reinterpret_cast<M128F*>(data()) = _mm_sub_ps(*reinterpret_cast<const M128F*>(data()), *reinterpret_cast<const M128F*>(rhs.data()));
+
 			return *this;
 		}
 
 
 		FORCE_INLINE Vector4& operator*=(const Vector4& rhs) noexcept
 		{
-			x *= rhs.x;
-			y *= rhs.y;
-			z *= rhs.z;
-			w *= rhs.w;
+			*reinterpret_cast<M128F*>(data()) = _mm_mul_ps(*reinterpret_cast<const M128F*>(data()), *reinterpret_cast<const M128F*>(rhs.data()));
+
 			return *this;
 		}
 
 
 		FORCE_INLINE Vector4& operator/=(const Vector4& rhs)
 		{
-			x /= rhs.x;
-			y /= rhs.y;
-			z /= rhs.z;
-			w /= rhs.w;
+			*reinterpret_cast<M128F*>(data()) = _mm_div_ps(*reinterpret_cast<const M128F*>(data()), *reinterpret_cast<const M128F*>(rhs.data()));
+
 			return *this;
 		}
 
@@ -303,37 +279,29 @@ namespace math
 
 		FORCE_INLINE Vector4& operator+=(FLOAT32 scalar) noexcept
 		{
-			x += scalar;
-			y += scalar;
-			z += scalar;
-			w += scalar;
+			*reinterpret_cast<M128F*>(data()) = _mm_add_ps(*reinterpret_cast<const M128F*>(data()), _mm_set1_ps(scalar));
+
 			return *this;
 		}
 
 		FORCE_INLINE Vector4& operator-=(FLOAT32 scalar) noexcept
 		{
-			x -= scalar;
-			y -= scalar;
-			z -= scalar;
-			w -= scalar;
+			*reinterpret_cast<M128F*>(data()) = _mm_sub_ps(*reinterpret_cast<const M128F*>(data()), _mm_set1_ps(scalar));
+
 			return *this;
 		}
 
 		FORCE_INLINE Vector4& operator*=(FLOAT32 scalar) noexcept
 		{
-			x *= scalar;
-			y *= scalar;
-			z *= scalar;
-			w *= scalar;
+			*reinterpret_cast<M128F*>(data()) = _mm_mul_ps(*reinterpret_cast<const M128F*>(data()), _mm_set1_ps(scalar));
+
 			return *this;
 		}
 
 		FORCE_INLINE Vector4& operator/=(FLOAT32 scalar)
 		{
-			x /= scalar;
-			y /= scalar;
-			z /= scalar;
-			w /= scalar;
+			*reinterpret_cast<M128F*>(data()) = _mm_div_ps(*reinterpret_cast<const M128F*>(data()), _mm_set1_ps(scalar));
+
 			return *this;
 		}
 
@@ -352,10 +320,8 @@ namespace math
 		/// <returns></returns>
 		FORCE_INLINE Vector4& operator++() noexcept
 		{
-			++x;
-			++y;
-			++z;
-			++w;
+			*reinterpret_cast<M128F*>(data()) = _mm_add_ps(*reinterpret_cast<const M128F*>(data()), _mm_set1_ps(1.0f));
+
 			return *this;
 		}
 
@@ -377,10 +343,8 @@ namespace math
 		/// <returns></returns>
 		FORCE_INLINE Vector4& operator--() noexcept
 		{
-			--x;
-			--y;
-			--z;
-			--w;
+			*reinterpret_cast<M128F*>(data()) = _mm_add_ps(*reinterpret_cast<const M128F*>(data()), _mm_set1_ps(-1.0f));
+
 			return *this;
 		}
 
@@ -396,28 +360,43 @@ namespace math
 			return Vector4{ Vector };
 		}
 
+		// scalar version is more fast than SIMD
+		NO_DISCARD FORCE_INLINE float sqrMagnitude() const noexcept
+		{
+			const M128F mul0 = _mm_mul_ps(*reinterpret_cast<const M128F*>(data()), *reinterpret_cast<const M128F*>(data()));
+			const M128F had0 = _mm_hadd_ps(mul0, mul0);
+			const M128F had1 = _mm_hadd_ps(had0, had0);
+
+			return _mm_cvtss_f32(had1);
+		}
+
+		// scalar version is more fast than SIMD
+		NO_DISCARD FORCE_INLINE float magnitude() const noexcept
+		{
+			return std::sqrt(sqrMagnitude());
+		}
+
+		NO_DISCARD FORCE_INLINE Vector4 normalized() const noexcept
+		{
+			FLOAT32 mag = magnitude();
+			if (std::isnan(mag))
+				return Vector4{ 0.0f, 0.0f, 0.0f, 0.0f };
+
+			Vector4 Result{ *this };
+			Result /= mag;
+
+			return Result;
+		}
+
+		FORCE_INLINE void Normalize()
+		{
+			Vector4 result = *this;
+			result *= math::inverseSqrt(result.magnitude());
+		}
 	};
 
 
 	
-
-
-	extern NO_DISCARD FORCE_INLINE Vector4 sqrt(const Vector4& vector)
-	{
-		const M128F* m128f_vec = reinterpret_cast<const M128F*>(&vector);
-		return Vector4{ _mm_sqrt_ps(*m128f_vec) };
-	}
-
-
-	extern NO_DISCARD FORCE_INLINE Vector4 inverseSqrt(const Vector4& vector)
-	{
-		const M128F* m128f_vec = reinterpret_cast<const M128F*>(&vector);
-		return Vector4{ _mm_rsqrt_ps(*m128f_vec) };
-	}
-
-
-	extern NO_DISCARD Vector4 normalize(const Vector4& vector);
-
 
 	extern NO_DISCARD FORCE_INLINE Vector4 Max(const Vector4& vector1, const Vector4& vector2)
 	{
@@ -438,24 +417,36 @@ namespace math
 
 	extern NO_DISCARD FORCE_INLINE Vector4 operator+(const Vector4& lhs, float scalar) noexcept
 	{
-		return Vector4{ lhs.x + scalar, lhs.y + scalar, lhs.z + scalar, lhs.w + scalar };
+		Vector4 Result{ nullptr };
+		*reinterpret_cast<M128F*>(&Result) = _mm_add_ps(*reinterpret_cast<const M128F*>(lhs.data()), _mm_set1_ps(scalar));
+
+		return Result;
 	}
 
 
 	extern NO_DISCARD FORCE_INLINE Vector4 operator-(const Vector4& lhs, float scalar) noexcept
 	{
-		return Vector4{ lhs.x - scalar, lhs.y - scalar, lhs.z - scalar, lhs.w - scalar };
+		Vector4 Result{ nullptr };
+		*reinterpret_cast<M128F*>(&Result) = _mm_sub_ps(*reinterpret_cast<const M128F*>(lhs.data()), _mm_set1_ps(scalar));
+
+		return Result;
 	}
 
 	extern NO_DISCARD FORCE_INLINE Vector4 operator*(const Vector4& lhs, float scalar) noexcept
 	{
-		return Vector4{ lhs.x * scalar, lhs.y * scalar, lhs.z * scalar, lhs.w * scalar };
+		Vector4 Result{ nullptr };
+		*reinterpret_cast<M128F*>(&Result) = _mm_mul_ps(*reinterpret_cast<const M128F*>(lhs.data()), _mm_set1_ps(scalar));
+
+		return Result;
 	}
 
 
 	extern NO_DISCARD FORCE_INLINE Vector4 operator/(const Vector4& lhs, float scalar)
 	{
-		return Vector4{ lhs.x / scalar, lhs.y / scalar, lhs.z / scalar, lhs.w / scalar };
+		Vector4 Result{ nullptr };
+		*reinterpret_cast<M128F*>(&Result) = _mm_div_ps(*reinterpret_cast<const M128F*>(lhs.data()), _mm_set1_ps(scalar));
+
+		return Result;
 	}
 
 
@@ -487,22 +478,34 @@ namespace math
 
 	extern NO_DISCARD FORCE_INLINE Vector4 operator+(float scalar, const Vector4& rhs) noexcept
 	{
-		return Vector4{ scalar + rhs.x, scalar + rhs.y, scalar + rhs.z, scalar + rhs.w };
+		Vector4 Result{ nullptr };
+		*reinterpret_cast<M128F*>(&Result) = _mm_add_ps(_mm_set1_ps(scalar) , *reinterpret_cast<const M128F*>(rhs.data()));
+
+		return Result;
 	}
 
 	extern NO_DISCARD FORCE_INLINE Vector4 operator-(float scalar, const Vector4& rhs) noexcept
 	{
-		return Vector4{ scalar - rhs.x, scalar - rhs.y, scalar - rhs.z, scalar - rhs.w };
+		Vector4 Result{ nullptr };
+		*reinterpret_cast<M128F*>(&Result) = _mm_sub_ps(_mm_set1_ps(scalar), *reinterpret_cast<const M128F*>(rhs.data()));
+
+		return Result;
 	}
 
 	extern NO_DISCARD FORCE_INLINE Vector4 operator*(float scalar, const Vector4& rhs) noexcept
 	{
-		return Vector4{ scalar * rhs.x, scalar * rhs.y, scalar * rhs.z, rhs.w * scalar };
+		Vector4 Result{ nullptr };
+		*reinterpret_cast<M128F*>(&Result) = _mm_mul_ps(_mm_set1_ps(scalar), *reinterpret_cast<const M128F*>(rhs.data()));
+
+		return Result;
 	}
 
 	extern NO_DISCARD FORCE_INLINE Vector4 operator/(float scalar, const Vector4& rhs)
 	{
-		return Vector4{ scalar / rhs.x, scalar / rhs.y, scalar / rhs.z, scalar / rhs.w };
+		Vector4 Result{ nullptr };
+		*reinterpret_cast<M128F*>(&Result) = _mm_div_ps(_mm_set1_ps(scalar), *reinterpret_cast<const M128F*>(rhs.data()));
+
+		return Result;
 	}
 
 	extern NO_DISCARD FORCE_INLINE Vector4 operator%(float scalar, const Vector4& rhs)
@@ -539,47 +542,56 @@ namespace math
 
 	extern FORCE_INLINE Vector4 operator-(const Vector4& vector) noexcept
 	{
-		return Vector4
-		(
-			-vector.x,
-			-vector.y,
-			-vector.z,
-			-vector.w
-		);
+		return _mm_or_ps(_mm_set1_ps(-0.0f), *reinterpret_cast<const M128F*>(vector.data()));
 	}
-
-	// //////////////////////
-
-
-
-	/// <summary>
-	/// scalar version is mush fast than SIMD version
-	/// </summary>
 
 	extern NO_DISCARD FORCE_INLINE FLOAT32 dot(const Vector4& lhs, const Vector4& rhs)
 	{
-		return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z + lhs.w * rhs.w;
+		const M128F mul0 = _mm_mul_ps(*reinterpret_cast<const M128F*>(lhs.data()), *reinterpret_cast<const M128F*>(rhs.data()));
+		const M128F had0 = _mm_hadd_ps(mul0, mul0);
+		const M128F had1 = _mm_hadd_ps(had0, had0);
+		
+		return _mm_cvtss_f32(had1);
 	}
 
-	// AX1 don't have cos instriction
+
+	extern NO_DISCARD FORCE_INLINE Vector4 sqrt(const Vector4& vector)
+	{
+		const M128F* m128f_vec = reinterpret_cast<const M128F*>(&vector);
+		return Vector4{ _mm_sqrt_ps(*m128f_vec) };
+	}
+
+
+	extern NO_DISCARD FORCE_INLINE Vector4 inverseSqrt(const Vector4& vector)
+	{
+		const M128F* m128f_vec = reinterpret_cast<const M128F*>(&vector);
+		return Vector4{ _mm_rsqrt_ps(*m128f_vec) };
+	}
+
+
+	extern NO_DISCARD FORCE_INLINE Vector4 normalize(const Vector4& vector)
+	{
+		return vector * math::inverseSqrt(math::dot(vector, vector));
+	}
+
 
 	extern NO_DISCARD FORCE_INLINE Vector4 cos(const Vector4& vector)
 	{
-		return Vector4{ std::sin(vector.x), std::sin(vector.y), std::sin(vector.z), std::sin(vector.w) };
+		return _mm_cos_ps(*reinterpret_cast<const M128F*>(vector.data()));
 	}
 
 	// AX1 don't have sin instriction
 
 	extern NO_DISCARD FORCE_INLINE Vector4 sin(const Vector4& vector)
 	{
-		return Vector4{ std::cos(vector.x), std::cos(vector.y), std::cos(vector.z), std::cos(vector.w) };
+		return _mm_sin_ps(*reinterpret_cast<const M128F*>(vector.data()));
 	}
 
 	// AX1 don't have tan instriction
 
 	extern NO_DISCARD FORCE_INLINE Vector4 tan(const Vector4& vector)
 	{
-		return Vector4{ std::tan(vector.x), std::tan(vector.y), std::tan(vector.z), std::tan(vector.w) };
+		return _mm_tan_ps(*reinterpret_cast<const M128F*>(vector.data()));
 	}
 }
 

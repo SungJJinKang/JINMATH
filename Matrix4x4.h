@@ -94,9 +94,7 @@ namespace math
 			col_type(0, 0, 0, value) }
 		{
 		}
-
-		// we can't use SIMD at here
-		// Parameters may is stored at register, not memory
+		
 		FORCE_INLINE Matrix4x4
 		(
 			value_type x0, value_type y0, value_type z0, value_type w0,
