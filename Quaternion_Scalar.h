@@ -1,5 +1,6 @@
 #pragma once
 
+#include "ErrorHandling.h"
 #include "LMath_Core.h"
 
 #include "Vector4.h"
@@ -72,7 +73,7 @@ namespace math
 
 		explicit Quaternion(const Matrix3x3& m) noexcept : value(nullptr)
 		{
-			mat2Quaternion(m);
+			*this = mat2Quaternion(m);
 		}
 
 		explicit Quaternion(const Matrix4x4& m) noexcept;
@@ -314,6 +315,8 @@ namespace math
 
 		
 		static Vector3 QuaternionToEulerAngle(const Quaternion& x);
+		
+		static Quaternion quatLookAt(const math::Vector3& direction, const math::Vector3& up);
 	};
 
 	
@@ -404,5 +407,6 @@ namespace math
 	}
 	
 	
-
+	
+	
 }

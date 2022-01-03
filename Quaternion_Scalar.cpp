@@ -56,18 +56,18 @@ math::Quaternion::type math::Quaternion::mat2Quaternion(const Matrix3x3& m)
 
 math::Quaternion::Quaternion(const Matrix4x4& m) noexcept : value(nullptr)
 {
-	mat2Quaternion(static_cast<Matrix3x3>( m));
+	*this = mat2Quaternion(static_cast<Matrix3x3>( m));
 }
 
 math::Quaternion::type& math::Quaternion::operator=(const Matrix4x4& m) noexcept
 {
-	mat2Quaternion(static_cast<Matrix3x3>(m));
+	*this = mat2Quaternion(static_cast<Matrix3x3>(m));
 	return *this;
 }
 
 math::Quaternion::type& math::Quaternion::operator=(const Matrix3x3& m) noexcept
 {
-	mat2Quaternion(m);
+	*this = mat2Quaternion(m);
 	return *this;
 }
 
@@ -177,4 +177,50 @@ extern math::Vector3 math::operator*(const Quaternion& q, const Vector3& v)
 extern math::Vector4 math::operator*(const Quaternion& q, const Vector4& v)
 {
 	return Vector4(q * Vector3(v), v.w);
+}
+
+namespace math
+{
+	namespace details
+	{
+		static math::Quaternion quatLookAtRH(const math::Vector3& direction, const math::Vector3& up)
+		{
+			math::Matrix3x3 Result{ nullptr };
+
+			Result[2] = -direction;
+			const math::Vector3 Right = cross(up, Result[2]);
+			Result[0] = Right * math::inverseSqrt(max(static_cast<float>(0.00001f), dot(Right, Right)));
+			Result[1] = cross(Result[2], Result[0]);
+
+			return math::Quaternion(Result);
+		}
+
+		static math::Quaternion quatLookAtLH(const math::Vector3& direction, const math::Vector3& up)
+		{
+			math::Matrix3x3 Result{ nullptr };
+
+			Result[2] = direction;
+			const math::Vector3 Right = cross(up, Result[2]);
+			Result[0] = Right * math::inverseSqrt(max(static_cast<float>(0.00001f), dot(Right, Right)));
+			Result[1] = cross(Result[2], Result[0]);
+
+			return math::Quaternion(Result);
+		}
+
+	}
+}
+
+math::Quaternion math::Quaternion::quatLookAt(const math::Vector3& direction, const math::Vector3& up)
+{
+
+#if CURRENT_COORDINATE_SYSTEM == LEFT_HAND
+
+	return details::quatLookAtLH(direction, up);
+
+#else
+
+	return details::quatLookAtRH(direction, up);
+
+# 		endif
+
 }
