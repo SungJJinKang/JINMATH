@@ -35,6 +35,11 @@ namespace math
 			return value.data();
 		}
 
+		FORCE_INLINE const FLOAT32* data() const noexcept
+		{
+			return value.data();
+		}
+
 		Quaternion() noexcept = delete;
 
 		FORCE_INLINE Quaternion(int*) : value{nullptr}
