@@ -2,6 +2,7 @@
 #include "LMath_Core.h"
 
 #include "Vector4.h"
+#include <cstring>
 
 #include "SIMD_Core.h"
 
@@ -124,8 +125,9 @@ namespace math
 
 
 		FORCE_INLINE Matrix4x4(const Matrix4x4& matrix) noexcept
-			: columns{ col_type{matrix.columns[0]}, col_type{matrix.columns[1]}, col_type{matrix.columns[2]}, col_type{matrix.columns[3]} }
+			: columns{ nullptr, nullptr, nullptr, nullptr }
 		{
+			std::memcpy(data(), matrix.data(), sizeof(Matrix4x4));
 		}
 
 		FORCE_INLINE Matrix4x4& operator=(value_type value) noexcept
@@ -182,7 +184,7 @@ namespace math
 			return Matrix4x4(columns[0] - rhs.columns[0], columns[1] - rhs.columns[1], columns[2] - rhs.columns[2], columns[3] - rhs.columns[3]);
 		}
 		
-		NO_DISCARD inline Matrix4x4 operator*(const Matrix4x4& rhs) const noexcept
+		NO_DISCARD FORCE_INLINE Matrix4x4 operator*(const Matrix4x4& rhs) const noexcept
 		{
 			M256F _REULST_MAT4[2];
 			M128F TEMP_M128F;
