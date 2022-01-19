@@ -189,7 +189,7 @@ namespace math
 
 			Result[2] = -direction;
 			const math::Vector3 Right = cross(up, Result[2]);
-			Result[0] = Right * math::inverseSqrt(max(static_cast<float>(0.00001f), dot(Right, Right)));
+			Result[0] = Right * math::inverseSqrt(math::Max(static_cast<float>(0.00001f), dot(Right, Right)));
 			Result[1] = cross(Result[2], Result[0]);
 
 			return math::Quaternion(Result);
@@ -201,7 +201,7 @@ namespace math
 
 			Result[2] = direction;
 			const math::Vector3 Right = cross(up, Result[2]);
-			Result[0] = Right * math::inverseSqrt(max(static_cast<float>(0.00001f), dot(Right, Right)));
+			Result[0] = Right * math::inverseSqrt(math::Max(static_cast<float>(0.00001f), dot(Right, Right)));
 			Result[1] = cross(Result[2], Result[0]);
 
 			return math::Quaternion(Result);
