@@ -54,6 +54,12 @@ namespace math
 	}
 
 	template<typename X>
+	FORCE_INLINE X Abs(const X x)
+	{
+		return (x > (X)0) ? x : -x;
+	}
+
+	template<typename X>
 	FORCE_INLINE X Max(const X x, const  X y)
 	{
 		return (x > y) ? x : y;
