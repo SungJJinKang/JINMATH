@@ -21,7 +21,25 @@
 #  define VLA_ARRAY_ON_STACK(type__, varname__, size__) type__ *varname__ = (type__*)_alloca(size__ * sizeof(type__))
 #  define NO_DISCARD [[nodiscard]]
 
+#else
+
+#error Unsupported compiler. Please use MSVC or clang
+
 #endif
+
+#undef NEVER_HAPPEN
+
+#if defined(_DEBUG)
+#define NEVER_HAPPEN assert(false)
+#elif (!defined(_DEBUG)) && defined(_MSC_VER)
+#define NEVER_HAPPEN __assume(0)
+#elif (!defined(_DEBUG)) && defined(__clang__)
+#define NEVER_HAPPEN __builtin_unreachable()
+#else
+#error Unsupported compiler ( Please Use msvc or clang )
+#endif
+
+
 
 #ifndef CHECK_IS_NUMBER
 #define CHECK_IS_NUMBER(t) std::is_floating_point_v<t> || std::is_integral_v<t>
