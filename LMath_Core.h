@@ -87,7 +87,7 @@
 #endif
 //#define DIRECT_X
 
-#ifdef OPEN_GL
+#if defined(OPEN_GL)
 #ifndef CURRENT_CLIP_RANGE
 #define CURRENT_CLIP_RANGE CLIP_RANGE_NEGATIVE_ONE_TO_ONE
 #endif
@@ -97,7 +97,7 @@
 #ifndef CURRENT_SETTING
 #define CURRENT_SETTING RIGHT_HAND_NEGATIVE_ONE_TO_ONE
 #endif
-#elif DIRECT_X
+#elif defined(DIRECT_X)
 #ifndef CURRENT_CLIP_RANGE
 #define CURRENT_CLIP_RANGE CLIP_RANGE_ZERO_TO_ONE
 #endif
