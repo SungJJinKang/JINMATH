@@ -194,18 +194,18 @@ namespace math
 			return *this;
 		}
 		
-		FORCE_INLINE type operator+(const Quaternion& rhs) noexcept
+		FORCE_INLINE type operator+(const Quaternion& rhs) const noexcept
 		{
 			return *this + rhs;
 		}
 
 
-		FORCE_INLINE type operator-(const Quaternion& rhs) noexcept
+		FORCE_INLINE type operator-(const Quaternion& rhs) const noexcept
 		{
 			return *this - rhs;
 		}
 
-		FORCE_INLINE type operator*(const Quaternion& rhs) noexcept
+		FORCE_INLINE type operator*(const Quaternion& rhs) const noexcept
 		{
 			Quaternion result{ nullptr };
 
@@ -217,7 +217,7 @@ namespace math
 			return type{ result };
 		}
 		
-		FORCE_INLINE type operator/(const Quaternion& rhs)
+		FORCE_INLINE type operator/(const Quaternion& rhs) const
 		{
 			return *this / rhs;
 		}
@@ -233,24 +233,24 @@ namespace math
 
 		operator Matrix4x4() const noexcept;
 
-		NO_DISCARD FORCE_INLINE bool operator==(const type& rhs) noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(const type& rhs) const noexcept
 		{
 			return this->x == rhs.x && this->y == rhs.y && this->z == rhs.z && this->w == rhs.w;
 		}
 
-		NO_DISCARD FORCE_INLINE bool operator!=(const type& rhs) noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(const type& rhs) const noexcept
 		{
 			return this->x != rhs.x || this->y != rhs.y || this->z != rhs.z || this->w != rhs.w;
 		}
 
 		template <typename X>
-		NO_DISCARD FORCE_INLINE bool operator==(const X& number) noexcept
+		NO_DISCARD FORCE_INLINE bool operator==(const X& number) const noexcept
 		{
 			return this->x == number && this->y == number && this->z == number && this->w == number;
 		}
 
 		template <typename X>
-		NO_DISCARD FORCE_INLINE bool operator!=(const X& number) noexcept
+		NO_DISCARD FORCE_INLINE bool operator!=(const X& number) const noexcept
 		{
 			return this->x != number || this->y != number || this->z != number || this->w != number;
 		}
@@ -461,19 +461,7 @@ namespace math
 	{
 		return q * s;
 	}
-
-
-	extern NO_DISCARD FORCE_INLINE  Quaternion operator*(const Quaternion& p, const Quaternion& q)
-	{
-		Quaternion result{ nullptr };
-
-		result.w = p.w * q.w - p.x * q.x - p.y * q.y - p.z * q.z;
-		result.x = p.w * q.x + p.x * q.w + p.y * q.z - p.z * q.y;
-		result.y = p.w * q.y + p.y * q.w + p.z * q.x - p.x * q.z;
-		result.z = p.w * q.z + p.z * q.w + p.x * q.y - p.y * q.x;
-
-		return Quaternion{ result };
-	}
+	
 
 	template<typename T>
 	extern NO_DISCARD FORCE_INLINE  Quaternion lerp(const Quaternion& x, const Quaternion& y, T a)
