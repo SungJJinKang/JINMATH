@@ -11,15 +11,21 @@ namespace math
 
 	inline FLOAT32 RADIAN_TO_DEGREE = 180.0f / PI;
 
-	
+	template <typename T>
+	extern NO_DISCARD FORCE_INLINE  T epsilon()
+	{
+		static_assert(std::is_same_v<T, FLOAT32> || std::is_same_v<T, FLOAT64>);
+
+		return std::numeric_limits<T>::epsilon();
+	}
 
 	
-	FORCE_INLINE FLOAT32 epsilon_FLOAT32()
+	extern NO_DISCARD FORCE_INLINE  FLOAT32 epsilon_FLOAT32()
 	{
 		return std::numeric_limits<FLOAT32>::epsilon();
 	}
 	
-	FORCE_INLINE FLOAT64 epsilon_FLOAT64()
+	extern NO_DISCARD FORCE_INLINE  FLOAT64 epsilon_FLOAT64()
 	{
 		return std::numeric_limits<FLOAT64>::epsilon();
 	}
@@ -33,77 +39,77 @@ namespace math
 	
 
 	template<typename T>
-	FORCE_INLINE auto acos(T value)
+	extern NO_DISCARD FORCE_INLINE  auto acos(T value)
 	{
 		return std::acos(value);
 	}
 	template<typename T>
-	FORCE_INLINE auto asin(T value)
+	extern NO_DISCARD FORCE_INLINE  auto asin(T value)
 	{
 		return std::asin(value);
 	}
 	template<typename T>
-	FORCE_INLINE auto atan(T value)
+	extern NO_DISCARD FORCE_INLINE  auto atan(T value)
 	{
 		return std::atan(value);
 	}
 	template<typename T>
-	FORCE_INLINE auto atan2(T value1, T value2)
+	extern NO_DISCARD FORCE_INLINE  auto atan2(T value1, T value2)
 	{
 		return std::atan2(value1, value2);
 	}
 
 	template<typename X>
-	FORCE_INLINE X Abs(const X x)
+	extern NO_DISCARD FORCE_INLINE  X Abs(const X x)
 	{
 		return (x > (X)0) ? x : -x;
 	}
 
 	template<typename X>
-	FORCE_INLINE X Max(const X x, const  X y)
+	extern NO_DISCARD FORCE_INLINE  X Max(const X x, const  X y)
 	{
 		return (x > y) ? x : y;
 	}
 
 	template<typename X>
-	FORCE_INLINE X Min(const X x, const  X y)
+	extern NO_DISCARD FORCE_INLINE  X Min(const X x, const  X y)
 	{
 		return (x < y) ? x : y;
 	}
 
 	template<typename T, typename Limit>
-	FORCE_INLINE typename T clamp(T value, Limit minVal, Limit maxVal)
+	extern NO_DISCARD FORCE_INLINE  typename T clamp(T value, Limit minVal, Limit maxVal)
 	{
 		return math::Min(math::Max(value, minVal), maxVal);
 	}
 
 	template<typename T>
-	FORCE_INLINE typename T clamp01(T value)
+	extern NO_DISCARD FORCE_INLINE  typename T clamp01(T value)
 	{
 		return math::clamp(value, T{ 0 }, T{ 1 });
 	}
 
 	template<typename T>
-	FORCE_INLINE auto cos(T radian)
+	extern NO_DISCARD FORCE_INLINE  auto cos(T radian)
 	{
 		return std::cos(radian);
 	}
 
 
 	template<typename T>
-	FORCE_INLINE typename T exp(T value)
+	extern NO_DISCARD FORCE_INLINE  typename T exp(T value)
 	{
 		return std::exp(value);
 	}
 
 	template<typename T>
-	FORCE_INLINE typename T infinity()
+	extern NO_DISCARD FORCE_INLINE  typename T infinity()
 	{
 		return (std::numeric_limits<T>::max)();
 	} 
 
 	template<typename T>
-	FORCE_INLINE typename T negativeInfinity()
+	extern NO_DISCARD FORCE_INLINE  typename T negativeInfinity()
 	{
 		return std::numeric_limits<T>::lowest();
 
@@ -111,27 +117,29 @@ namespace math
 
 
 	template<typename Value, typename Floating>
-	FORCE_INLINE typename Floating lerpUnClamped(Value value1, Value value2, Floating t)
+	extern NO_DISCARD FORCE_INLINE  typename Floating lerpUnClamped(Value value1, Value value2, Floating t)
 	{
+		static_assert(std::is_same_v<Floating, FLOAT32> || std::is_same_v<Floating, FLOAT64>);
 		return value1 + t * (value2 - value1);
 	}
 
 	template<typename Value, typename Floating>
-	FORCE_INLINE typename Floating lerp(Value value1, Value value2, Floating t)
+	extern NO_DISCARD FORCE_INLINE  typename Floating lerp(Value value1, Value value2, Floating t)
 	{
+		static_assert(std::is_same_v<Floating, FLOAT32> || std::is_same_v<Floating, FLOAT64>);
 		return lerpUnClamped<Value, Floating>(value1, value2, clamp01<Floating>(t));
 	}
 
 	
 
 	template<typename T>
-	FORCE_INLINE auto log(T value)
+	extern NO_DISCARD FORCE_INLINE  auto log(T value)
 	{
 		return std::log(value);
 	}
 
 	template<typename T>
-	FORCE_INLINE auto log10(T value)
+	extern NO_DISCARD FORCE_INLINE  auto log10(T value)
 	{
 		return std::log10(value);
 	}
@@ -163,33 +171,33 @@ namespace math
 	*/
 
 	template<typename T>
-	FORCE_INLINE auto inverseSqrt(T value)
+	extern NO_DISCARD FORCE_INLINE  auto inverseSqrt(T value)
 	{
 		return static_cast<T>(1) / std::sqrt(value);
 	}
 
 	template<typename T>
-	FORCE_INLINE auto tan(T radian)
+	extern NO_DISCARD FORCE_INLINE  auto tan(T radian)
 	{
 		return std::tan(radian);
 	}
 
-	FORCE_INLINE bool Equal(FLOAT32 a, FLOAT32 b)
+	extern NO_DISCARD FORCE_INLINE  bool Equal(FLOAT32 a, FLOAT32 b)
 	{
 		return std::abs(a - b) < std::numeric_limits<FLOAT32>::epsilon();;
 	}
 
-	FORCE_INLINE bool Equal(FLOAT64 a, FLOAT64 b)
+	extern NO_DISCARD FORCE_INLINE  bool Equal(FLOAT64 a, FLOAT64 b)
 	{
 		return std::abs(a - b) < std::numeric_limits<FLOAT64>::epsilon();;
 	}
 
-	FORCE_INLINE bool Equal(FLOAT32 a, FLOAT64 b)
+	extern NO_DISCARD FORCE_INLINE  bool Equal(FLOAT32 a, FLOAT64 b)
 	{
 		return Equal(static_cast<FLOAT64>(a), b);
 	}
 
-	FORCE_INLINE bool Equal(FLOAT64 a, FLOAT32 b)
+	extern NO_DISCARD FORCE_INLINE  bool Equal(FLOAT64 a, FLOAT32 b)
 	{
 		return Equal(a, static_cast<FLOAT64>(b));
 	}

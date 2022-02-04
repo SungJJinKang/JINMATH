@@ -503,7 +503,38 @@ namespace math
 	{
 		return Vector2(::math::Min(vector1.x, vector2.x), ::math::Min(vector1.y, vector2.y));
 	}
+	template<typename T>
+	extern NO_DISCARD FORCE_INLINE Vector2 lerp
+	(
+		const Vector2& a,
+		const Vector2& b,
+		T const& t
+	)
+	{
+		// interpolate src vectors
+		return Vector2{ math::lerp(a.x, b.x, t), math::lerp(a.y, b.y, t) };
+	}
 
-	// ///////////////////////////////////////////////
+	template<typename T>
+	extern NO_DISCARD FORCE_INLINE Vector2 slerp
+	(
+		const Vector2& x,
+		const Vector2& y,
+		T const& a
+	)
+	{
+		// get cosine of angle between vectors (-1 -> 1)
+		T CosAlpha = math::dot(x, y);
+		// get angle (0 -> pi)
+		T Alpha = math::acos(CosAlpha);
+		// get sine of angle between vectors (0 -> 1)
+		T SinAlpha = math::sin(Alpha);
+		// this breaks down when SinAlpha = 0, i.e. Alpha = 0 or pi
+		T t1 = math::sin((static_cast<T>(1) - a) * Alpha) / SinAlpha;
+		T t2 = math::sin(a * Alpha) / SinAlpha;
+
+		// interpolate src vectors
+		return x * t1 + y * t2;
+	}
 }
 

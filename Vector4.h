@@ -593,6 +593,41 @@ namespace math
 	{
 		return _mm_tan_ps(*reinterpret_cast<const M128F*>(vector.data()));
 	}
+
+	template<typename T>
+	extern NO_DISCARD FORCE_INLINE Vector4 lerp
+	(
+		const Vector4& a,
+		const Vector4& b,
+		T const& t
+	)
+	{
+		// interpolate src vectors
+		return Vector4{ math::lerp(a.x, b.x, t), math::lerp(a.y, b.y, t) , math::lerp(a.z, b.z, t) , math::lerp(a.w, b.w, t) };
+	}
+
+	template<typename T>
+	extern NO_DISCARD FORCE_INLINE Vector4 slerp
+	(
+		const Vector4& x,
+		const Vector4& y,
+		T const& a
+	)
+	{
+		// get cosine of angle between vectors (-1 -> 1)
+		T CosAlpha = math::dot(x, y);
+		// get angle (0 -> pi)
+		T Alpha = math::acos(CosAlpha);
+		// get sine of angle between vectors (0 -> 1)
+		T SinAlpha = math::sin(Alpha);
+		// this breaks down when SinAlpha = 0, i.e. Alpha = 0 or pi
+		T t1 = math::sin((static_cast<T>(1) - a) * Alpha) / SinAlpha;
+		T t2 = math::sin(a * Alpha) / SinAlpha;
+
+		// interpolate src vectors
+		return x * t1 + y * t2;
+	}
+
 }
 
 
