@@ -2,6 +2,7 @@
 
 #include "LMath_Core.h"
 
+#include "Vector3.h"
 #include "Vector4.h"
 #include "Utility.h"
 
@@ -331,6 +332,30 @@ namespace math
 		}
 		*/
 
+		NO_DISCARD FORCE_INLINE static FLOAT32 angle(const Quaternion& x)
+		{
+			if (math::Abs(x.w) > 0.877582561890372716130286068203503191)
+			{
+				FLOAT32 const a = math::asin(math::sqrt(x.x * x.x + x.y * x.y + x.z * x.z)) * static_cast<FLOAT32>(2);
+				if (x.w < static_cast<FLOAT32>(0))
+				{
+					return static_cast<FLOAT32>(math::PI) * static_cast<FLOAT32>(2) - a;
+				}
+				return a;
+			}
+
+			return acos(x.w) * static_cast<FLOAT32>(2);
+		}
+		
+		NO_DISCARD FORCE_INLINE Vector3 axis(const Quaternion& x)
+		{
+			FLOAT32 const tmp1 = static_cast<FLOAT32>(1) - x.w * x.w;
+			if (tmp1 <= static_cast<FLOAT32>(0))
+				return Vector3(0, 0, 1);
+			FLOAT32 const tmp2 = static_cast<FLOAT32>(1) / sqrt(tmp1);
+			return Vector3(x.x * tmp2, x.y * tmp2, x.z * tmp2);
+		}
+
 		static Quaternion angleAxis(const FLOAT32& angle, const Vector3& v);
 
 		template<typename X, typename Y>
@@ -360,10 +385,11 @@ namespace math
 		static Vector3 QuaternionToEulerAngle(const Quaternion& x);
 		
 		static Quaternion quatLookAt(const math::Vector3& direction, const math::Vector3& up);
+		
 	};
 
 	
-	extern NO_DISCARD FORCE_INLINE  FLOAT32 dot(const Quaternion& a, const Quaternion& b)
+	extern NO_DISCARD FORCE_INLINE FLOAT32 dot(const Quaternion& a, const Quaternion& b)
 	{
 		return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 	}
