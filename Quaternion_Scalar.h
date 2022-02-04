@@ -196,13 +196,27 @@ namespace math
 		
 		FORCE_INLINE type operator+(const Quaternion& rhs) const noexcept
 		{
-			return *this + rhs;
+			Quaternion result{ nullptr };
+
+			result.w = w + rhs.w;
+			result.x = x + rhs.x;
+			result.y = y + rhs.y;
+			result.z = z + rhs.z;
+
+			return result;
 		}
 
 
 		FORCE_INLINE type operator-(const Quaternion& rhs) const noexcept
 		{
-			return *this - rhs;
+			Quaternion result{ nullptr };
+
+			result.w = w - rhs.w;
+			result.x = x - rhs.x;
+			result.y = y - rhs.y;
+			result.z = z - rhs.z;
+
+			return result;
 		}
 
 		FORCE_INLINE type operator*(const Quaternion& rhs) const noexcept
@@ -219,7 +233,14 @@ namespace math
 		
 		FORCE_INLINE type operator/(const Quaternion& rhs) const
 		{
-			return *this / rhs;
+			Quaternion result{ nullptr };
+
+			result.w = w / rhs.w;
+			result.x = x / rhs.x;
+			result.y = y / rhs.y;
+			result.z = z / rhs.z;
+
+			return result;
 		}
 
 		/*
