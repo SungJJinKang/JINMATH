@@ -26,56 +26,68 @@ namespace math
 		/// <summary>
 		/// this is radian
 		/// </summary>
-		D_PROPERTY()
-		Vector4 value;
+		struct
+		{
+			D_PROPERTY()
+			FLOAT32 w;
+
+			D_PROPERTY()
+			FLOAT32 x;
+
+			D_PROPERTY()
+			FLOAT32 y;
+
+			D_PROPERTY()
+			FLOAT32 z;
+		};
 
 		FORCE_INLINE FLOAT32* data() noexcept
 		{
-			return value.data();
+			return &w;
 		}
 
 		FORCE_INLINE const FLOAT32* data() const noexcept
 		{
-			return value.data();
+			return &w;
 		}
 
 		Quaternion() noexcept = delete;
 
-		FORCE_INLINE Quaternion(int*) : value{nullptr}
+		FORCE_INLINE Quaternion(int*)
 		{}
 
 		FORCE_INLINE explicit Quaternion(FLOAT32 value) noexcept
-			: value{ value , value , value , value }
+			: w{ value }, x{ value }, y{ value }, z{ value }
 		{
 		}
 
-		FORCE_INLINE Quaternion(FLOAT32 xValue, FLOAT32 yValue, FLOAT32 zValue, FLOAT32 wValue) noexcept
-			: value{ xValue , yValue , zValue , wValue }
+		FORCE_INLINE Quaternion(FLOAT32 wValue, FLOAT32 xValue, FLOAT32 yValue, FLOAT32 zValue) noexcept
+			: w{ wValue }, x{ xValue }, y{ yValue }, z{ zValue }
 		{
 		}
 
-		template <typename X, typename Y, typename Z, typename W>
-		Quaternion(X xValue, Y yValue, Z zValue, W wValue) noexcept
-			: value{ static_cast<FLOAT32>(xValue) , static_cast<FLOAT32>(yValue) , static_cast<FLOAT32>(zValue) , static_cast<FLOAT32>(wValue) }
+		template <typename W, typename X, typename Y, typename Z>
+		Quaternion(W wValue, X xValue, Y yValue, Z zValue) noexcept
+			: w{ static_cast<FLOAT32>(wValue) }, x{ static_cast<FLOAT32>(xValue) }, y{ static_cast<FLOAT32>(yValue) }, z{ static_cast<FLOAT32>(zValue) }
 		{
 		}
 
 		FORCE_INLINE Quaternion(const Quaternion& quat) noexcept
-			: value{ quat.value }
+			: w{ quat.w }, x{ quat.x }, y{ quat.y }, z{ quat.z }
 		{
 		}
 
 		
 		Quaternion(FLOAT32 s, const Vector3& vector) noexcept;
 		
-		FORCE_INLINE explicit Quaternion(const Vector3& eulerAngle) noexcept : value(nullptr)
+		FORCE_INLINE explicit Quaternion(const Vector3& eulerAngle) noexcept
 		{
 			*this = type::EulerAngleToQuaternion(eulerAngle);
 		}
 
 		static type mat2Quaternion(const Matrix3x3& m);
 
-		explicit Quaternion(const Matrix3x3& m) noexcept : value(nullptr)
+		explicit Quaternion(const Matrix3x3& m) noexcept
 		{
 			*this = mat2Quaternion(m);
 		}
@@ -84,7 +96,10 @@ namespace math
 
 		FORCE_INLINE type& operator=(const type& vector) noexcept
 		{
-			value = vector.value;
+			w = vector.w;
+			x = vector.x;
+			y = vector.y;
+			z = vector.z;
 			return *this;
 		}
 
@@ -104,31 +119,55 @@ namespace math
 		NO_DISCARD value_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < componentCount());
-			return value[i];
+			switch (i)
+			{
+			case 0:
+				return w;
+			case 1:
+				return x;
+			case 2:
+				return y;
+			case 3:
+				return z;
+			default:
+				NEVER_HAPPEN;
+			}
 		}
 
 		NO_DISCARD FORCE_INLINE const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
-			return value[i];
+			switch (i)
+			{
+			case 0:
+				return w;
+			case 1:
+				return x;
+			case 2:
+				return y;
+			case 3:
+				return z;
+			default:
+				NEVER_HAPPEN;
+			}
 		}
 
 		
 		FORCE_INLINE type& operator+=(const Quaternion& rhs) noexcept
 		{
-			value.x += rhs.value.x;
-			value.y += rhs.value.y;
-			value.z += rhs.value.z;
-			value.w += rhs.value.w;
+			w += rhs.w;
+			x += rhs.x;
+			y += rhs.y;
+			z += rhs.z;
 			return *this;
 		}
 		
 		FORCE_INLINE type& operator-=(const Quaternion& rhs) noexcept
 		{
-			value.x -= rhs.value.x;
-			value.y -= rhs.value.y;
-			value.z -= rhs.value.z;
-			value.w -= rhs.value.w;
+			w += rhs.w;
+			x += rhs.x;
+			y += rhs.y;
+			z += rhs.z;
 			return *this;
 		}
 
@@ -138,19 +177,19 @@ namespace math
 			const Quaternion p(*this);
 			const Quaternion q(rhs);
 
-			this->value.w = p.value.w * q.value.w - p.value.x * q.value.x - p.value.y * q.value.y - p.value.z * q.value.z;
-			this->value.x = p.value.w * q.value.x + p.value.x * q.value.w + p.value.y * q.value.z - p.value.z * q.value.y;
-			this->value.y = p.value.w * q.value.y + p.value.y * q.value.w + p.value.z * q.value.x - p.value.x * q.value.z;
-			this->value.z = p.value.w * q.value.z + p.value.z * q.value.w + p.value.x * q.value.y - p.value.y * q.value.x;
+			this->w = p.w * q.w - p.x * q.x - p.y * q.y - p.z * q.z;
+			this->x = p.w * q.x + p.x * q.w + p.y * q.z - p.z * q.y;
+			this->y = p.w * q.y + p.y * q.w + p.z * q.x - p.x * q.z;
+			this->z = p.w * q.z + p.z * q.w + p.x * q.y - p.y * q.x;
 			return *this;
 		}
 		
 		FORCE_INLINE type& operator/=(const Quaternion& rhs) noexcept
 		{
-			value.x /= rhs.value.x;
-			value.y /= rhs.value.y;
-			value.z /= rhs.value.z;
-			value.w /= rhs.value.w;
+			x /= rhs.x;
+			y /= rhs.y;
+			z /= rhs.z;
+			w /= rhs.w;
 			return *this;
 		}
 		
@@ -169,10 +208,10 @@ namespace math
 		{
 			Quaternion result{ nullptr };
 
-			result.value.w = this->value.w * rhs.value.w - this->value.x * rhs.value.x - this->value.y * rhs.value.y - this->value.z * rhs.value.z;
-			result.value.x = this->value.w * rhs.value.x + this->value.x * rhs.value.w + this->value.y * rhs.value.z - this->value.z * rhs.value.y;
-			result.value.y = this->value.w * rhs.value.y + this->value.y * rhs.value.w + this->value.z * rhs.value.x - this->value.x * rhs.value.z;
-			result.value.z = this->value.w * rhs.value.z + this->value.z * rhs.value.w + this->value.x * rhs.value.y - this->value.y * rhs.value.x;
+			result.w = this->w * rhs.w - this->x * rhs.x - this->y * rhs.y - this->z * rhs.z;
+			result.x = this->w * rhs.x + this->x * rhs.w + this->y * rhs.z - this->z * rhs.y;
+			result.y = this->w * rhs.y + this->y * rhs.w + this->z * rhs.x - this->x * rhs.z;
+			result.z = this->w * rhs.z + this->z * rhs.w + this->x * rhs.y - this->y * rhs.x;
 
 			return type{ result };
 		}
@@ -195,24 +234,24 @@ namespace math
 
 		NO_DISCARD FORCE_INLINE bool operator==(const type& rhs) noexcept
 		{
-			return this->value.x == rhs.value.x && this->value.y == rhs.value.y && this->value.z == rhs.value.z && this->value.w == rhs.value.w;
+			return this->x == rhs.x && this->y == rhs.y && this->z == rhs.z && this->w == rhs.w;
 		}
 
 		NO_DISCARD FORCE_INLINE bool operator!=(const type& rhs) noexcept
 		{
-			return this->value.x != rhs.value.x || this->value.y != rhs.value.y || this->value.z != rhs.value.z || this->value.w != rhs.value.w;
+			return this->x != rhs.x || this->y != rhs.y || this->z != rhs.z || this->w != rhs.w;
 		}
 
 		template <typename X>
 		NO_DISCARD FORCE_INLINE bool operator==(const X& number) noexcept
 		{
-			return this->value.x == number && this->value.y == number && this->value.z == number && this->value.w == number;
+			return this->x == number && this->y == number && this->z == number && this->w == number;
 		}
 
 		template <typename X>
 		NO_DISCARD FORCE_INLINE bool operator!=(const X& number) noexcept
 		{
-			return this->value.x != number || this->value.y != number || this->value.z != number || this->value.w != number;
+			return this->x != number || this->y != number || this->z != number || this->w != number;
 		}
 
 		/// <summary>
@@ -221,10 +260,10 @@ namespace math
 		/// <returns></returns>
 		FORCE_INLINE type& operator++() noexcept
 		{
-			++value.x;
-			++value.y;
-			++value.z;
-			++value.w;
+			++x;
+			++y;
+			++z;
+			++w;
 			return *this;
 		}
 
@@ -246,10 +285,10 @@ namespace math
 		/// <returns></returns>
 		FORCE_INLINE type& operator--() noexcept
 		{
-			--value.x;
-			--value.y;
-			--value.z;
-			--value.w;
+			--x;
+			--y;
+			--z;
+			--w;
 			return *this;
 		}
 
@@ -314,7 +353,7 @@ namespace math
 
 		static FLOAT32 yaw(const Quaternion& q)
 		{
-			return std::asin(::math::clamp(static_cast<FLOAT32>(-2) * (q.value.x * q.value.z - q.value.w * q.value.y), static_cast<FLOAT32>(-1), static_cast<FLOAT32>(1)));
+			return std::asin(::math::clamp(static_cast<FLOAT32>(-2) * (q.x * q.z - q.w * q.y), static_cast<FLOAT32>(-1), static_cast<FLOAT32>(1)));
 		}
 
 		
@@ -324,33 +363,33 @@ namespace math
 	};
 
 	
-	FORCE_INLINE extern FLOAT32 dot(const Quaternion& a, const Quaternion& b)
+	extern NO_DISCARD FORCE_INLINE  FLOAT32 dot(const Quaternion& a, const Quaternion& b)
 	{
-		return a.value.x * b.value.x + a.value.y * b.value.y + a.value.z * b.value.z + a.value.w * b.value.w;
+		return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 	}
 
 	
-	FORCE_INLINE extern Quaternion cross(const Quaternion& q1, const Quaternion& q2)
+	extern NO_DISCARD FORCE_INLINE Quaternion cross(const Quaternion& q1, const Quaternion& q2)
 	{
 		return Quaternion(
-			q1.value.w * q2.value.w - q1.value.x * q2.value.x - q1.value.y * q2.value.y - q1.value.z * q2.value.z,
-			q1.value.w * q2.value.x + q1.value.x * q2.value.w + q1.value.y * q2.value.z - q1.value.z * q2.value.y,
-			q1.value.w * q2.value.y + q1.value.y * q2.value.w + q1.value.z * q2.value.x - q1.value.x * q2.value.z,
-			q1.value.w * q2.value.z + q1.value.z * q2.value.w + q1.value.x * q2.value.y - q1.value.y * q2.value.x);
+			q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z,
+			q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y,
+			q1.w * q2.y + q1.y * q2.w + q1.z * q2.x - q1.x * q2.z,
+			q1.w * q2.z + q1.z * q2.w + q1.x * q2.y - q1.y * q2.x);
 	}
 	
-	FORCE_INLINE extern Quaternion conjugate(const Quaternion& q)
+	extern NO_DISCARD FORCE_INLINE  Quaternion conjugate(const Quaternion& q)
 	{
-		return Quaternion(q.value.w, -q.value.x, -q.value.y, -q.value.z);
+		return Quaternion(q.w, -q.x, -q.y, -q.z);
 	}
 
-	FORCE_INLINE extern Quaternion operator/(const Quaternion& q, const FLOAT32 s)
+	extern NO_DISCARD FORCE_INLINE  Quaternion operator/(const Quaternion& q, const FLOAT32 s)
 	{
 		return Quaternion(
-			q.value.w / s, q.value.x / s, q.value.y / s, q.value.z / s);
+			q.w / s, q.x / s, q.y / s, q.z / s);
 	}
 
-	FORCE_INLINE extern Quaternion inverse(const Quaternion& q)
+	extern NO_DISCARD FORCE_INLINE  Quaternion inverse(const Quaternion& q)
 	{
 		return operator/(conjugate(q), dot(q, q));
 	}
@@ -358,59 +397,103 @@ namespace math
 
 
 	
-	FORCE_INLINE extern Quaternion operator+(const Quaternion& vector) noexcept
+	extern NO_DISCARD FORCE_INLINE Quaternion operator+(const Quaternion& vector) noexcept
 	{
 		return Quaternion{ vector };
 	}
 
 	
-	FORCE_INLINE extern Quaternion operator-(const Quaternion& vector) noexcept
+	extern NO_DISCARD FORCE_INLINE Quaternion operator-(const Quaternion& vector) noexcept
 	{
 		return Quaternion(
-			-vector.value.x,
-			-vector.value.y,
-			-vector.value.z,
-			-vector.value.w);
+			-vector.x,
+			-vector.y,
+			-vector.z,
+			-vector.w);
 	}
 
 
 	//
 	
-	FORCE_INLINE extern Vector3 operator*(const Quaternion& q, const Vector3& v);
+	extern NO_DISCARD FORCE_INLINE Vector3 operator*(const Quaternion& q, const Vector3& v);
 
 
-	FORCE_INLINE extern Vector4 operator*(const Quaternion& q, const Vector4& v);
+	extern NO_DISCARD FORCE_INLINE  Vector4 operator*(const Quaternion& q, const Vector4& v);
 
-	FORCE_INLINE extern Vector4 operator*(const Vector4& v, const Quaternion& q)
+	extern NO_DISCARD FORCE_INLINE  Vector4 operator*(const Vector4& v, const Quaternion& q)
 	{
 		return inverse(q) * v;
 	}
 	
-	FORCE_INLINE extern Quaternion operator*(const Quaternion& q, const FLOAT32 s)
+	extern NO_DISCARD FORCE_INLINE  Quaternion operator*(const Quaternion& q, const FLOAT32 s)
 	{
 		return Quaternion(
-			q.value.w * s, q.value.x * s, q.value.y * s, q.value.z * s);
+			q.w * s, q.x * s, q.y * s, q.z * s);
 	}
 	
-	FORCE_INLINE extern Quaternion operator*(const FLOAT32 s, const Quaternion& q)
+	extern NO_DISCARD FORCE_INLINE  Quaternion operator*(const FLOAT32 s, const Quaternion& q)
 	{
 		return q * s;
 	}
 
 
-	FORCE_INLINE extern Quaternion operator*(const Quaternion& p, const Quaternion& q)
+	extern NO_DISCARD FORCE_INLINE  Quaternion operator*(const Quaternion& p, const Quaternion& q)
 	{
 		Quaternion result{ nullptr };
 
-		result.value.w = p.value.w * q.value.w - p.value.x * q.value.x - p.value.y * q.value.y - p.value.z * q.value.z;
-		result.value.x = p.value.w * q.value.x + p.value.x * q.value.w + p.value.y * q.value.z - p.value.z * q.value.y;
-		result.value.y = p.value.w * q.value.y + p.value.y * q.value.w + p.value.z * q.value.x - p.value.x * q.value.z;
-		result.value.z = p.value.w * q.value.z + p.value.z * q.value.w + p.value.x * q.value.y - p.value.y * q.value.x;
+		result.w = p.w * q.w - p.x * q.x - p.y * q.y - p.z * q.z;
+		result.x = p.w * q.x + p.x * q.w + p.y * q.z - p.z * q.y;
+		result.y = p.w * q.y + p.y * q.w + p.z * q.x - p.x * q.z;
+		result.z = p.w * q.z + p.z * q.w + p.x * q.y - p.y * q.x;
 
 		return Quaternion{ result };
 	}
-	
-	
-	
+
+	template<typename T>
+	extern NO_DISCARD FORCE_INLINE  Quaternion lerp(const Quaternion& x, const Quaternion& y, T a)
+	{
+		static_assert(std::is_same_v<T, FLOAT32> || std::is_same_v<T, FLOAT64>);
+
+		// Lerp is only defined in [0, 1]
+		assert(a >= static_cast<T>(0));
+		assert(a <= static_cast<T>(1));
+
+		return x * (static_cast<FLOAT32>(1) - a) + (y * a);
+	}
+
+	template<typename T>
+	extern NO_DISCARD FORCE_INLINE  Quaternion slerp(const Quaternion& x, const Quaternion& y, T a)
+	{
+		static_assert(std::is_same_v<T, FLOAT32> || std::is_same_v<T, FLOAT64>);
+
+		Quaternion z = y;
+
+		T cosTheta = dot(x, y);
+
+		// If cosTheta < 0, the interpolation will take the long way around the sphere.
+		// To fix this, one quat must be negated.
+		if (cosTheta < static_cast<T>(0))
+		{
+			z = -y;
+			cosTheta = -cosTheta;
+		}
+
+		// Perform a linear interpolation when cosTheta is close to 1 to avoid side effect of sin(angle) becoming a zero denominator
+		if (cosTheta > static_cast<T>(1) - math::epsilon<T>()())
+		{
+			// Linear interpolation
+			return Quaternion(
+				math::lerp(x.w, z.w, a),
+				math::lerp(x.x, z.x, a),
+				math::lerp(x.y, z.y, a),
+				math::lerp(x.z, z.z, a));
+		}
+		else
+		{
+			// Essential Mathematics, page 467
+			T angle = math::acos(cosTheta);
+			return (math::sin((static_cast<T>(1) - a) * angle) * x + math::sin(a * angle) * z) / math::sin(angle);
+		}
+	}
 	
 }
