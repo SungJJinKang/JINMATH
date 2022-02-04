@@ -593,19 +593,7 @@ namespace math
 	{
 		return _mm_tan_ps(*reinterpret_cast<const M128F*>(vector.data()));
 	}
-
-	template<typename T>
-	extern NO_DISCARD FORCE_INLINE Vector4 lerp
-	(
-		const Vector4& a,
-		const Vector4& b,
-		T const& t
-	)
-	{
-		// interpolate src vectors
-		return Vector4{ math::lerp(a.x, b.x, t), math::lerp(a.y, b.y, t) , math::lerp(a.z, b.z, t) , math::lerp(a.w, b.w, t) };
-	}
-
+	
 	template<typename T>
 	extern NO_DISCARD FORCE_INLINE Vector4 slerp
 	(

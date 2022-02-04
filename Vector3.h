@@ -514,19 +514,7 @@ namespace math
 	{
 		return Vector3(::math::Min(vector1.x, vector2.x), ::math::Min(vector1.y, vector2.y), ::math::Min(vector1.z, vector2.z));
 	}
-
-	template<typename T>
-	extern NO_DISCARD FORCE_INLINE Vector3 lerp
-	(
-		const Vector3& a,
-		const Vector3& b,
-		T const& t
-	)
-	{
-		// interpolate src vectors
-		return Vector3{ math::lerp(a.x, b.x, t), math::lerp(a.y, b.y, t) , math::lerp(a.z, b.z, t) };
-	}
-
+	
 	template<typename T>
 	extern NO_DISCARD FORCE_INLINE Vector3 slerp
 	(
