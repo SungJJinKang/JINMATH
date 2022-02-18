@@ -221,7 +221,7 @@ namespace math
 			return Matrix4x4{ *reinterpret_cast<Matrix4x4*>(&_REULST_MAT4) };
 		}
 
-		NO_DISCARD inline Vector4 operator*(const Vector4& vector) const noexcept
+		NO_DISCARD FORCE_INLINE Vector4 operator*(const Vector4& vector) const noexcept
 		{
 			Vector4 TEMP_VEC4{ nullptr };
 
@@ -237,11 +237,7 @@ namespace math
 
 			return Vector4{ TEMP_VEC4 };
 		}
-
-
-		inline thread_local static Vector4 Vec4_Parameter{ 1.0f };
-		inline thread_local static Vector4 Vec4_Result{ 1.0f };
-
+		
 		inline static M128F AllOne{ _mm_set1_ps(1.0f) };
 
 		/// <summary>
@@ -251,14 +247,14 @@ namespace math
 		/// <param name="vector"></param>
 		/// <returns></returns>
 		
-		NO_DISCARD inline Vector4 operator*(const Vector3& vector) const noexcept
+		NO_DISCARD FORCE_INLINE Vector4 operator*(const Vector3& vector) const noexcept
 		{
-			//vec3 is not aligned to 128bit, so we need to copy temporary vec3 data to vec4
-			Vec4_Parameter = vector;
+			const Vector4 temp_vec4{ vector };
+			Vector4 result{ nullptr };
 
 			const M128F* A = reinterpret_cast<const M128F*>(this);
-			const M128F* B = reinterpret_cast<const M128F*>(&vector);
-			M128F* R = reinterpret_cast<M128F*>(&Vec4_Result);
+			const M128F* B = reinterpret_cast<const M128F*>(temp_vec4.data());
+			M128F* R = reinterpret_cast<M128F*>(result.data());
 
 			// First row of result (Matrix1[0] * Matrix2).
 			*R = M128F_MUL(M128F_REPLICATE(*B, 0), A[0]);
@@ -266,7 +262,7 @@ namespace math
 			*R = M128F_MUL_AND_ADD(M128F_REPLICATE(*B, 2), A[2], *R);
 			*R = M128F_MUL_AND_ADD(AllOne, A[3], *R);
 
-			return Vector4{ Vec4_Result };
+			return result;
 		}
 
 
