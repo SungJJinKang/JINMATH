@@ -1,6 +1,6 @@
 #pragma once
 
-#include "JINSTLCore.h"
+#include "JINMATHCore.h"
 
 namespace math
 {

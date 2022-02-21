@@ -1,6 +1,6 @@
 #pragma once
 
-#include "JINSTLCore.h"
+#include "JINMATHCore.h"
 
 
 #if defined(__AVX__) || defined(__AVX2__)

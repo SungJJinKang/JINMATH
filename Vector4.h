@@ -1,5 +1,5 @@
 #pragma once
-#include "JINSTLCore.h"
+#include "JINMATHCore.h"
 
 #include "Utility.h"
 #include "SIMD_Core.h"

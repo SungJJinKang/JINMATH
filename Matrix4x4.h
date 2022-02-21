@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "JINSTLCore.h"
+#include "JINMATHCore.h"
 
 #include "Vector4.h"
 #include <cstring>
