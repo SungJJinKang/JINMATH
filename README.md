@@ -1,14 +1,8 @@
-# LightMath_Cpp
+# JINMATH
 
-Light math Library For Game Development.
+Homemade Math library for studying, [DoomsEngine](https://github.com/SungJJinKang/DoomsEngine)     
 
 ## Feature
-   * Unstable. Need More Test
-   
-   * C++17
-   * Header Only
-   * Support Constexpr
-   * Support SIMD ( AVX1 )
-   * Inlining for performance
-
-## Roadmap
+- C++17
+- Support SIMD ( AVX1 )
+- Unstable. Need More Test
