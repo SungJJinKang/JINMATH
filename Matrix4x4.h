@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "LMath_Core.h"
+#include "JINSTLCore.h"
 
 #include "Vector4.h"
 #include <cstring>

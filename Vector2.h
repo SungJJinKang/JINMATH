@@ -1,5 +1,6 @@
 #pragma once
-#include "LMath_Core.h"
+#include "JINSTLCore.h"
+
 #include "Utility.h"
 
 #include "Vector2.reflection.h"

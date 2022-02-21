@@ -1,7 +1,7 @@
 #pragma once
-#include <limits>
+#include "JINSTLCore.h"
 
-#include "LMath_Core.h"
+#include <limits>
 
 namespace math
 {

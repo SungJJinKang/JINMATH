@@ -1,10 +1,8 @@
 #pragma once
-#include "LMath_Core.h"
+#include "JINSTLCore.h"
 
 #include "Utility.h"
-
 #include "SIMD_Core.h"
-
 
 #include "Vector4.reflection.h"
 namespace math
