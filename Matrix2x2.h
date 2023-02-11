@@ -23,26 +23,26 @@ namespace math
 		using type = typename Matrix2x2;
 		using col_type = Vector2;
 
-		NO_DISCARD FORCE_INLINE static size_t columnCount() noexcept { return 2; }
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE static size_t columnCount() noexcept { return 2; }
 
 		D_PROPERTY()
 		col_type columns[2];
 
-		FORCE_INLINE float* data() noexcept
+		JINMATH_FORCE_INLINE float* data() noexcept
 		{
 			return columns[0].data();
 		}
 
-		const FORCE_INLINE float* data() const noexcept
+		const JINMATH_FORCE_INLINE float* data() const noexcept
 		{
 			return columns[0].data();
 		}
 
 		static const Matrix2x2 identify;
 
-		FORCE_INLINE Matrix2x2() = delete;
+		JINMATH_FORCE_INLINE Matrix2x2() = delete;
 
-		FORCE_INLINE Matrix2x2(INT32*) noexcept : columns{ nullptr, nullptr }
+		JINMATH_FORCE_INLINE Matrix2x2(INT32*) noexcept : columns{ nullptr, nullptr }
 		{
 
 		}
@@ -52,14 +52,14 @@ namespace math
 		/// </summary>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		FORCE_INLINE explicit Matrix2x2(value_type value) noexcept
+		JINMATH_FORCE_INLINE explicit Matrix2x2(value_type value) noexcept
 			: columns{
 			col_type(value, 0),
 			col_type(0, value) }
 		{
 		}
 
-		FORCE_INLINE Matrix2x2
+		JINMATH_FORCE_INLINE Matrix2x2
 		(
 			value_type x0, value_type y0,
 			value_type x1, value_type y1
@@ -70,37 +70,37 @@ namespace math
 		}
 
 		
-		FORCE_INLINE Matrix2x2(const col_type& column0, const col_type& column1) noexcept
+		JINMATH_FORCE_INLINE Matrix2x2(const col_type& column0, const col_type& column1) noexcept
 			: columns{ col_type{column0}, col_type{column1} }
 		{
 		}
 		
-		FORCE_INLINE Matrix2x2(const Matrix2x2& matrix) noexcept
+		JINMATH_FORCE_INLINE Matrix2x2(const Matrix2x2& matrix) noexcept
 			: columns{ col_type{matrix.columns[0]}, col_type{matrix.columns[1]} }
 		{
 		}
 
 		
-		FORCE_INLINE explicit Matrix2x2(const Matrix3x3& matrix) noexcept;
+		JINMATH_FORCE_INLINE explicit Matrix2x2(const Matrix3x3& matrix) noexcept;
 
 
-		FORCE_INLINE explicit Matrix2x2(const Matrix4x4& matrix) noexcept;
+		JINMATH_FORCE_INLINE explicit Matrix2x2(const Matrix4x4& matrix) noexcept;
 
-		FORCE_INLINE Matrix2x2& operator=(value_type value) noexcept
+		JINMATH_FORCE_INLINE Matrix2x2& operator=(value_type value) noexcept
 		{
 			columns[0] = value;
 			columns[1] = value;
 			return *this;
 		}
 
-		FORCE_INLINE Matrix2x2& operator=(const col_type& column) noexcept
+		JINMATH_FORCE_INLINE Matrix2x2& operator=(const col_type& column) noexcept
 		{
 			columns[0] = column;
 			columns[1] = column;
 			return *this;
 		}
 		
-		FORCE_INLINE Matrix2x2& operator=(const Matrix2x2& matrix) noexcept
+		JINMATH_FORCE_INLINE Matrix2x2& operator=(const Matrix2x2& matrix) noexcept
 		{
 			columns[0] = matrix.columns[0];
 			columns[1] = matrix.columns[1];
@@ -108,17 +108,17 @@ namespace math
 		}
 
 		
-		FORCE_INLINE Matrix2x2& operator=(const Matrix3x3& matrix) noexcept;
+		JINMATH_FORCE_INLINE Matrix2x2& operator=(const Matrix3x3& matrix) noexcept;
 		
-		FORCE_INLINE Matrix2x2& operator=(const Matrix4x4& matrix) noexcept;
+		JINMATH_FORCE_INLINE Matrix2x2& operator=(const Matrix4x4& matrix) noexcept;
 
-		NO_DISCARD FORCE_INLINE col_type& operator[](size_t i)
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE col_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
 		}
 
-		NO_DISCARD FORCE_INLINE const col_type& operator[](size_t i) const
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE const col_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < columnCount());
 			return columns[i];
@@ -127,22 +127,22 @@ namespace math
 
 
 		
-		FORCE_INLINE Matrix2x2 operator+(const Matrix2x2& rhs) const noexcept
+		JINMATH_FORCE_INLINE Matrix2x2 operator+(const Matrix2x2& rhs) const noexcept
 		{
 			return Matrix2x2(columns[0] + rhs.columns[0], columns[1] + rhs.columns[1]);
 		}
 
 		
-		FORCE_INLINE Matrix2x2 operator-(const Matrix2x2& rhs) const noexcept
+		JINMATH_FORCE_INLINE Matrix2x2 operator-(const Matrix2x2& rhs) const noexcept
 		{
 			return Matrix2x2(columns[0] - rhs.columns[0], columns[1] - rhs.columns[1]);
 		}
 
 		
-		NO_DISCARD FORCE_INLINE Matrix2x2 operator*(const Matrix2x2& rhs) const noexcept;
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Matrix2x2 operator*(const Matrix2x2& rhs) const noexcept;
 
 
-		NO_DISCARD FORCE_INLINE Vector2 operator*(const Vector2& vector) const noexcept
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 operator*(const Vector2& vector) const noexcept
 		{
 			return Vector2
 			{
@@ -151,37 +151,37 @@ namespace math
 			};
 		}
 
-		FORCE_INLINE Matrix2x2 operator+(float rhs) const noexcept
+		JINMATH_FORCE_INLINE Matrix2x2 operator+(float rhs) const noexcept
 		{
 			return Matrix2x2(columns[0] + rhs, columns[1] + rhs);
 		}
 
-		FORCE_INLINE Matrix2x2 operator-(float rhs) const noexcept
+		JINMATH_FORCE_INLINE Matrix2x2 operator-(float rhs) const noexcept
 		{
 			return Matrix2x2(columns[0] - rhs, columns[1] - rhs);
 		}
 
-		FORCE_INLINE Matrix2x2 operator*(float rhs) const noexcept
+		JINMATH_FORCE_INLINE Matrix2x2 operator*(float rhs) const noexcept
 		{
 			return Matrix2x2(columns[0] * rhs, columns[1] * rhs);
 		}
 
 		/*
 		
-		FORCE_INLINE Matrix2x2 operator/(const Matrix<4, X>& rhs)
+		JINMATH_FORCE_INLINE Matrix2x2 operator/(const Matrix<4, X>& rhs)
 		{
 			return Matrix2x2(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
 		}
 
 		
-		FORCE_INLINE Matrix2x2 operator%(const Matrix<4, X>& rhs)
+		JINMATH_FORCE_INLINE Matrix2x2 operator%(const Matrix<4, X>& rhs)
 		{
 			return Matrix2x2(x % rhs.x, y % rhs.y, z % rhs.z, w % rhs.w);
 		}
 		*/
 
 		
-		FORCE_INLINE Matrix2x2& operator+=(const Matrix2x2& rhs) noexcept
+		JINMATH_FORCE_INLINE Matrix2x2& operator+=(const Matrix2x2& rhs) noexcept
 		{
 			columns[0] += rhs.columns[0];
 			columns[1] += rhs.columns[1];
@@ -189,7 +189,7 @@ namespace math
 		}
 
 		
-		FORCE_INLINE Matrix2x2& operator-=(const Matrix2x2& rhs) noexcept
+		JINMATH_FORCE_INLINE Matrix2x2& operator-=(const Matrix2x2& rhs) noexcept
 		{
 			columns[0] -= rhs.columns[0];
 			columns[1] -= rhs.columns[1];
@@ -198,7 +198,7 @@ namespace math
 
 
 		
-		FORCE_INLINE Matrix2x2& operator*=(const Matrix2x2& rhs) noexcept
+		JINMATH_FORCE_INLINE Matrix2x2& operator*=(const Matrix2x2& rhs) noexcept
 		{
 			return (*this = *this * rhs);
 		}
@@ -207,7 +207,7 @@ namespace math
 
 		/*
 		
-		FORCE_INLINE Matrix2x2& operator/=(const Matrix<4, X>& rhs)
+		JINMATH_FORCE_INLINE Matrix2x2& operator/=(const Matrix<4, X>& rhs)
 		{
 			x /= rhs.x;
 			y /= rhs.y;
@@ -217,7 +217,7 @@ namespace math
 		}
 
 		
-		FORCE_INLINE Matrix2x2& operator%=(const Matrix<4, X>& rhs)
+		JINMATH_FORCE_INLINE Matrix2x2& operator%=(const Matrix<4, X>& rhs)
 		{
 			x %= rhs.x;
 			y %= rhs.y;
@@ -228,21 +228,21 @@ namespace math
 		*/
 		//
 
-		FORCE_INLINE Matrix2x2& operator+=(float scalar) noexcept
+		JINMATH_FORCE_INLINE Matrix2x2& operator+=(float scalar) noexcept
 		{
 			columns[0] += scalar;
 			columns[1] += scalar;
 			return *this;
 		}
 
-		FORCE_INLINE Matrix2x2& operator-=(float scalar) noexcept
+		JINMATH_FORCE_INLINE Matrix2x2& operator-=(float scalar) noexcept
 		{
 			columns[0] -= scalar;
 			columns[1] -= scalar;
 			return *this;
 		}
 
-		FORCE_INLINE Matrix2x2& operator*=(float scalar) noexcept
+		JINMATH_FORCE_INLINE Matrix2x2& operator*=(float scalar) noexcept
 		{
 			columns[0] *= scalar;
 			columns[1] *= scalar;
@@ -251,7 +251,7 @@ namespace math
 
 		/*
 		
-		FORCE_INLINE Matrix2x2& operator/=(const X& scalar)
+		JINMATH_FORCE_INLINE Matrix2x2& operator/=(const X& scalar)
 		{
 			x /= scalar;
 			y /= scalar;
@@ -262,7 +262,7 @@ namespace math
 
 
 		template <typename X, std::enable_if_t<std::is_integral_v<X>, bool> = true>
-		FORCE_INLINE Matrix2x2& operator%=(const X& scalar)
+		JINMATH_FORCE_INLINE Matrix2x2& operator%=(const X& scalar)
 		{
 			x %= scalar;
 			y %= scalar;
@@ -272,7 +272,7 @@ namespace math
 		}
 
 		template <typename X, std::enable_if_t<std::is_floating_point_v<X>, bool> = true>
-		FORCE_INLINE Matrix2x2& operator%=(const X& scalar)
+		JINMATH_FORCE_INLINE Matrix2x2& operator%=(const X& scalar)
 		{
 
 			x %= std::fmod(x, scalar);
@@ -285,22 +285,22 @@ namespace math
 
 		//
 
-		NO_DISCARD FORCE_INLINE bool operator==(const Matrix2x2& rhs) const noexcept
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator==(const Matrix2x2& rhs) const noexcept
 		{
 			return this->columns[0] == rhs.columns[0] && this->columns[1] == rhs.columns[1];
 		}
 
-		NO_DISCARD FORCE_INLINE bool operator!=(const Matrix2x2& rhs) const noexcept
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator!=(const Matrix2x2& rhs) const noexcept
 		{
 			return this->columns[0] != rhs.columns[0] || this->columns[1] != rhs.columns[1];
 		}
 
-		NO_DISCARD FORCE_INLINE bool operator==(float number) const noexcept
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator==(float number) const noexcept
 		{
 			return this->columns[0] == number && this->columns[1] == number;
 		}
 
-		NO_DISCARD FORCE_INLINE bool operator!=(float number) const noexcept
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator!=(float number) const noexcept
 		{
 			return this->columns[0] != number || this->columns[1] != number;
 		}
@@ -309,7 +309,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE Matrix2x2& operator++() noexcept
+		JINMATH_FORCE_INLINE Matrix2x2& operator++() noexcept
 		{
 			++columns[0];
 			++columns[1];
@@ -321,7 +321,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE Matrix2x2 operator++(INT32) noexcept
+		JINMATH_FORCE_INLINE Matrix2x2 operator++(INT32) noexcept
 		{
 			Matrix2x2 Matrix{ *this };
 			++* this;
@@ -332,7 +332,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE Matrix2x2& operator--() noexcept
+		JINMATH_FORCE_INLINE Matrix2x2& operator--() noexcept
 		{
 			--columns[0];
 			--columns[1];
@@ -344,7 +344,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE Matrix2x2 operator--(INT32) noexcept
+		JINMATH_FORCE_INLINE Matrix2x2 operator--(INT32) noexcept
 		{
 			Matrix2x2 Matrix{ *this };
 			--* this;
@@ -388,12 +388,12 @@ namespace math
 		}
 	};
 	
-	extern NO_DISCARD FORCE_INLINE Matrix2x2 operator+(const Matrix2x2& matrix) noexcept
+	JINMATH_NO_DISCARD inline Matrix2x2 operator+(const Matrix2x2& matrix) noexcept
 	{
 		return Matrix2x2{ matrix };
 	}
 	
-	extern NO_DISCARD FORCE_INLINE Matrix2x2 operator-(const Matrix2x2& matrix) noexcept
+	JINMATH_NO_DISCARD inline Matrix2x2 operator-(const Matrix2x2& matrix) noexcept
 	{
 		return Matrix2x2(
 			-matrix.columns[0],

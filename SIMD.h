@@ -5,12 +5,12 @@
 
 #if defined(__AVX__) || defined(__AVX2__)
 
-#ifndef SIMD_ENABLED
-#define SIMD_ENABLED
+#ifndef JINMATH_SIMD_ENABLED
+#define JINMATH_SIMD_ENABLED
 #endif
 
-#ifndef L_AVX
-#define L_AVX
+#ifndef JINMATH_L_AVX
+#define JINMATH_L_AVX
 #endif
 
 #else
@@ -27,7 +27,7 @@
 //so enclosing function decide whether to use according to whether to support simd
 #ifndef LMATH_CONSTEXPR
 
-#ifdef L_AVX
+#ifdef JINMATH_L_AVX
 #define LMATH_
 #else
 #define LMATH_constexpr

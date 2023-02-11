@@ -7,19 +7,19 @@
 
 #if defined(__GNUC__)  || defined( __clang__)
 
-#  define FORCE_INLINE inline __attribute__ ((always_inline))
-#  define NEVER_INLINE __attribute__ ((noinline))
-#  define RESTRICT __restrict
-#  define VLA_ARRAY_ON_STACK(type__, varname__, size__) type__ varname__[size__];
-#  define NO_DISCARD __attribute__((warn_unused_result))
+#  define JINMATH_FORCE_INLINE inline __attribute__ ((always_inline))
+#  define JINMATH_NEVER_INLINE __attribute__ ((noinline))
+#  define JINMATH_RESTRICT __JINMATH_RESTRICT
+#  define JINMATH_VLA_ARRAY_ON_STACK(type__, varname__, size__) type__ varname__[size__];
+#  define JINMATH_NO_DISCARD __attribute__((warn_unused_result))
 
 #elif defined(_MSC_VER)
 
-#  define FORCE_INLINE __forceinline
-#  define NEVER_INLINE __declspec(noinline)
-#  define RESTRICT __restrict
-#  define VLA_ARRAY_ON_STACK(type__, varname__, size__) type__ *varname__ = (type__*)_alloca(size__ * sizeof(type__))
-#  define NO_DISCARD [[nodiscard]]
+#  define JINMATH_FORCE_INLINE __forceinline
+#  define JINMATH_NEVER_INLINE __declspec(noinline)
+#  define JINMATH_RESTRICT __JINMATH_RESTRICT
+#  define JINMATH_VLA_ARRAY_ON_STACK(type__, varname__, size__) type__ *varname__ = (type__*)_alloca(size__ * sizeof(type__))
+#  define JINMATH_NO_DISCARD [[nodiscard]]
 
 #else
 
@@ -27,85 +27,85 @@
 
 #endif
 
-#undef NEVER_HAPPEN
+#undef JINMATH_NEVER_HAPPEN
 
 #if defined(_DEBUG)
-#define NEVER_HAPPEN assert(false)
+#define JINMATH_NEVER_HAPPEN assert(false)
 #elif (!defined(_DEBUG)) && defined(_MSC_VER)
-#define NEVER_HAPPEN __assume(0)
+#define JINMATH_NEVER_HAPPEN __assume(0)
 #elif (!defined(_DEBUG)) && defined(__clang__)
-#define NEVER_HAPPEN __builtin_unreachable()
+#define JINMATH_NEVER_HAPPEN __builtin_unreachable()
 #else
 #error Unsupported compiler ( Please Use msvc or clang )
 #endif
 
 
 
-#ifndef CHECK_IS_NUMBER
-#define CHECK_IS_NUMBER(t) std::is_floating_point_v<t> || std::is_integral_v<t>
+#ifndef JINMATH_CHECK_IS_NUMBER
+#define JINMATH_CHECK_IS_NUMBER(t) std::is_floating_point_v<t> || std::is_integral_v<t>
 #endif
 
-#ifndef CHECK_IS_NOT_CV
-#define CHECK_IS_NOT_CV(t) !std::is_const_v<t> && !std::is_volatile_v<t>
+#ifndef JINMATH_CHECK_IS_NOT_CV
+#define JINMATH_CHECK_IS_NOT_CV(t) !std::is_const_v<t> && !std::is_volatile_v<t>
 #endif
 
-#ifndef MODULO
-#define MODULO(typeA, valueA, valueB) static_cast<typeA>(std::fmod(valueA, static_cast<typeA>(valueB)))
+#ifndef JINMATH_MODULO
+#define JINMATH_MODULO(typeA, valueA, valueB) static_cast<typeA>(std::fmod(valueA, static_cast<typeA>(valueB)))
 #endif
 
-#ifndef CLIP_RANGE_ZERO_TO_ONE
-#define CLIP_RANGE_ZERO_TO_ONE		(1 << 0) // ZERO_TO_ONE
+#ifndef JINMATH_CLIP_RANGE_ZERO_TO_ONE
+#define JINMATH_CLIP_RANGE_ZERO_TO_ONE		(1 << 0) // ZERO_TO_ONE
 #endif
-#ifndef CLIP_RANGE_NEGATIVE_ONE_TO_ONE
-#define CLIP_RANGE_NEGATIVE_ONE_TO_ONE		(1 << 1) // NEGATIVE_ONE_TO_ONE
+#ifndef JINMATH_CLIP_RANGE_NEGATIVE_ONE_TO_ONE
+#define JINMATH_CLIP_RANGE_NEGATIVE_ONE_TO_ONE		(1 << 1) // NEGATIVE_ONE_TO_ONE
 #endif
-#ifndef LEFT_HAND
-#define LEFT_HAND		(1 << 2) // LEFT_HANDED, For DirectX, Metal, Vulkan
+#ifndef JINMATH_LEFT_HAND
+#define JINMATH_LEFT_HAND		(1 << 2) // LEFT_HANDED, For DirectX, Metal, Vulkan
 #endif
-#ifndef RIGHT_HAND
-#define RIGHT_HAND		(1 << 3) // RIGHT_HANDED, For OpenGL, default in GLM
-#endif
-
-#ifndef LEFT_HAND_ZERO_TO_ONE
-#define LEFT_HAND_ZERO_TO_ONE (LEFT_HAND | CLIP_RANGE_ZERO_TO_ONE)
+#ifndef JINMATH_RIGHT_HAND
+#define JINMATH_RIGHT_HAND		(1 << 3) // RIGHT_HANDED, For OpenGL, default in GLM
 #endif
 
-#ifndef LEFT_HAND_NEGATIVE_ONE_TO_ONE
-#define LEFT_HAND_NEGATIVE_ONE_TO_ONE (LEFT_HAND | CLIP_RANGE_NEGATIVE_ONE_TO_ONE)
+#ifndef JINMATH_LEFT_HAND_ZERO_TO_ONE
+#define JINMATH_LEFT_HAND_ZERO_TO_ONE (JINMATH_LEFT_HAND | JINMATH_CLIP_RANGE_ZERO_TO_ONE)
 #endif
 
-#ifndef RIGHT_HAND_ZERO_TO_ONE
-#define RIGHT_HAND_ZERO_TO_ONE (RIGHT_HAND | CLIP_RANGE_ZERO_TO_ONE)
+#ifndef JINMATH_LEFT_HAND_NEGATIVE_ONE_TO_ONE
+#define JINMATH_LEFT_HAND_NEGATIVE_ONE_TO_ONE (JINMATH_LEFT_HAND | JINMATH_CLIP_RANGE_NEGATIVE_ONE_TO_ONE)
 #endif
 
-#ifndef RIGHT_HAND_NEGATIVE_ONE_TO_ONE
-#define RIGHT_HAND_NEGATIVE_ONE_TO_ONE (RIGHT_HAND | CLIP_RANGE_NEGATIVE_ONE_TO_ONE)
+#ifndef JINMATH_RIGHT_HAND_ZERO_TO_ONE
+#define JINMATH_RIGHT_HAND_ZERO_TO_ONE (JINMATH_RIGHT_HAND | JINMATH_CLIP_RANGE_ZERO_TO_ONE)
 #endif
 
-#ifndef OPEN_GL
-#define OPEN_GL
+#ifndef JINMATH_RIGHT_HAND_NEGATIVE_ONE_TO_ONE
+#define JINMATH_RIGHT_HAND_NEGATIVE_ONE_TO_ONE (JINMATH_RIGHT_HAND | JINMATH_CLIP_RANGE_NEGATIVE_ONE_TO_ONE)
+#endif
+
+#ifndef JINMATH_OPEN_GL
+#define JINMATH_OPEN_GL
 #endif
 //#define DIRECT_X
 
-#if defined(OPEN_GL)
-#ifndef CURRENT_CLIP_RANGE
-#define CURRENT_CLIP_RANGE CLIP_RANGE_NEGATIVE_ONE_TO_ONE
+#if defined(JINMATH_OPEN_GL)
+#ifndef JINMATH_CURRENT_CLIP_RANGE
+#define JINMATH_CURRENT_CLIP_RANGE JINMATH_CLIP_RANGE_NEGATIVE_ONE_TO_ONE
 #endif
-#ifndef CURRENT_COORDINATE_SYSTEM
-#define CURRENT_COORDINATE_SYSTEM RIGHT_HAND
+#ifndef JINMATH_CURRENT_COORDINATE_SYSTEM
+#define JINMATH_CURRENT_COORDINATE_SYSTEM JINMATH_RIGHT_HAND
 #endif
-#ifndef CURRENT_SETTING
-#define CURRENT_SETTING RIGHT_HAND_NEGATIVE_ONE_TO_ONE
+#ifndef JINMATH_CURRENT_SETTING
+#define JINMATH_CURRENT_SETTING JINMATH_RIGHT_HAND_NEGATIVE_ONE_TO_ONE
 #endif
 #elif defined(DIRECT_X)
-#ifndef CURRENT_CLIP_RANGE
-#define CURRENT_CLIP_RANGE CLIP_RANGE_ZERO_TO_ONE
+#ifndef JINMATH_CURRENT_CLIP_RANGE
+#define JINMATH_CURRENT_CLIP_RANGE JINMATH_CLIP_RANGE_ZERO_TO_ONE
 #endif
-#ifndef CURRENT_COORDINATE_SYSTEM
-#define CURRENT_COORDINATE_SYSTEM LEFT_HAND
+#ifndef JINMATH_CURRENT_COORDINATE_SYSTEM
+#define JINMATH_CURRENT_COORDINATE_SYSTEM JINMATH_LEFT_HAND
 #endif
-#ifndef CURRENT_SETTING
-#define CURRENT_SETTING LEFT_HAND_ZERO_TO_ONE
+#ifndef JINMATH_CURRENT_SETTING
+#define JINMATH_CURRENT_SETTING JINMATH_LEFT_HAND_ZERO_TO_ONE
 #endif
 #endif
 

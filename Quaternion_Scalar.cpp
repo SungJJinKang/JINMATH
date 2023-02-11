@@ -165,7 +165,7 @@ math::Vector3 math::Quaternion::QuaternionToEulerAngle(const Quaternion& x)
 	return Vector3(Quaternion::pitch(x), Quaternion::yaw(x), Quaternion::roll(x));
 }
 
-extern math::Vector3 math::operator*(const Quaternion& q, const Vector3& v)
+math::Vector3 math::operator*(const Quaternion& q, const Vector3& v)
 {
 	const Vector3 QuatVector(q.x, q.y, q.z);
 	const Vector3 uv(cross(QuatVector, v));
@@ -174,7 +174,7 @@ extern math::Vector3 math::operator*(const Quaternion& q, const Vector3& v)
 	return v + ((uv * q.w) + uuv) * static_cast<FLOAT32>(2);
 }
 
-extern math::Vector4 math::operator*(const Quaternion& q, const Vector4& v)
+math::Vector4 math::operator*(const Quaternion& q, const Vector4& v)
 {
 	return Vector4(q * Vector3(v), v.w);
 }
@@ -183,7 +183,7 @@ namespace math
 {
 	namespace details
 	{
-		FORCE_INLINE static math::Quaternion quatLookAtRH(const math::Vector3& direction, const math::Vector3& up)
+		JINMATH_FORCE_INLINE static math::Quaternion quatLookAtRH(const math::Vector3& direction, const math::Vector3& up)
 		{
 			math::Matrix3x3 Result{ nullptr };
 
@@ -195,7 +195,7 @@ namespace math
 			return math::Quaternion(Result);
 		}
 
-		FORCE_INLINE static math::Quaternion quatLookAtLH(const math::Vector3& direction, const math::Vector3& up)
+		JINMATH_FORCE_INLINE static math::Quaternion quatLookAtLH(const math::Vector3& direction, const math::Vector3& up)
 		{
 			math::Matrix3x3 Result{ nullptr };
 
@@ -213,7 +213,7 @@ namespace math
 math::Quaternion math::Quaternion::quatLookAt(const math::Vector3& direction, const math::Vector3& up)
 {
 
-#if CURRENT_COORDINATE_SYSTEM == LEFT_HAND
+#if JINMATH_CURRENT_COORDINATE_SYSTEM == JINMATH_LEFT_HAND
 
 	return details::quatLookAtLH(direction, up);
 

@@ -41,27 +41,27 @@ namespace math
 			FLOAT32 z;
 		};
 
-		FORCE_INLINE FLOAT32* data() noexcept
+		JINMATH_FORCE_INLINE FLOAT32* data() noexcept
 		{
 			return &w;
 		}
 
-		FORCE_INLINE const FLOAT32* data() const noexcept
+		JINMATH_FORCE_INLINE const FLOAT32* data() const noexcept
 		{
 			return &w;
 		}
 
 		Quaternion() noexcept = delete;
 
-		FORCE_INLINE Quaternion(int*)
+		JINMATH_FORCE_INLINE Quaternion(int*)
 		{}
 
-		FORCE_INLINE explicit Quaternion(FLOAT32 value) noexcept
+		JINMATH_FORCE_INLINE explicit Quaternion(FLOAT32 value) noexcept
 			: w{ value }, x{ value }, y{ value }, z{ value }
 		{
 		}
 
-		FORCE_INLINE Quaternion(FLOAT32 wValue, FLOAT32 xValue, FLOAT32 yValue, FLOAT32 zValue) noexcept
+		JINMATH_FORCE_INLINE Quaternion(FLOAT32 wValue, FLOAT32 xValue, FLOAT32 yValue, FLOAT32 zValue) noexcept
 			: w{ wValue }, x{ xValue }, y{ yValue }, z{ zValue }
 		{
 		}
@@ -72,7 +72,7 @@ namespace math
 		{
 		}
 
-		FORCE_INLINE Quaternion(const Quaternion& quat) noexcept
+		JINMATH_FORCE_INLINE Quaternion(const Quaternion& quat) noexcept
 			: w{ quat.w }, x{ quat.x }, y{ quat.y }, z{ quat.z }
 		{
 		}
@@ -80,7 +80,7 @@ namespace math
 		
 		Quaternion(FLOAT32 s, const Vector3& vector) noexcept;
 		
-		FORCE_INLINE explicit Quaternion(const Vector3& eulerAngle) noexcept
+		JINMATH_FORCE_INLINE explicit Quaternion(const Vector3& eulerAngle) noexcept
 		{
 			*this = type::EulerAngleToQuaternion(eulerAngle);
 		}
@@ -94,7 +94,7 @@ namespace math
 
 		explicit Quaternion(const Matrix4x4& m) noexcept;
 
-		FORCE_INLINE type& operator=(const type& vector) noexcept
+		JINMATH_FORCE_INLINE type& operator=(const type& vector) noexcept
 		{
 			w = vector.w;
 			x = vector.x;
@@ -104,19 +104,19 @@ namespace math
 		}
 
 	
-		FORCE_INLINE type& operator=(const Matrix4x4& m) noexcept;
+		JINMATH_FORCE_INLINE type& operator=(const Matrix4x4& m) noexcept;
 
-		FORCE_INLINE type& operator=(const Matrix3x3& m) noexcept;
+		JINMATH_FORCE_INLINE type& operator=(const Matrix3x3& m) noexcept;
 
-		FORCE_INLINE type& operator=(const Vector3& eulerAngle) noexcept
+		JINMATH_FORCE_INLINE type& operator=(const Vector3& eulerAngle) noexcept
 		{
 			*this = type::EulerAngleToQuaternion(eulerAngle);
 			return *this;
 		} 
 		
-		NO_DISCARD inline static size_t componentCount()  noexcept { return 4; }
+		JINMATH_NO_DISCARD inline static size_t componentCount()  noexcept { return 4; }
 
-		NO_DISCARD value_type& operator[](size_t i)
+		JINMATH_NO_DISCARD value_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -130,11 +130,11 @@ namespace math
 			case 3:
 				return z;
 			default:
-				NEVER_HAPPEN;
+				JINMATH_NEVER_HAPPEN;
 			}
 		}
 
-		NO_DISCARD FORCE_INLINE const value_type& operator[](size_t i) const
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -148,12 +148,12 @@ namespace math
 			case 3:
 				return z;
 			default:
-				NEVER_HAPPEN;
+				JINMATH_NEVER_HAPPEN;
 			}
 		}
 
 		
-		FORCE_INLINE type& operator+=(const Quaternion& rhs) noexcept
+		JINMATH_FORCE_INLINE type& operator+=(const Quaternion& rhs) noexcept
 		{
 			w += rhs.w;
 			x += rhs.x;
@@ -162,7 +162,7 @@ namespace math
 			return *this;
 		}
 		
-		FORCE_INLINE type& operator-=(const Quaternion& rhs) noexcept
+		JINMATH_FORCE_INLINE type& operator-=(const Quaternion& rhs) noexcept
 		{
 			w += rhs.w;
 			x += rhs.x;
@@ -172,7 +172,7 @@ namespace math
 		}
 
 
-		FORCE_INLINE type& operator*=(const Quaternion& rhs) noexcept
+		JINMATH_FORCE_INLINE type& operator*=(const Quaternion& rhs) noexcept
 		{
 			const Quaternion p(*this);
 			const Quaternion q(rhs);
@@ -184,7 +184,7 @@ namespace math
 			return *this;
 		}
 		
-		FORCE_INLINE type& operator/=(const Quaternion& rhs) noexcept
+		JINMATH_FORCE_INLINE type& operator/=(const Quaternion& rhs) noexcept
 		{
 			x /= rhs.x;
 			y /= rhs.y;
@@ -193,7 +193,7 @@ namespace math
 			return *this;
 		}
 		
-		FORCE_INLINE type operator+(const Quaternion& rhs) const noexcept
+		JINMATH_FORCE_INLINE type operator+(const Quaternion& rhs) const noexcept
 		{
 			Quaternion result{ nullptr };
 
@@ -206,7 +206,7 @@ namespace math
 		}
 
 
-		FORCE_INLINE type operator-(const Quaternion& rhs) const noexcept
+		JINMATH_FORCE_INLINE type operator-(const Quaternion& rhs) const noexcept
 		{
 			Quaternion result{ nullptr };
 
@@ -218,7 +218,7 @@ namespace math
 			return result;
 		}
 
-		FORCE_INLINE type operator*(const Quaternion& rhs) const noexcept
+		JINMATH_FORCE_INLINE type operator*(const Quaternion& rhs) const noexcept
 		{
 			Quaternion result{ nullptr };
 
@@ -230,7 +230,7 @@ namespace math
 			return type{ result };
 		}
 		
-		FORCE_INLINE type operator/(const Quaternion& rhs) const
+		JINMATH_FORCE_INLINE type operator/(const Quaternion& rhs) const
 		{
 			Quaternion result{ nullptr };
 
@@ -253,24 +253,24 @@ namespace math
 
 		operator Matrix4x4() const noexcept;
 
-		NO_DISCARD FORCE_INLINE bool operator==(const type& rhs) const noexcept
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator==(const type& rhs) const noexcept
 		{
 			return this->x == rhs.x && this->y == rhs.y && this->z == rhs.z && this->w == rhs.w;
 		}
 
-		NO_DISCARD FORCE_INLINE bool operator!=(const type& rhs) const noexcept
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator!=(const type& rhs) const noexcept
 		{
 			return this->x != rhs.x || this->y != rhs.y || this->z != rhs.z || this->w != rhs.w;
 		}
 
 		template <typename X>
-		NO_DISCARD FORCE_INLINE bool operator==(const X& number) const noexcept
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator==(const X& number) const noexcept
 		{
 			return this->x == number && this->y == number && this->z == number && this->w == number;
 		}
 
 		template <typename X>
-		NO_DISCARD FORCE_INLINE bool operator!=(const X& number) const noexcept
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator!=(const X& number) const noexcept
 		{
 			return this->x != number || this->y != number || this->z != number || this->w != number;
 		}
@@ -279,7 +279,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE type& operator++() noexcept
+		JINMATH_FORCE_INLINE type& operator++() noexcept
 		{
 			++x;
 			++y;
@@ -293,7 +293,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE type operator++(INT32) noexcept
+		JINMATH_FORCE_INLINE type operator++(INT32) noexcept
 		{
 			type Quaternion{ *this };
 			++* this;
@@ -304,7 +304,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE type& operator--() noexcept
+		JINMATH_FORCE_INLINE type& operator--() noexcept
 		{
 			--x;
 			--y;
@@ -318,7 +318,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE type operator--(INT32) noexcept
+		JINMATH_FORCE_INLINE type operator--(INT32) noexcept
 		{
 			type Quaternion{ *this };
 			--* this;
@@ -352,7 +352,7 @@ namespace math
 		}
 		*/
 
-		NO_DISCARD FORCE_INLINE static FLOAT32 angle(const Quaternion& x)
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE static FLOAT32 angle(const Quaternion& x)
 		{
 			if (math::Abs(x.w) > 0.877582561890372716130286068203503191)
 			{
@@ -367,7 +367,7 @@ namespace math
 			return acos(x.w) * static_cast<FLOAT32>(2);
 		}
 		
-		NO_DISCARD FORCE_INLINE Vector3 axis(const Quaternion& x)
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector3 axis(const Quaternion& x)
 		{
 			FLOAT32 const tmp1 = static_cast<FLOAT32>(1) - x.w * x.w;
 			if (tmp1 <= static_cast<FLOAT32>(0))
@@ -409,13 +409,12 @@ namespace math
 	};
 
 	
-	extern NO_DISCARD FORCE_INLINE FLOAT32 dot(const Quaternion& a, const Quaternion& b)
+	JINMATH_NO_DISCARD inline FLOAT32 dot(const Quaternion& a, const Quaternion& b)
 	{
 		return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 	}
-
-	
-	extern NO_DISCARD FORCE_INLINE Quaternion cross(const Quaternion& q1, const Quaternion& q2)
+		
+	JINMATH_NO_DISCARD inline Quaternion cross(const Quaternion& q1, const Quaternion& q2)
 	{
 		return Quaternion(
 			q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z,
@@ -424,32 +423,29 @@ namespace math
 			q1.w * q2.z + q1.z * q2.w + q1.x * q2.y - q1.y * q2.x);
 	}
 	
-	extern NO_DISCARD FORCE_INLINE  Quaternion conjugate(const Quaternion& q)
+	JINMATH_NO_DISCARD inline Quaternion conjugate(const Quaternion& q)
 	{
 		return Quaternion(q.w, -q.x, -q.y, -q.z);
 	}
 
-	extern NO_DISCARD FORCE_INLINE  Quaternion operator/(const Quaternion& q, const FLOAT32 s)
+	JINMATH_NO_DISCARD inline Quaternion operator/(const Quaternion& q, const FLOAT32 s)
 	{
 		return Quaternion(
 			q.w / s, q.x / s, q.y / s, q.z / s);
 	}
 
-	extern NO_DISCARD FORCE_INLINE  Quaternion inverse(const Quaternion& q)
+	JINMATH_NO_DISCARD inline Quaternion inverse(const Quaternion& q)
 	{
 		return operator/(conjugate(q), dot(q, q));
 	}
-
-
-
-	
-	extern NO_DISCARD FORCE_INLINE Quaternion operator+(const Quaternion& vector) noexcept
+		
+	JINMATH_NO_DISCARD inline Quaternion operator+(const Quaternion& vector) noexcept
 	{
 		return Quaternion{ vector };
 	}
 
 	
-	extern NO_DISCARD FORCE_INLINE Quaternion operator-(const Quaternion& vector) noexcept
+	JINMATH_NO_DISCARD inline Quaternion operator-(const Quaternion& vector) noexcept
 	{
 		return Quaternion(
 			-vector.x,
@@ -461,30 +457,28 @@ namespace math
 
 	//
 	
-	extern NO_DISCARD FORCE_INLINE Vector3 operator*(const Quaternion& q, const Vector3& v);
+	JINMATH_NO_DISCARD Vector3 operator*(const Quaternion& q, const Vector3& v);
+	JINMATH_NO_DISCARD Vector4 operator*(const Quaternion& q, const Vector4& v);
 
-
-	extern NO_DISCARD FORCE_INLINE  Vector4 operator*(const Quaternion& q, const Vector4& v);
-
-	extern NO_DISCARD FORCE_INLINE  Vector4 operator*(const Vector4& v, const Quaternion& q)
+	JINMATH_NO_DISCARD inline Vector4 operator*(const Vector4& v, const Quaternion& q)
 	{
 		return inverse(q) * v;
 	}
 	
-	extern NO_DISCARD FORCE_INLINE  Quaternion operator*(const Quaternion& q, const FLOAT32 s)
+	JINMATH_NO_DISCARD inline Quaternion operator*(const Quaternion& q, const FLOAT32 s)
 	{
 		return Quaternion(
 			q.w * s, q.x * s, q.y * s, q.z * s);
 	}
 	
-	extern NO_DISCARD FORCE_INLINE  Quaternion operator*(const FLOAT32 s, const Quaternion& q)
+	JINMATH_NO_DISCARD inline Quaternion operator*(const FLOAT32 s, const Quaternion& q)
 	{
 		return q * s;
 	}
 	
 
 	template<typename T>
-	extern NO_DISCARD FORCE_INLINE  Quaternion lerp(const Quaternion& x, const Quaternion& y, T a)
+	JINMATH_NO_DISCARD inline Quaternion lerp(const Quaternion& x, const Quaternion& y, T a)
 	{
 		static_assert(std::is_same_v<T, FLOAT32> || std::is_same_v<T, FLOAT64>);
 
@@ -496,7 +490,7 @@ namespace math
 	}
 
 	template<typename T>
-	extern NO_DISCARD FORCE_INLINE  Quaternion slerp(const Quaternion& x, const Quaternion& y, T a)
+	JINMATH_NO_DISCARD inline Quaternion slerp(const Quaternion& x, const Quaternion& y, T a)
 	{
 		static_assert(std::is_same_v<T, FLOAT32> || std::is_same_v<T, FLOAT64>);
 

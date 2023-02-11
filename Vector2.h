@@ -22,12 +22,12 @@ namespace math
 		D_PROPERTY()
 		union { float y, g; };
 
-		FORCE_INLINE float* data() noexcept
+		JINMATH_FORCE_INLINE float* data() noexcept
 		{
 			return &x;
 		}
 
-		const FORCE_INLINE float* data() const noexcept
+		const JINMATH_FORCE_INLINE float* data() const noexcept
 		{
 			return &x;
 		}
@@ -37,23 +37,23 @@ namespace math
 		static const Vector2 up;
 
 
-		FORCE_INLINE Vector2() = delete;
-		FORCE_INLINE Vector2(INT32*)  noexcept
+		JINMATH_FORCE_INLINE Vector2() = delete;
+		JINMATH_FORCE_INLINE Vector2(INT32*)  noexcept
 		{
 		}
 
-		FORCE_INLINE explicit Vector2(float xValue)  noexcept
+		JINMATH_FORCE_INLINE explicit Vector2(float xValue)  noexcept
 			: x{ xValue }, y { xValue }
 		{
 		}
 
 
-		FORCE_INLINE Vector2(float xValue, float yValue) noexcept
+		JINMATH_FORCE_INLINE Vector2(float xValue, float yValue) noexcept
 			: x{ xValue }, y{ yValue }
 		{
 		}
 		
-		FORCE_INLINE Vector2(const Vector2& vector) noexcept
+		JINMATH_FORCE_INLINE Vector2(const Vector2& vector) noexcept
 			: x{ vector.x }, y{ vector.y}
 		{
 		}
@@ -62,14 +62,14 @@ namespace math
 		explicit Vector2(const Vector3& vector) noexcept;
 		explicit Vector2(const Vector4& vector) noexcept;
 
-		FORCE_INLINE Vector2& operator=(value_type xValue) noexcept
+		JINMATH_FORCE_INLINE Vector2& operator=(value_type xValue) noexcept
 		{
 			x = xValue;
 			y = xValue;
 			return *this;
 		}
 				
-		FORCE_INLINE Vector2& operator=(const Vector2& vector) noexcept
+		JINMATH_FORCE_INLINE Vector2& operator=(const Vector2& vector) noexcept
 		{
 			x = vector.x;
 			y = vector.y;
@@ -87,9 +87,9 @@ namespace math
 
 	
 
-		NO_DISCARD FORCE_INLINE static size_t componentCount() noexcept { return 2; }
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE static size_t componentCount() noexcept { return 2; }
 
-		NO_DISCARD FORCE_INLINE value_type& operator[](size_t i)
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE value_type& operator[](size_t i)
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -105,7 +105,7 @@ namespace math
 			}
 		}
 
-		NO_DISCARD FORCE_INLINE const value_type& operator[](size_t i) const
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE const value_type& operator[](size_t i) const
 		{
 			assert(i >= 0 || i < componentCount());
 			switch (i)
@@ -122,17 +122,17 @@ namespace math
 		}
 		
 
-		NO_DISCARD FORCE_INLINE FLOAT32 sqrMagnitude() const noexcept
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE FLOAT32 sqrMagnitude() const noexcept
 		{
 			return x* x + y * y;
 		}
 
-		NO_DISCARD FORCE_INLINE FLOAT32 magnitude() const noexcept
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE FLOAT32 magnitude() const noexcept
 		{
 			return std::sqrt(sqrMagnitude());
 		}
 
-		NO_DISCARD FORCE_INLINE Vector2 normalized() const noexcept
+		JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 normalized() const noexcept
 		{
 			FLOAT32 mag = magnitude();
 			if (mag == 0)
@@ -141,7 +141,7 @@ namespace math
 			return Vector2{ static_cast<value_type>(x / mag), static_cast<value_type>(y / mag) };
 		}
 
-		FORCE_INLINE void Normalize()
+		JINMATH_FORCE_INLINE void Normalize()
 		{
 			FLOAT32 mag = magnitude();
 			if (mag > std::numeric_limits<FLOAT32>::epsilon())
@@ -152,42 +152,42 @@ namespace math
 		}
 
 		
-		FORCE_INLINE operator Vector2()
+		JINMATH_FORCE_INLINE operator Vector2()
 		{
 			return Vector2{x, y};
 		}
 
-		FORCE_INLINE Vector2 operator+(const Vector2& rhs) const noexcept
+		JINMATH_FORCE_INLINE Vector2 operator+(const Vector2& rhs) const noexcept
 		{
 			return Vector2(x + rhs.x, y + rhs.y);
 		}
 
 		
-		FORCE_INLINE Vector2 operator-(const Vector2& rhs) const noexcept
+		JINMATH_FORCE_INLINE Vector2 operator-(const Vector2& rhs) const noexcept
 		{
 			return Vector2(x - rhs.x, y - rhs.y);
 		}
 
 		
-		FORCE_INLINE Vector2 operator*(const Vector2& rhs) const noexcept
+		JINMATH_FORCE_INLINE Vector2 operator*(const Vector2& rhs) const noexcept
 		{
 			return Vector2(x * rhs.x, y * rhs.y);
 		}
 
 		
-		FORCE_INLINE Vector2 operator/(const Vector2& rhs) const noexcept
+		JINMATH_FORCE_INLINE Vector2 operator/(const Vector2& rhs) const noexcept
 		{
 			return Vector2(x / rhs.x, y / rhs.y);
 		}
 
 		
-		FORCE_INLINE Vector2 operator%(const Vector2& rhs) const
+		JINMATH_FORCE_INLINE Vector2 operator%(const Vector2& rhs) const
 		{
-			return Vector2(MODULO(float, x, rhs.x), MODULO(float, y, rhs.y));
+			return Vector2(JINMATH_MODULO(float, x, rhs.x), JINMATH_MODULO(float, y, rhs.y));
 		}
 
 		
-		FORCE_INLINE Vector2& operator+=(const Vector2& rhs) noexcept
+		JINMATH_FORCE_INLINE Vector2& operator+=(const Vector2& rhs) noexcept
 		{
 			x += rhs.x;
 			y += rhs.y;
@@ -195,7 +195,7 @@ namespace math
 		}
 
 		
-		FORCE_INLINE Vector2& operator-=(const Vector2& rhs) noexcept
+		JINMATH_FORCE_INLINE Vector2& operator-=(const Vector2& rhs) noexcept
 		{
 			x -= rhs.x;
 			y -= rhs.y;
@@ -203,7 +203,7 @@ namespace math
 		}
 
 		
-		FORCE_INLINE Vector2& operator*=(const Vector2& rhs) noexcept
+		JINMATH_FORCE_INLINE Vector2& operator*=(const Vector2& rhs) noexcept
 		{
 			x *= rhs.x;
 			y *= rhs.y;
@@ -211,7 +211,7 @@ namespace math
 		}
 
 		
-		FORCE_INLINE Vector2& operator/=(const Vector2& rhs)
+		JINMATH_FORCE_INLINE Vector2& operator/=(const Vector2& rhs)
 		{
 			x /= rhs.x;
 			y /= rhs.y;
@@ -219,10 +219,10 @@ namespace math
 		}
 
 		
-		FORCE_INLINE Vector2& operator%=(const Vector2& rhs)
+		JINMATH_FORCE_INLINE Vector2& operator%=(const Vector2& rhs)
 		{
-			MODULO(float, x, rhs.x);
-			MODULO(float, y, rhs.y);
+			JINMATH_MODULO(float, x, rhs.x);
+			JINMATH_MODULO(float, y, rhs.y);
 			return *this;
 		}
 
@@ -238,7 +238,7 @@ namespace math
 		//
 
 		
-		FORCE_INLINE Vector2& operator+=(float scalar) noexcept
+		JINMATH_FORCE_INLINE Vector2& operator+=(float scalar) noexcept
 		{
 			x += scalar;
 			y += scalar;
@@ -246,7 +246,7 @@ namespace math
 		}
 
 		
-		FORCE_INLINE Vector2& operator-=(float scalar) noexcept
+		JINMATH_FORCE_INLINE Vector2& operator-=(float scalar) noexcept
 		{
 			x -= scalar;
 			y -= scalar;
@@ -254,7 +254,7 @@ namespace math
 		}
 
 		
-		FORCE_INLINE Vector2& operator*=(float scalar) noexcept
+		JINMATH_FORCE_INLINE Vector2& operator*=(float scalar) noexcept
 		{
 			x *= scalar;
 			y *= scalar;
@@ -262,7 +262,7 @@ namespace math
 		}
 
 		
-		FORCE_INLINE Vector2& operator/=(float scalar)
+		JINMATH_FORCE_INLINE Vector2& operator/=(float scalar)
 		{
 			x /= scalar;
 			y /= scalar;
@@ -270,10 +270,10 @@ namespace math
 		}
 
 		
-		FORCE_INLINE Vector2& operator%=(float scalar)
+		JINMATH_FORCE_INLINE Vector2& operator%=(float scalar)
 		{
-			MODULO(float, x, scalar);
-			MODULO(float, y, scalar);
+			JINMATH_MODULO(float, x, scalar);
+			JINMATH_MODULO(float, y, scalar);
 			return *this;
 		}
 
@@ -287,7 +287,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE Vector2& operator++() noexcept
+		JINMATH_FORCE_INLINE Vector2& operator++() noexcept
 		{
 			++x;
 			++y;
@@ -299,7 +299,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE Vector2 operator++(INT32) noexcept
+		JINMATH_FORCE_INLINE Vector2 operator++(INT32) noexcept
 		{
 			Vector2 Vector{ *this };
 			++* this;
@@ -310,7 +310,7 @@ namespace math
 		/// prefix
 		/// </summary>
 		/// <returns></returns>
-		FORCE_INLINE Vector2& operator--() noexcept
+		JINMATH_FORCE_INLINE Vector2& operator--() noexcept
 		{
 			--x;
 			--y;
@@ -322,7 +322,7 @@ namespace math
 		/// </summary>
 		/// <param name=""></param>
 		/// <returns></returns>
-		FORCE_INLINE Vector2 operator--(INT32) noexcept
+		JINMATH_FORCE_INLINE Vector2 operator--(INT32) noexcept
 		{
 			Vector2 Vector{ *this };
 			--* this;
@@ -331,110 +331,109 @@ namespace math
 		
 	};
 
-	extern NO_DISCARD FORCE_INLINE Vector2 operator+(const Vector2& lhs, float scalar) noexcept
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 operator+(const Vector2& lhs, float scalar) noexcept
 	{
 		return Vector2{ lhs.x + scalar, lhs.y + scalar };
 	}
 
 
-	extern NO_DISCARD FORCE_INLINE Vector2 operator-(const Vector2& lhs, float scalar) noexcept
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 operator-(const Vector2& lhs, float scalar) noexcept
 	{
 		return Vector2{ lhs.x - scalar, lhs.y - scalar };
 
 	}
 
-	extern NO_DISCARD FORCE_INLINE Vector2 operator*(const Vector2& lhs, float scalar) noexcept
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 operator*(const Vector2& lhs, float scalar) noexcept
 	{
 		return Vector2{ lhs.x * scalar, lhs.y * scalar };
 	}
 
 
-	extern NO_DISCARD FORCE_INLINE Vector2 operator/(const Vector2& lhs, float scalar)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 operator/(const Vector2& lhs, float scalar)
 	{
 		return Vector2{ lhs.x / scalar, lhs.y / scalar };
 	}
 
 
-	extern NO_DISCARD FORCE_INLINE Vector2 operator%(const Vector2& lhs, float scalar)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 operator%(const Vector2& lhs, float scalar)
 	{
-		return Vector2{ MODULO(float, lhs.x, scalar), MODULO(float, lhs.y, scalar) };
+		return Vector2{ JINMATH_MODULO(float, lhs.x, scalar), JINMATH_MODULO(float, lhs.y, scalar) };
 	}
 
-	extern NO_DISCARD FORCE_INLINE bool operator==(const Vector2& lhs, const Vector2& rhs) noexcept
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator==(const Vector2& lhs, const Vector2& rhs) noexcept
 	{
 		return lhs.x == rhs.x && lhs.y == rhs.y;
 	}
 
-	extern NO_DISCARD FORCE_INLINE bool operator!=(const Vector2& lhs, const Vector2& rhs) noexcept
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator!=(const Vector2& lhs, const Vector2& rhs) noexcept
 	{
 		return lhs.x != rhs.x || lhs.y != rhs.y;
 	}
 
-	extern NO_DISCARD FORCE_INLINE bool operator==(const Vector2& lhs, float scalar)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator==(const Vector2& lhs, float scalar)
 	{
 		return lhs.x == scalar && lhs.y == scalar;
 	}
 
 
-	extern NO_DISCARD FORCE_INLINE bool operator!=(const Vector2& lhs, float scalar)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator!=(const Vector2& lhs, float scalar)
 	{
 		return lhs.x != scalar || lhs.y != scalar;
 	}
 
-	extern NO_DISCARD FORCE_INLINE Vector2 operator+(float scalar, const Vector2& rhs) noexcept
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 operator+(float scalar, const Vector2& rhs) noexcept
 	{
 		return Vector2{ scalar + rhs.x, scalar + rhs.y };
 	}
 
-	extern NO_DISCARD FORCE_INLINE Vector2 operator-(float scalar, const Vector2& rhs) noexcept
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 operator-(float scalar, const Vector2& rhs) noexcept
 	{
 		return Vector2{ scalar - rhs.x, scalar - rhs.y };
-
 	}
 
-	extern NO_DISCARD FORCE_INLINE Vector2 operator*(float scalar, const Vector2& rhs) noexcept
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 operator*(float scalar, const Vector2& rhs) noexcept
 	{
 		return Vector2{ scalar * rhs.x, scalar * rhs.y };
 	}
 
-	extern NO_DISCARD FORCE_INLINE Vector2 operator/(float scalar, const Vector2& rhs)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 operator/(float scalar, const Vector2& rhs)
 	{
 		return Vector2{ scalar / rhs.x, scalar / rhs.y };
 	}
 
-	extern NO_DISCARD FORCE_INLINE Vector2 operator%(float scalar, const Vector2& rhs)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 operator%(float scalar, const Vector2& rhs)
 	{
-		return Vector2{ MODULO(float, scalar, rhs.x), MODULO(float, scalar, rhs.y) };
+		return Vector2{ JINMATH_MODULO(float, scalar, rhs.x), JINMATH_MODULO(float, scalar, rhs.y) };
 	}
 
-	extern NO_DISCARD FORCE_INLINE bool operator==(float scalar, const Vector2& rhs)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator==(float scalar, const Vector2& rhs)
 	{
 		return scalar == rhs.x && scalar == rhs.y;
 	}
 
-	extern NO_DISCARD FORCE_INLINE bool operator!=(float scalar, const Vector2& rhs)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE bool operator!=(float scalar, const Vector2& rhs)
 	{
 		return scalar != rhs.x || scalar != rhs.y;
 	}
 
-	extern NO_DISCARD FORCE_INLINE Vector2 lerpUnClamped(const Vector2& start, const Vector2& end, float t) noexcept
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 lerpUnClamped(const Vector2& start, const Vector2& end, float t) noexcept
 	{
 		return start + (end - start) * t;
 	}
 
 
-	extern NO_DISCARD FORCE_INLINE Vector2 lerp(const Vector2& start, const Vector2& end, float t) noexcept
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 lerp(const Vector2& start, const Vector2& end, float t) noexcept
 	{
 		return lerpUnClamped(start, end, clamp01(t));
 	}
 	
-	extern FORCE_INLINE Vector2 operator+(const Vector2& vector) noexcept
+	JINMATH_FORCE_INLINE Vector2 operator+(const Vector2& vector) noexcept
 	{
 		return Vector2{ vector };
 	}
 
 	
-	extern FORCE_INLINE Vector2 operator-(const Vector2& vector) noexcept
+	JINMATH_FORCE_INLINE Vector2 operator-(const Vector2& vector) noexcept
 	{
 		return Vector2(
 			-vector.x,
@@ -444,7 +443,7 @@ namespace math
 	// ///////////////////////////////////////////////
 
 	
-	extern NO_DISCARD FORCE_INLINE FLOAT32 dot(const Vector2& lhs, const Vector2& rhs)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE FLOAT32 dot(const Vector2& lhs, const Vector2& rhs)
 	{
 		return lhs.x * rhs.x + lhs.y * rhs.y;
 	}
@@ -455,58 +454,52 @@ namespace math
 	/// perpDot return area of the parallelogram from two vectors
 	/// </summary>
 	
-	extern NO_DISCARD FORCE_INLINE FLOAT32 perpDot(const Vector2& lhs, const Vector2& rhs)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE FLOAT32 perpDot(const Vector2& lhs, const Vector2& rhs)
 	{
 		return lhs.x * rhs.y - lhs.y * rhs.x;
 	}
 
 	
-	extern NO_DISCARD FORCE_INLINE Vector2 cos(const Vector2& vector)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 cos(const Vector2& vector)
 	{
 		return Vector2{std::sin(vector.x), std::sin(vector.y)};
 	}
 
 	
-	extern NO_DISCARD FORCE_INLINE Vector2 sin(const Vector2& vector)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 sin(const Vector2& vector)
 	{
 		return Vector2{ std::cos(vector.x), std::cos(vector.y)};
 	}
-
 	
-	extern NO_DISCARD FORCE_INLINE Vector2 tan(const Vector2& vector)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 tan(const Vector2& vector)
 	{
 		return Vector2{ std::tan(vector.x), std::tan(vector.y)};
 	}
-
 	
-	extern NO_DISCARD FORCE_INLINE Vector2 sqrt(const Vector2& vector)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 sqrt(const Vector2& vector)
 	{
 		return Vector2{std::sqrt(vector.x), std::sqrt(vector.y)};
 	}
-
 	
-	extern NO_DISCARD FORCE_INLINE Vector2 inverseSqrt(const Vector2& vector)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 inverseSqrt(const Vector2& vector)
 	{
 		return Vector2{ ::math::inverseSqrt(vector.x), ::math::inverseSqrt(vector.y)};
 	}
-
 	
-	extern NO_DISCARD Vector2 normalize(const Vector2& vector);
-
-
-	extern NO_DISCARD FORCE_INLINE Vector2 Max(const Vector2& vector1, const Vector2& vector2)
+	JINMATH_NO_DISCARD Vector2 normalize(const Vector2& vector);
+	
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 Max(const Vector2& vector1, const Vector2& vector2)
 	{
 		return Vector2(::math::Max(vector1.x, vector2.x), ::math::Max(vector1.y, vector2.y));
 	}
-
 	
-	extern NO_DISCARD FORCE_INLINE Vector2 Min(const Vector2& vector1, const Vector2& vector2)
+	JINMATH_NO_DISCARD JINMATH_FORCE_INLINE Vector2 Min(const Vector2& vector1, const Vector2& vector2)
 	{
 		return Vector2(::math::Min(vector1.x, vector2.x), ::math::Min(vector1.y, vector2.y));
 	}
 
 	template<typename T>
-	extern NO_DISCARD FORCE_INLINE Vector2 slerp
+	JINMATH_NO_DISCARD inline Vector2 slerp
 	(
 		const Vector2& x,
 		const Vector2& y,

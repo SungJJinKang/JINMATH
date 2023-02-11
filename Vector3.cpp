@@ -32,7 +32,7 @@ math::Vector3::type& math::Vector3::operator=(const Vector4& vector) noexcept
 	return *this;
 }
 
-extern NO_DISCARD math::Vector3 math::normalize(const Vector3& vector)
+JINMATH_NO_DISCARD math::Vector3 math::normalize(const Vector3& vector)
 {
 	return vector * inverseSqrt(dot(vector, vector));
 }
