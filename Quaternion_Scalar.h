@@ -130,7 +130,7 @@ namespace math
 			case 3:
 				return z;
 			default:
-				JINMATH_NEVER_HAPPEN;
+				JINMATH_ASSUME_ZERO;
 			}
 		}
 
@@ -148,7 +148,7 @@ namespace math
 			case 3:
 				return z;
 			default:
-				JINMATH_NEVER_HAPPEN;
+				JINMATH_ASSUME_ZERO;
 			}
 		}
 

@@ -27,14 +27,14 @@
 
 #endif
 
-#undef JINMATH_NEVER_HAPPEN
+#undef JINMATH_ASSUME_ZERO
 
 #if defined(_DEBUG)
-#define JINMATH_NEVER_HAPPEN assert(false)
+#define JINMATH_ASSUME_ZERO assert(false)
 #elif (!defined(_DEBUG)) && defined(_MSC_VER)
-#define JINMATH_NEVER_HAPPEN __assume(0)
+#define JINMATH_ASSUME_ZERO __assume(0)
 #elif (!defined(_DEBUG)) && defined(__clang__)
-#define JINMATH_NEVER_HAPPEN __builtin_unreachable()
+#define JINMATH_ASSUME_ZERO __builtin_unreachable()
 #else
 #error Unsupported compiler ( Please Use msvc or clang )
 #endif
