@@ -266,10 +266,10 @@ namespace math
 
 		JINMATH_FORCE_INLINE Vector4& operator%=(const Vector4& rhs)
 		{
-			JINMATH_MODULO(FLOAT32, x, rhs.x);
-			JINMATH_MODULO(FLOAT32, y, rhs.y);
-			JINMATH_MODULO(FLOAT32, z, rhs.z);
-			JINMATH_MODULO(FLOAT32, w, rhs.w);
+			x = JINMATH_MODULO(FLOAT32, x, rhs.x);
+			y = JINMATH_MODULO(FLOAT32, y, rhs.y);
+			z = JINMATH_MODULO(FLOAT32, z, rhs.z);
+			w = JINMATH_MODULO(FLOAT32, w, rhs.w);
 			return *this;
 		}
 
@@ -305,10 +305,10 @@ namespace math
 
 		JINMATH_FORCE_INLINE Vector4& operator%=(FLOAT32 scalar)
 		{
-			JINMATH_MODULO(FLOAT32, x, scalar);
-			JINMATH_MODULO(FLOAT32, y, scalar);
-			JINMATH_MODULO(FLOAT32, z, scalar);
-			JINMATH_MODULO(FLOAT32, w, scalar);
+			x = JINMATH_MODULO(FLOAT32, x, scalar);
+			y = JINMATH_MODULO(FLOAT32, y, scalar);
+			z = JINMATH_MODULO(FLOAT32, z, scalar);
+			w = JINMATH_MODULO(FLOAT32, w, scalar);
 			return *this;
 		}
 

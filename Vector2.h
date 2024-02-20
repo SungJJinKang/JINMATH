@@ -221,8 +221,8 @@ namespace math
 		
 		JINMATH_FORCE_INLINE Vector2& operator%=(const Vector2& rhs)
 		{
-			JINMATH_MODULO(float, x, rhs.x);
-			JINMATH_MODULO(float, y, rhs.y);
+			x = JINMATH_MODULO(float, x, rhs.x);
+			y = JINMATH_MODULO(float, y, rhs.y);
 			return *this;
 		}
 
@@ -272,8 +272,8 @@ namespace math
 		
 		JINMATH_FORCE_INLINE Vector2& operator%=(float scalar)
 		{
-			JINMATH_MODULO(float, x, scalar);
-			JINMATH_MODULO(float, y, scalar);
+			x = JINMATH_MODULO(float, x, scalar);
+			y = JINMATH_MODULO(float, y, scalar);
 			return *this;
 		}
 

@@ -243,9 +243,9 @@ namespace math
 		
 		JINMATH_FORCE_INLINE Vector3& operator%=(const Vector3& rhs)
 		{
-			JINMATH_MODULO(float, x, rhs.x);
-			JINMATH_MODULO(float, y, rhs.y);
-			JINMATH_MODULO(float, z, rhs.z);
+			x = JINMATH_MODULO(float, x, rhs.x);
+			y = JINMATH_MODULO(float, y, rhs.y);
+			z = JINMATH_MODULO(float, z, rhs.z);
 			return *this;
 		}
 
@@ -285,9 +285,9 @@ namespace math
 
 		JINMATH_FORCE_INLINE Vector3& operator%=(float scalar)
 		{
-			JINMATH_MODULO(float, x, scalar);
-			JINMATH_MODULO(float, y, scalar);
-			JINMATH_MODULO(float, z, scalar);
+			x = JINMATH_MODULO(float, x, scalar);
+			y = JINMATH_MODULO(float, y, scalar);
+			z = JINMATH_MODULO(float, z, scalar);
 			return *this;
 		}
 
